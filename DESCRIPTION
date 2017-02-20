@@ -1,0 +1,27 @@
+Package: LittleThumb
+Type: Package
+Title: Traceable importation and processing of sequencing data (ChIP-seq, RNA-seq, etc.)
+Version: 0.1.0
+Author: Benjamin Leblanc
+Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
+Imports:
+    methods,
+    stringr,
+    optparse,
+    dplyr,
+    GEOquery,
+    SRAdb,
+    GenomeInfoDb
+Depends:
+    R (>= 3.2.0),
+    methods,
+    stringr,
+    optparse,
+    dplyr,
+    GEOquery,
+    SRAdb,
+    GenomeInfoDb
+Suggests:
+Description: Traceable importation and processing of sequencing data (ChIP-seq, RNA-seq, etc.)
+License: GPL (>= 2)
+LazyData: TRUE
