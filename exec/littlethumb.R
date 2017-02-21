@@ -22,14 +22,15 @@ options('download.file.method.GEOquery' = 'libcurl')
 
 # COMMON CONFIG ################################################################
 
-MAPPING_INDEXES <- paste0("/data/ANALYSIS_LabProjects/Project_H3_MutantEffectModel/MAPPING_INDEXES.txt")
-MAPPING_INDEXES <- paste0("~/Dropbox/Workflow/MAPPING_INDEXES.txt")
+# =============================================================================.
+# External configuration
+# -----------------------------------------------------------------------------.
+MAPPING_INDEXES <- paste0(config_path(), "/MAPPING_INDEXES.txt")
 
-if(! file.exists(MAPPING_INDEXES)) stop("file not found ", MAPPING_INDEXES)
+if(! file.exists(MAPPING_INDEXES)) stop("package is broken")
 MAPPING_INDEXES <- read.delim(MAPPING_INDEXES, stringsAsFactors = F)
 MAPPING_INDEXES <- availableMappingIndexes(MAPPING_INDEXES)
 MAPPING_INDEXES <- filter(MAPPING_INDEXES, hostname == host_name())
-
 # =============================================================================.
 # Internal configuration
 # -----------------------------------------------------------------------------.
