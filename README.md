@@ -1,8 +1,3 @@
----
-output:
-  html_document:
-    code_folding: hide
----
 LittleThumb -  Traceable importation and processing of sequencing data
 ================================================================================
 
