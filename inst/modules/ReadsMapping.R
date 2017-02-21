@@ -45,8 +45,8 @@ MAPPERS <- data.frame(
 MAP_CMD <- "bowtie"
 MAP_PAR <- ""
 MAP_IDX <- "genomic_hg38,genomic_dm3" #
-INPDIR     <- "_RAWREADS_"
-OUTDIR     <- "_MAPPEDREADS_"
+INPDIR  <- "_RAWREADS_"
+OUTDIR  <- "_MAPPEDREADS_"
 # -----------------------------------------------------------------------------.
 option_list <- list(
   # Task specific options
@@ -124,7 +124,8 @@ opt <- parse_args(
   OptionParser(option_list = option_list), args = JOBARGS,
   positional_arguments = TRUE
 )
-# print_options(opt$options, opt$args, lbl = "Query")
+# -----------------------------------------------------------------------------.
+print_options(opt$options, opt$args, lbl = "Query")
 # -----------------------------------------------------------------------------.
 if(opt$options$query == "") {
   opt$options$query <- opt$args

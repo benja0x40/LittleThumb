@@ -41,6 +41,11 @@ In the terminal.
 # Clone github repository
 cd ~/DataImportTools
 git clone git@github.com:benja0x40/LittleThumb.git
+
+# Update cloned repository
+cd ~/DataImportTools/LittleThumb
+git pull
+
 # Build package
 R CMD build LittleThumb
 ```
@@ -48,12 +53,12 @@ R CMD build LittleThumb
 In the R environment.
 
 ```r
-# Using manually built package archive
-install.packages("LittleThumb_0.1.0.tar.gz")
-
 # When package devtools will be fixed (bug in current version 1.12.0)
 library("devtools")
 install_github("benja0x40/LittleThumb")
+
+# Using manually built package archive
+install.packages("LittleThumb_0.1.0.tar.gz")
 
 # Post installation
 library(LittleThumb)

@@ -39,9 +39,9 @@ DTSFILE   <- paste0(ANNDIR, "/GEO.SRA.", JOBID, ".txt") # dataset description
 # Define user options
 # -----------------------------------------------------------------------------.
 # Default values
-SRADBFILE  <- paste0("SRAmetadb_", TODAY, ".sqlite")
-INPDIR     <- NA
-OUTDIR     <- "_RAWREADS_"
+SRADBFILE <- paste0("SRAmetadb_", TODAY, ".sqlite")
+INPDIR    <- NA
+OUTDIR    <- "_RAWREADS_"
 # -----------------------------------------------------------------------------.
 option_list <- list(
   # Task specific options
@@ -112,7 +112,8 @@ opt <- parse_args(
   OptionParser(option_list = option_list), args = JOBARGS,
   positional_arguments = TRUE
 )
-# print_options(opt$options, opt$args, lbl = "Query")
+# -----------------------------------------------------------------------------.
+print_options(opt$options, opt$args, lbl = "Query")
 # -----------------------------------------------------------------------------.
 if(opt$options$query == "") {
   opt$options$query <- opt$args
