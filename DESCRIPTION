@@ -5,6 +5,7 @@ Version: 0.1.0
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports:
+    devtools,
     methods,
     stringr,
     optparse,
@@ -14,6 +15,7 @@ Imports:
     GenomeInfoDb
 Depends:
     R (>= 3.2.0),
+    devtools,
     methods,
     stringr,
     optparse,
