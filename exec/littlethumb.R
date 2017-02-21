@@ -64,23 +64,25 @@ msg_line()
 print(ls()) # help to make sure modules start within a clean environment
 msg_line()
 # -----------------------------------------------------------------------------.
-rex <- "^import-geo +"
-if(grepl(rex, cmd_args(), perl = T)) {
-  JOBARGS <- gsub(rex, "", cmd_args())
+JOBARGS <- cmd_args()
+# -----------------------------------------------------------------------------.
+rex <- "^import-geo "
+if(grepl(rex, JOBARGS, perl = T)) {
+  JOBARGS <- job_args(rex, JOBARGS)
   rm(rex)
   source(paste0(modules_path(), "/ImportDataFromGEO.R"))
 }
 # -----------------------------------------------------------------------------.
-rex <- "^import-basespace +"
-if(grepl(rex, cmd_args(), perl = T)) {
-  JOBARGS <- gsub(rex, "", cmd_args())
+rex <- "^import-basespace "
+if(grepl(rex, JOBARGS, perl = T)) {
+  JOBARGS <- job_args(rex, JOBARGS)
   rm(rex)
   source(paste0(modules_path(), "/ImportDataFromBaseSpace.R"))
 }
 # -----------------------------------------------------------------------------.
-rex <- "^map-reads +"
-if(grepl(rex, cmd_args(), perl = T)) {
-  JOBARGS <- gsub(rex, "", cmd_args())
+rex <- "^(littlethumb) +map-reads +(.*)"
+if(grepl(rex, JOBARGS, perl = T)) {
+  JOBARGS <- job_args(rex, JOBARGS)
   rm(rex)
   source(paste0(modules_path(), "/ReadsMapping.R"))
 }

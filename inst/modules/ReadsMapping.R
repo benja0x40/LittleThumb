@@ -125,7 +125,7 @@ opt <- parse_args(
   positional_arguments = TRUE
 )
 # -----------------------------------------------------------------------------.
-print_options(opt$options, opt$args, lbl = "Query")
+# print_options(opt$options, opt$args, lbl = "Query")
 # -----------------------------------------------------------------------------.
 if(opt$options$query == "") {
   opt$options$query <- opt$args

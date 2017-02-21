@@ -29,6 +29,12 @@ cmd_line <- function() {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
+job_args <-function(rex, x) {
+  unlist(str_split(str_trim(gsub(rex, "", x)), " "))
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
 exec_path <- function() {
   paste0(inst("LittleThumb"), "/exec")
 }
@@ -141,6 +147,8 @@ msg_line <- function(x = "-", n = 80, begin = "", end = "", sep = "", ...) {
 msg_header <- function(tag, ...) {
   msg_line("=", begin = "# ", ...)
   cat("# [ ", tag, " ] ", cmd_line(), "\n", sep = "", ...)
+  msg_line("-", begin = "# ", ...)
+  cat("# LAUNCHDIR = ", LAUNCHDIR, "\n", sep = "", ...)
   msg_line("-", begin = "# ", ...)
   msg_line("", ...)
 }

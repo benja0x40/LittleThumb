@@ -101,7 +101,7 @@ opt <- parse_args(
   positional_arguments = TRUE
 )
 # -----------------------------------------------------------------------------.
-print_options(opt$options, opt$args, lbl = "Query")
+# print_options(opt$options, opt$args, lbl = "Query")
 # -----------------------------------------------------------------------------.
 if(! basespace_available(opt$options$mount)) {
   stop("BaseSpace file system not mounted properly")
