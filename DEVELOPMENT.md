@@ -5,14 +5,58 @@ Automation and traceability for sequencing data analysis with R/Bioconductor.
 
 ### **A. Key concepts** ###
 
-LittleThumb organizes data analysis projects into workspaces, datasets and jobs,
-providing both command line (bash) and R front ends.
+Genomic research projects involve complex and often time consuming bioinformatic activities.
+
+From a high level perspective these activities can be grouped in 3 main
+categories.
+The first category consist in retrieval and organization of sequencing data
+coming from ongoing experiments as well as from previously published studies.
+The second category consist in performing data analysis and can often involve
+exploratory and design/development activities.
+The third category is production of publication quality figures and associated
+documentation (e.g. legends, material and methods, etc.). 
+
+The LittleThumb project aims to provide a solution connecting as transparently
+as possible these 3 group of activities for genomic research projects involving
+numerous datasets, extensive data exploration and advanced data analyses.
+
+To achieve this aim LittleThumb organizes genomic research projects into
+workspaces, datasets, jobs and productions, proposing two interfaces, one
+accessible via terminal commands (bash), and one accessible via the
+R/Bioconductor environment, that operate consistently with each other.
 
 #### **1. Workspaces** ####
 
 A workspace is a container for data analyses. It provides a root location for
 storage of imported and processed data where LittleThumb can ensure the
 traceability and consistency of associated jobs and datasets.
+
+For the moment Workspaces are independent from each other, meaning that datasets
+cannot be shared between workspaces. Sharing need to adress indirect data
+access plus maintenance of reverse dependency and locking mechanisms.
+
+Workspace structure
+
+- **_root folder_**
+    - **\_LittleThumb\_**  
+        - **automation**  
+            dataset_register  
+            job_register  
+            dependency_graph  
+            semaphores
+        - **config**  
+            config files
+        - **datasets**  
+            dataset descriptions
+        - **jobs**  
+            job descriptions
+        - **history**  
+            jobs.txt  
+            commands.sh
+    - **RAWREADS**  
+        user defined, contains sequencing data
+    - **PROCESSED**  
+        user defined, ...
 
 #### **2. Datasets** ####
 
@@ -24,9 +68,15 @@ associated with sequencing experiments, or read counts over genomic intervals,
 or bed files with coordinates of ChIP-enriched regions, or bigwig files of
 genomic profiles.
 
-#### **3. Jobs** ####
+#### **3. Jobs & productions (planned)** ####
 
-Jobs represent executable tasks on datasets.
+Jobs represent elementary executable tasks on datasets.
+
+Productions represent series of jobs that can execute without any external
+requirement except the availability of initial parameters and/or datasets.
+
+Productions can include sub-productions?
+Could be done by including jobs consisting in runing a sub-production?
 
 #### **4. Configurations** ####
 
@@ -43,18 +93,36 @@ Authorized settings overwrite default settings in the reverse order:
 
 #### **1. Descriptions** ####
 
-**+ Interface**
-
-| Function        | Command         | Description                              |
-| --------------- | --------------- | ---------------------------------------- |
-| `template`      | `template`      | template                                 |
+A description (S4 class = `LT_Description`) implements an hybrid data structure
+combining a list and a data frame, internally named `properties` and `data`
+respectively.
 
 **+ Representation**
 
-| Attribute      | Description                                                 |
-| -------------- | ----------------------------------------------------------- |
-| `template`     | template                                                    |
+| Attribute    | Description                   |
+| ------------ | ----------------------------- |
+| `id`         | unique identifier (automated) |
+| `properties` | `list` with named elements    |
+| `data`       | `DataFrame`                   |
 
+**+ Interface**
+
+| Function           | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| `properties`       | top level names of the `properties` list       |
+| `property`         | accessor for top level `properties`            |
+| `datakeys`         | column names in `data`                         |
+| `ndata`            | number of rows in the `data` data frame        |
+| `save_description` | save an `LT_Description` object to text file   |
+| `load_description` | load an `LT_Description` object from text file |
+
+**+ Common property accessors**
+
+| Function  | Description                         |
+| --------- | ----------------------------------- |
+| `lt_id`   | LittleThumb identifier (read only)  |
+| `lt_name` | user defined name                   |
+| `lt_path` | file system directory               |
 
 #### **2. Workspaces** ####
 

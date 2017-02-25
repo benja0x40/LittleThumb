@@ -8,8 +8,8 @@ Automation and traceability for sequencing data analysis with R/Bioconductor.
 #### Prerequisites ####
 
   - [R environment](https://www.r-project.org/) version 3.x
-  - R packages `devtools`, `S4Vectors`, `stringr`, `dplyr`, `jsonlite`, `optparse`
-  - [Bioconductor](http://www.bioconductor.org/) packages `GEOquery`, `SRAdb`, `GenomeInfoDb`
+  - R packages `devtools`, `stringr`, `dplyr`, `jsonlite`, `optparse`
+  - [Bioconductor](http://www.bioconductor.org/) packages `S4Vectors`, `GEOquery`, `SRAdb`, `GenomeInfoDb`
   
 The code below installs R and Bioconductor packages required by LittleThumb.
 
@@ -18,12 +18,14 @@ The code below installs R and Bioconductor packages required by LittleThumb.
 pkg <- installed.packages()[, "Package"]
 
 # CRAN packages
-lst <- c("devtools", "S4Vectors", "stringr", "dplyr", "jsonlite", "optparse")
+lst <- c("devtools", "stringr", "dplyr", "jsonlite", "optparse")
 lst <- setdiff(lst, pkg)
-if(length(lst) > 0) install.packages(lst, repos = "https://cloud.r-project.org/")
+if(length(lst) > 0) {
+  install.packages(lst, repos = "https://cloud.r-project.org/")
+}
 
 # Bioconductor packages
-lst <- c("GEOquery", "SRAdb", "GenomeInfoDb")
+lst <- c("S4Vectors", "GEOquery", "SRAdb", "GenomeInfoDb")
 lst <- setdiff(lst, pkg)
 if(length(lst) > 0) {
   source("https://bioconductor.org/biocLite.R")

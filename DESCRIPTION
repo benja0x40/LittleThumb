@@ -35,5 +35,5 @@ Description: Automation and traceability for high-throughput sequencing data
     analysis with R/Bioconductor.
 License: GPL (>= 2)
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
