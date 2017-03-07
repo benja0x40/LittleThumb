@@ -10,8 +10,6 @@ test_that("define_workspace", {
 
   # Initialization
   resetLittleThumb(ask = F)
-  openLittleThumb()
-
   LTE <- .lte_env.()
   cfg <- LTE$config
 
@@ -46,10 +44,9 @@ test_that("create_workspace", {
 
   # Initialization
   resetLittleThumb(ask = F)
-  openLittleThumb()
-
   LTE <- .lte_env.()
   cfg <- LTE$config
+
   lst <- list_paths(cfg, is_dir == T  & level == "workspace")
 
   path <- make_path(cfg, "USRDIR")

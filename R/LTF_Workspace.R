@@ -5,7 +5,6 @@
 # -----------------------------------------------------------------------------.
 define_workspace <- function(name, path) {
 
-  if(! .lte_is_loaded.()) openLittleThumb()
   LTE <- .lte_env.()
 
   chk <- check_class(name, "character", error = T)
@@ -19,7 +18,7 @@ define_workspace <- function(name, path) {
   chk <- is_registered(LTE$workspaces, k = 2, x = path)
   if(chk) stop("duplicate workspace path ", path)
 
-  x <- list(name = name, path = path, is_created = F, is_active = F)
+  x <- list(name = name, path = path, is_created = F, is_opened = F)
   LTE$workspaces <- rbind(LTE$workspaces, x, stringsAsFactors = F)
 
   .lte_save.()
@@ -29,7 +28,6 @@ define_workspace <- function(name, path) {
 # -----------------------------------------------------------------------------.
 list_workspaces <- function(detailed = F) {
 
-  if(! .lte_is_loaded.()) openLittleThumb()
   LTE <- .lte_env.()
 
 
@@ -43,7 +41,6 @@ list_workspaces <- function(detailed = F) {
 # -----------------------------------------------------------------------------.
 create_workspace <- function(name, path = NULL) {
 
-  if(! .lte_is_loaded.()) openLittleThumb()
   LTE <- .lte_env.()
 
   if(! is.null(path)) define_workspace(name, path)
@@ -58,10 +55,42 @@ create_workspace <- function(name, path = NULL) {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-workspace <- function() {
+delete_workspace <- function(name) {
 
-  if(! .lte_is_loaded.()) openLittleThumb()
   LTE <- .lte_env.()
 
-  td_selector(LTE$workspaces, is_active == T, v = "name")
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+open_workspace <- function(name, path = NULL) {
+
+  LTE <- .lte_env.()
+  lbl <- name
+
+  chk <- td_selector(LTE$workspaces, name == lbl, v = "is_created")
+  if(! chk) stop("workspace has to be created before it can be opened")
+
+  chk <- td_selector(LTE$workspaces, name == lbl, v = "is_opened")
+  if(! chk) {
+    assign(lbl, new.env(), pos = globalenv())
+    register_value(LTE$workspaces, x = lbl, v = "is_opened") <- T
+  }
+
+  # Auto load existing datasets and jobs
+
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+close_workspace <- function(name) {
+
+  LTE <- .lte_env.()
+  lbl <- name
+
+  chk <- td_selector(LTE$workspaces, name == lbl, v = "is_opened")
+  if(chk) {
+    rm(list = lbl, pos = globalenv())
+    register_value(LTE$workspaces, x = lbl, v = "is_opened") <- F
+  }
 }

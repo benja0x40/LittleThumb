@@ -7,16 +7,27 @@
 #' @include LTF_TextRepresentation.R
 #' @include LTF_FileSystem.R
 
+
 # Class definitions & implementations
 #' @include LTC_TabularData.R
 #' @include LTC_MetaData.R
+
+
 
 # S3 DEFINTION #################################################################
 
 # =============================================================================.
 # Composed of: LT_MetaData, LT_TabularData
 # =============================================================================.
-#
+#' LT_Data
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description
+#'
+#' @param ...
+#'
+#' @return
+#' an object of class LT_Data
 # -----------------------------------------------------------------------------.
 LT_Data <- function(name = NULL, description = NULL, MD = NULL, TD = NULL) {
 

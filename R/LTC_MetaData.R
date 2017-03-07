@@ -7,14 +7,27 @@
 #' @include LTF_TextRepresentation.R
 #' @include LTF_FileSystem.R
 
+
 # Class definitions & implementations
+
+
+
+
 
 # S3 DEFINTION #################################################################
 
 # =============================================================================.
-# Specializes: list
+# Inherits from: list
 # =============================================================================.
-#
+#' LT_MetaData
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description
+#'
+#' @param ...
+#'
+#' @return
+#' a list (using class LT_MetaData would to fix dispatch issues)
 # -----------------------------------------------------------------------------.
 LT_MetaData <- function(..., .names. = NULL) {
   obj <- list(...)

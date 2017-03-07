@@ -5,27 +5,29 @@ Version: 0.1.0
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports:
-    devtools,
     methods,
+    devtools,
     lazyeval,
     stringr,
     tibble,
     dplyr,
     jsonlite,
     optparse,
+    igraph,
     GEOquery,
     SRAdb,
     GenomeInfoDb
 Depends:
     R (>= 3.2.0),
-    devtools,
     methods,
+    devtools,
     lazyeval,
     stringr,
     tibble,
     dplyr,
     jsonlite,
     optparse,
+    igraph,
     GEOquery,
     SRAdb,
     GenomeInfoDb
@@ -49,7 +51,8 @@ Collate:
     'LTC_TabularData.R'
     'LTC_Data.R'
     'LTC_Config.R'
+    'LTF_Workspace.R'
+    'LTC_Dataset.R'
     'LTE.R'
     'LTF_SelfInstallation.R'
-    'LTF_Workspace.R'
     'zzz.R'

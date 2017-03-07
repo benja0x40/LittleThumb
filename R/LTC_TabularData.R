@@ -7,14 +7,27 @@
 #' @include LTF_TextRepresentation.R
 #' @include LTF_FileSystem.R
 
+
 # Class definitions & implementations
+
+
+
+
 
 # S3 DEFINTION #################################################################
 
 # =============================================================================.
-# Specializes: data.frame
+# Inherits from: data.frame
 # =============================================================================.
-#
+#' LT_TabularData
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description
+#'
+#' @param ...
+#'
+#' @return
+#' a data.frame (using class LT_TabularData would to fix dispatch issues)
 # -----------------------------------------------------------------------------.
 LT_TabularData <- function(...) {
   obj <- data.frame(..., stringsAsFactors = F)
@@ -214,14 +227,14 @@ register_merge.data.frame <- function(
 
   # Shared columns
   lst <- lapply(obj, colnames)
-  lst <- Reduce(intersect, lst)
+  lst <- Reduce(base::intersect, lst)
   lst <- c(ids, lst)
 
   # Bind rows
   obj <- lapply(obj, rownames2col, rnc = rnc)
-  obj <- lapply(obj, as_data_frame)
+  obj <- lapply(obj, dplyr::as_data_frame)
   obj <- do.call("bind_rows", args = list(obj, .id = ids))
-  obj <- as.data.frame(obj, stringsAsFactors = F)
+  obj <- base::as.data.frame(obj, stringsAsFactors = F)
   obj <- LT_TabularData(obj)
 
   # Cleanup

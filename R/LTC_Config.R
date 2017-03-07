@@ -7,19 +7,22 @@
 #' @include LTF_TextRepresentation.R
 #' @include LTF_FileSystem.R
 
+
 # Class definitions & implementations
 #' @include LTC_TabularData.R
 #' @include LTC_MetaData.R
 #' @include LTC_Data.R
 
+
 # S3 DEFINTION #################################################################
 
+# =============================================================================.
+# Inherits from: LT_Data
 # =============================================================================.
 #' LT_Config
 # -----------------------------------------------------------------------------.
 #' @export
 #' @description
-#' LittleThumb class of configuration objects.
 #'
 #' @param ...
 #'
