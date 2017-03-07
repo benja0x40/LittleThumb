@@ -1,14 +1,15 @@
 Package: LittleThumb
 Type: Package
-Title: Automation and traceability for sequencing data analysis
+Title: LittleThumb
 Version: 0.1.0
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports:
     devtools,
     methods,
-    S4Vectors,
+    lazyeval,
     stringr,
+    tibble,
     dplyr,
     jsonlite,
     optparse,
@@ -19,8 +20,9 @@ Depends:
     R (>= 3.2.0),
     devtools,
     methods,
-    S4Vectors,
+    lazyeval,
     stringr,
+    tibble,
     dplyr,
     jsonlite,
     optparse,
@@ -31,9 +33,23 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Description: Automation and traceability for high-throughput sequencing data
-    analysis with R/Bioconductor.
+Description: Automation and traceability for sequencing data analysis
+             with R/Bioconductor.
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+Collate: 
+    'LTF_FileSystem.R'
+    'LTF_TextRepresentation.R'
+    'LTF_Registration.R'
+    'LTF_R_Objects.R'
+    'LTF_Basics.R'
+    'LTC_MetaData.R'
+    'LTC_TabularData.R'
+    'LTC_Data.R'
+    'LTC_Config.R'
+    'LTE.R'
+    'LTF_SelfInstallation.R'
+    'LTF_Workspace.R'
+    'zzz.R'

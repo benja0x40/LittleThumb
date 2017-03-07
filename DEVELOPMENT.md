@@ -107,14 +107,16 @@ respectively.
 
 **+ Interface**
 
-| Function           | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| `properties`       | top level names of the `properties` list       |
-| `property`         | accessor for top level `properties`            |
-| `datakeys`         | column names in `data`                         |
-| `ndata`            | number of rows in the `data` data frame        |
-| `save_description` | save an `LT_Description` object to text file   |
-| `load_description` | load an `LT_Description` object from text file |
+| Function             | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `properties`         | top level names of the `properties` list          |
+| `property`           | accessor for top level `properties`               |
+| `datakeys`           | column names in `data`                            |
+| `ndata`              | number of rows in the `data` data frame           |
+| `merge_descriptions` | merge `LT_Description` objects into a single one  |
+| `split_descriptions` | split a `LT_Description` object into several ones |
+| `save_description`   | save an `LT_Description` object to text file      |
+| `load_description`   | load an `LT_Description` object from text file    |
 
 **+ Common property accessors**
 
