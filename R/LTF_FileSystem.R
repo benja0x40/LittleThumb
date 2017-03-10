@@ -7,7 +7,8 @@ make_path <- function (obj, ...) { UseMethod("make_path", obj) }
 list_paths <- function (obj, ...) { UseMethod("list_paths", obj) }
 create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
 check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
-# lt_path <- function (obj, ...) { UseMethod("lt_path", obj) }
+
+lt_path <- function (obj, ...) { UseMethod("lt_path", obj) }
 # lt_save <- function (obj, ...) { UseMethod("lt_save", obj) }
 # lt_load <- function (con, ...) { UseMethod("lt_load", obj) }
 # -----------------------------------------------------------------------------.
@@ -148,7 +149,7 @@ make_path.character <- function(..., ext = "") {
   path <- list(...)
   path <- path[! sapply(path, is.null)]
   if(length(path) > 0) {
-    path <- as.character(path)
+    path <- lapply(path, as.character)
     root <- ""
     if(substr(path[1], 1, 1) == "/") root <- "/"
     n <- length(path)
