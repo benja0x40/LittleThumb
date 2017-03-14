@@ -21,7 +21,6 @@
 # =============================================================================.
 #' LT_Dataset
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #'
 #' @param ...
@@ -44,44 +43,75 @@ is.LT_Dataset <- function(x) { inherits(x, "LT_Dataset") }
 # > FileSystem #################################################################
 
 # =============================================================================.
-#
+# Path to dataset definition
 # -----------------------------------------------------------------------------.
 lt_path.LT_Dataset <- function(obj, workspace, config, path_label = "DTSDIR") {
   LTE <- .lte_env.()
   path <- with(LTE$workspaces, path[match(workspace, name)])
-  path <- make_path(path, make_path(config, path_label), dts$name, ext = ".txt")
+  path <- make_path(path, make_path(config, path_label), obj$name, ext = ".txt")
   path
+}
+
+# =============================================================================.
+# Path to data files
+# -----------------------------------------------------------------------------.
+make_path.LT_Dataset <- function(obj, name) {
+  kid <- obj$MD$keys$id
+  kfl <- obj$MD$keys$files
+  idx <- match(name, obj$TD[[kid]])
+  flp <- paste0(obj$MD$path, obj$TD[[kfl]][idx])
+  flp
 }
 
 # > Dataset ####################################################################
 
 # =============================================================================.
-# Return dataset names
+# Return registered dataset names
 # -----------------------------------------------------------------------------.
-list_datasets <- function(workspace = NULL, x, detailed = F) {
+which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
+
+  LTE <- .lte_env.()
+
+  # TODO: should be based on reg_idx in data.frame Registration interface
+  idx <- integer()
+  if(! is.null(id)) {
+    idx <- match(id, LTE$datasets$id)
+  } else {
+    chk <- ! any(is.null(workspace), is.null(name))
+    checklist(chk, lst = "", msg = "workspace and name required")
+    idx <- base::intersect(
+      which(LTE$datasets$name %in% name),
+      which(LTE$datasets$workspace %in% workspace)
+    )
+  }
+
+  idx
+}
+# =============================================================================.
+# Return registered dataset names
+# -----------------------------------------------------------------------------.
+list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
 
   LTE <- .lte_env.()
 
   if(is.null(workspace)) {
-    wks <- list_workspaces(is_opened == T)
-    if(nrow(wks) == 0) wks <- list_workspaces()
+    workspace <- list_workspaces()
   } else {
-    # verify if workspace is registered
+    chk <- is_registered.data.frame(LTE$workspaces, x = workspace, error = T)
   }
 
   dts <- LTE$datasets
   if(nrow(dts) > 0) {
+    dts <- dts[dts$workspace %in% workspace, ]
     if(! detailed) dts <- dts$name
+  } else {
+    if(! detailed) dts <- character()
   }
 
   dts
-
-  # by default workspace = opened workspaces | all workspaces if none is opened
-  # x is a logical expression (lazy eval)
-  # use td_selector on LTE$datasets
 }
+
 # =============================================================================.
-0
 # Create dataset definition and copy associated data inside a workspace folder
 # -----------------------------------------------------------------------------.
 # Use cases:
@@ -89,31 +119,91 @@ list_datasets <- function(workspace = NULL, x, detailed = F) {
 # - from files within a folder
 # - from a given list of files
 # -----------------------------------------------------------------------------.
+# Make minimal creation procedure (+ retrieve ideas below)
+# and then complexify procedure to include annotations and key columns
+
 create_dataset <- function(
   workspace, source_path = NULL, files = NULL, pattern = NULL,
-  annotation = NULL, file_columns = NULL, id_columns = NULL,
+  annotations = NULL, id_column = NULL, file_columns = NULL,
   name = NULL, path = NULL, delete_source = F, ask = T
 ) {
 
-  workspace <- "WS1"
-  source_path <- "../DOWNLOADS/systemPipeR/inst/unitTests/"
-  files <- NULL
-  pattern <- ".*\\.fastq$"
-  name <- NULL
-  path <- "RAWREADS"
-  delete_source <- F
-  ask <- F
+  # TODO: Cleanup
+  # workspace <- "WS1"
+  # source_path <- "../DOWNLOADS/systemPipeR/inst/unitTests/"
+  # files <- NULL
+  # pattern <- ".*\\.fastq$"
+  # name <- NULL
+  # path <- "RAWREADS"
+  # delete_source <- F
+  # ask <- F
 
   LTE <- .lte_env.()
 
-  # Target workspace ///////////////////////////////////////////////////////////
+  # Make workspace /////////////////////////////////////////////////////////////
 
-  # Workspace must be registered
+  # Workspace must be registered???   TODO: allow to define new workspace
   chk <- is_registered(LTE$workspaces, x = workspace, error = T)
 
   # Create workspace if necessary
   chk <- with(LTE$workspaces, is_created[match(workspace, name)])
   if(! chk) create_workspace(workspace)
+
+  # Make dataset definition ////////////////////////////////////////////////////
+
+  dts <- LT_Dataset()
+
+  # Name the dataset
+  if(! is.null(name)) {
+    dts$name <- name                   # case  1: name
+  } else if(! is.null(path)) {
+    dts$name <- basename(path)         # case  2: path
+  } else {
+    dts$name <- paste0("DTS_", dts$id) # default: id
+  }
+  chk <- ! dts$name %in% list_datasets(workspace)
+  checklist(chk, dts$name, "dataset name already exists")
+
+  # Destination path
+  if(is.null(path)) path <- dts$name
+
+  # Make default meta data
+  dts$MD$path    <- path
+  dts$is_primary <- T
+  dts$MD$source  <- list(annotations = NULL, files = NULL)
+  dts$MD$keys    <- list(id = NULL, files = NULL)
+
+  # Create destination path
+  path <- with(LTE$workspaces, path[match(workspace, name)])
+  path <- make_path(path, dts$MD$path)
+  dir.create(path, showWarnings = F)
+
+  # Make annotations ///////////////////////////////////////////////////////////
+
+  ann <- NULL
+
+  if(! is.null(annotations)) {
+
+    chk <- file.exists(annotations)
+    checklist(chk, annotations, "missing annotation file")
+
+    ann <- read.delim(annotations, stringsAsFactors = F)
+
+    # Update meta data
+    dts$MD$source$annotations <- annotations
+
+    if(! is.null(id_column)) {
+      chk <- is_key(ann, id_column, error = T)
+      dts$MD$keys$id <- id_column
+    } else stop("missing id_column")
+
+    if(! is.null(file_columns)) {
+      chk <- is_key(ann, file_columns, error = T)
+      dts$MD$keys$files <- file_columns
+    } else stop("missing file_columns")
+
+    dts$TD <- ann
+  }
 
   # Identify input files ///////////////////////////////////////////////////////
 
@@ -126,6 +216,7 @@ create_dataset <- function(
   chk <- 0
   chk <- chk + 1 * (length(files) > 0)
   chk <- chk + 2 * (length(source_path) == 1)
+  chk <- chk + 4 * (! is.null(ann))
 
   # Source: files
   if(chk == 1) flp <- files
@@ -144,37 +235,31 @@ create_dataset <- function(
     flp <- sapply(paste0(source_path, "/", flp), make_path)
   }
 
+  # Source: source_path/ann[, "file"]
+  if(bitAnd(4, chk)) {
+    flp <- with(dts, TD[, MD$keys$files])
+    flp <- sapply(paste0(source_path, "/", flp), make_path)
+  }
+
+  # Source: annotation + file column
   flp <- as.character(sapply(flp, make_path))
   chk <- file.exists(flp)
   checklist(chk, flp, "missing files")
 
-  # Make dataset object ////////////////////////////////////////////////////////
+  # Update dataset definition //////////////////////////////////////////////////
 
-  # Make minimal creation procedure (+ retrieve ideas below)
-  # and then complexify procedure to include annotations and key columns
+  dts$MD$source$files <- flp
 
-  dts <- LT_Dataset()
-
-  # Name dataset
-  if(! is.null(name)) {
-    dts$name <- name              # case 1: name
-  } else if(! is.null(path)) {
-    dts$name <- basename(path)  # case 2: path
-  } else {
-    dts$name <- paste0("DTS_", dts$id)            # default: id
+  if(is.null(ann)) {
+    dts$keys$id <- "name"
+    dts$keys$files <- "file"
+    dts$TD <- data.frame(
+      name = basename(flp), file = basename(flp), stringsAsFactors = F
+    )
   }
 
-  # Make destination path
-  if(is.null(path)) path <- dts$name
+  # Copy data files ////////////////////////////////////////////////////////////
 
-  dts$MD$path <- path
-  dts$is_primary <- T
-
-  path <- with(LTE$workspaces, path[match(workspace, name)])
-  path <- make_path(path, dts$MD$path)
-  dir.create(path, showWarnings = F)
-
-  # Copy files
   file.copy(from = flp, to = path, overwrite = F, copy.date = T)
 
   if(delete_source) {
@@ -184,15 +269,10 @@ create_dataset <- function(
       txt_out(flp, sep = "\n", indent = 2)
       del <- confirm_execution(q = F)
     }
-    if(del) file.remove(files)
+    if(del) file.remove(flp)
   }
 
-  # Register dataset object ////////////////////////////////////////////////////
-
-  dts$MD$source <- list(files = flp)
-  dts$TD <- data.frame(
-    name = basename(flp), file = basename(flp), stringsAsFactors = F
-  )
+  # Register dataset definition ////////////////////////////////////////////////
 
   # Save dataset definition
   path <- lt_path(dts, workspace, LTE$config)
@@ -204,8 +284,8 @@ create_dataset <- function(
 
   # Register dataset
   x <- list(
-    id = dts$id, workspace = workspace, name = dts$name, path = dts$MD$path,
-    is_primary = dts$is_primary
+    id = dts$id, workspace = workspace, name = dts$name, items = nrow(dts$TD),
+    path = dts$MD$path, is_primary = dts$is_primary
   )
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
 }
@@ -220,9 +300,20 @@ delete_dataset <- function(name, workspace = NULL) {
 # =============================================================================.
 # Load data into a workspace environment
 # -----------------------------------------------------------------------------.
-open_dataset <- function(name, workspace = NULL) {
+open_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 
   LTE <- .lte_env.()
+
+  chk <- 0
+  chk <- chk + 1 * (length(files) > 0)
+  chk <- chk + 2 * (length(source_path) == 1)
+  chk <- chk + 4 * (! is.null(ann))
+
+
+
+  # 1. Create LT_Channel in LT_Workspace with name = dataset name
+  # 2. Load each data as R object in the LT_Channel
+  #    need to provide a file importer
 
 }
 # =============================================================================.

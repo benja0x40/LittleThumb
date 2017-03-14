@@ -6,6 +6,11 @@
 \usage{
 make_id(n = 1, tag = "")
 }
+\arguments{
+\item{n}{number of identifiers to be generated}
+
+\item{tag}{prefix of generated identifiers}
+}
 \value{
 \code{character}
 }

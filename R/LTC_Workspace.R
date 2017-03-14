@@ -19,7 +19,7 @@
 # =============================================================================.
 # Inherits from: environment
 # =============================================================================.
-setClass(
+trash <- setClass(
   "LT_Workspace", contains = "environment",
   representation = list(
     name = "character", path = "character", datasets = "list", jobs = "list"
@@ -32,6 +32,7 @@ setClass(
 # -----------------------------------------------------------------------------.
 #' @export
 #' @description
+#'
 #'
 #' @param ...
 #'
@@ -50,7 +51,16 @@ LT_Workspace <- function(...) {
 # > Workspace ##################################################################
 
 # =============================================================================.
-# Add {name, path} to LTE$workspaces register
+#' define_workspace
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description
+#' Add {name, path, is_created, is_opened} to LTE$workspaces register
+#'
+#' @param name
+#' @param path
+#'
+#' @return
 # -----------------------------------------------------------------------------.
 define_workspace <- function(name, path) {
 
@@ -75,17 +85,19 @@ define_workspace <- function(name, path) {
 # =============================================================================.
 # Return workspace names
 # -----------------------------------------------------------------------------.
-list_workspaces <- function(x = NULL, detailed = F) {
+list_workspaces <- function(detailed = F, x = NULL) {
 
   LTE <- .lte_env.()
 
-  lst <- NULL
-  if(nrow(LTE$workspaces) > 0) {
-    lst <- td_selector(LTE$workspaces, x, 1:ncol(LTE$workspaces))
-    if(nrow(lst) > 0 & ! detailed) lst <- lst$name
+  wks <- LTE$workspaces
+  if(nrow(wks) > 0) {
+    wks <- td_selector(wks, x, 1:ncol(wks))
+    if(nrow(wks) > 0 & ! detailed) wks <- wks$name
+  } else {
+    if(! detailed) wks <- character()
   }
 
-  lst
+  wks
 }
 # =============================================================================.
 # Create workspace folders

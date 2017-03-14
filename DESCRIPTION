@@ -36,12 +36,12 @@ Suggests:
     knitr,
     rmarkdown
 Description: Automation and traceability for sequencing data analysis
-             with R/Bioconductor.
+    with R/Bioconductor.
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-Collate: 
+Collate:
     'LTF_FileSystem.R'
     'LTF_TextRepresentation.R'
     'LTF_Registration.R'

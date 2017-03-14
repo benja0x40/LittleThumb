@@ -6,6 +6,13 @@
 \usage{
 checklist(chk, lst, msg = "", spc = "\\n")
 }
+\arguments{
+\item{chk}{logical vector}
+
+\item{lst}{character vector}
+
+\item{msg}{message}
+}
 \description{
 checklist
 }

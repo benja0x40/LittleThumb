@@ -7,12 +7,15 @@ options(LittleThumb.testing = T)
 # =============================================================================.
 # Make workspaces for tests
 # -----------------------------------------------------------------------------.
-something_to_test <- function() {
+something_to_test <- function(path = NULL) {
+
+
   resetLittleThumb(ask = F)
   LTE <- .lte_env.()
   cfg <- LTE$config
 
-  path <- make_path(cfg, "USRDIR")
+  if(is.null(path)) path <- make_path(cfg, "USRDIR")
+
   path1 <- make_path(path, "TestWorkspace1")
   path2 <- make_path(path, "TestWorkspace2")
   clear_path(path1)
@@ -71,8 +74,8 @@ test_that("list_workspaces", {
   # Tests
   expect_identical(list_workspaces(detailed = T)$name, c("WS1", "WS2"))
   expect_identical(list_workspaces(), c("WS1", "WS2"))
-  expect_identical(list_workspaces(name == "WS1"), "WS1")
-  expect_identical(list_workspaces(name == "WS2"), "WS2")
+  expect_identical(list_workspaces(F, name == "WS1"), "WS1")
+  expect_identical(list_workspaces(F, name == "WS2"), "WS2")
 })
 
 # + create_workspace -----------------------------------------------------------

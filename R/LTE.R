@@ -56,7 +56,14 @@
   saveRDS(LTE, .lte_path.(LTE$config))
 }
 # =============================================================================.
-#
+#' openLittleThumb
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description
+#' Load or create the LittleThumb environement (LTE), which contains
+#' configuration options as well as the workspace, dataset and job registers.
+#'
+#' @return NULL
 # -----------------------------------------------------------------------------.
 openLittleThumb <- function() {
 
