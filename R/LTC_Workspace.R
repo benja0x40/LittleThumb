@@ -30,9 +30,7 @@ trash <- setClass(
 # =============================================================================.
 #' LT_Workspace
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
-#'
 #'
 #' @param ...
 #'
@@ -48,12 +46,27 @@ LT_Workspace <- function(...) {
 
 # METHODS ######################################################################
 
+# > FileSystem #################################################################
+
+# =============================================================================.
+# Path to dataset definition
+# -----------------------------------------------------------------------------.
+lt_path.LT_Workspace <- function(obj) {
+  obj@path
+}
+
+# =============================================================================.
+# Path to dataset definition
+# -----------------------------------------------------------------------------.
+make_path.LT_Workspace <- function(obj, name) {
+  obj@path
+}
+
 # > Workspace ##################################################################
 
 # =============================================================================.
 #' define_workspace
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #' Add {name, path, is_created, is_opened} to LTE$workspaces register
 #'
@@ -164,7 +177,10 @@ open_workspace <- function(name, path = NULL) {
   }
 
   # Auto load existing datasets and jobs
-
+  if(nrow(LTE$datasets) > 0) {
+    dts <- td_selector(LTE$datasets, workspace == lbl, "lt_path")
+    if(length(dts) > 0)  env[[lbl]]@datasets <- lapply(dts, lt_load)
+  }
 }
 # =============================================================================.
 # Remove workspace environment from R
@@ -174,11 +190,8 @@ close_workspace <- function(name) {
   LTE <- .lte_env.()
   lbl <- name # to avoid ambiguity
 
-  chk <- td_selector(LTE$workspaces, name == lbl, v = "is_opened")
-  if(chk) {
+  chk <- is_registered.data.frame(LTE$workspaces, "name", lbl, error = T)
+  rm(list = lbl, pos = globalenv())
 
-    rm(list = lbl, pos = globalenv())
-
-    register_value(LTE$workspaces, x = lbl, v = "is_opened") <- F
-  }
+  register_value(LTE$workspaces, x = lbl, v = "is_opened") <- F
 }

@@ -80,7 +80,6 @@ check_class <- function(x, class, lst = F, strict = T, error = F) {
 #'   \link{assign},
 #'   \link{environment}
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #' copy or move an R object from the source environment \code{src} to the target
 #' environment \code{pos}.

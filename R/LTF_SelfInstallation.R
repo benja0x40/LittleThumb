@@ -99,7 +99,6 @@
 # =============================================================================.
 #' installLittleThumb
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #' Must be run after standard installation of the R package.
 #'

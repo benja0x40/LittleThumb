@@ -64,6 +64,7 @@ something_to_test <- function(path = NULL) {
 
 # TESTS ########################################################################
 
+# =============================================================================.
 something_to_test(path = "/media/SSD512GB/TESTS/")
 
 list_workspaces(detailed = T)
@@ -104,5 +105,13 @@ create_dataset(
   id_column = "name", file_columns = "file"
 )
 
+closeLittleThumb()
 
+# =============================================================================.
+openLittleThumb()
+list_workspaces(detailed = T)
+list_datasets(detailed = T)
+
+open_workspace("WS1")
+open_workspace("WS2")
 

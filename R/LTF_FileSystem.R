@@ -74,7 +74,6 @@ make_paths <- function(obj, name, root = "", key = 1, value = 2) {
 # =============================================================================.
 #' make_path
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #' Path construction using depth search first.
 #' Note: Does not support multiple occurence of the same path key in the path

@@ -32,13 +32,10 @@
 #
 # -----------------------------------------------------------------------------.
 .lte_is_loaded. <- function(silent = T, error = F) {
-  chk <- F
-  if(exists(.lte_name.(), where = globalenv())) {
-    if(! silent) message("LittleThumb is active")
-    chk <- T
-  } else {
-    if(error) stop("LittleThumb is not active")
-  }
+  chk <- exists(.lte_name.(), where = globalenv())
+  msg <- ifelse(chk, "LittleThumb is active", "LittleThumb is not active")
+  if(error & ! chk) stop(msg)
+  if(! silent) message(msg)
   chk
 }
 # =============================================================================.
@@ -58,7 +55,6 @@
 # =============================================================================.
 #' openLittleThumb
 # -----------------------------------------------------------------------------.
-#' @export
 #' @description
 #' Load or create the LittleThumb environement (LTE), which contains
 #' configuration options as well as the workspace, dataset and job registers.
@@ -67,7 +63,7 @@
 # -----------------------------------------------------------------------------.
 openLittleThumb <- function() {
 
-  if(! .lte_is_loaded.(silent = F)) {
+  if(! .lte_is_loaded.()) {
 
     # Load package config
     cfg <- lt_load(.pkg_config_file.())
@@ -100,14 +96,19 @@ openLittleThumb <- function() {
 #
 # -----------------------------------------------------------------------------.
 closeLittleThumb <- function(ask = T) {
-  if(! .lte_is_loaded.(silent = F)) {
+  if(.lte_is_loaded.()) {
+
+    lst <- list_workspaces(detailed = F, is_opened == TRUE)
+
     # 1. Confirm execution
     if(ask) {
-      message("")
+      message("Close the following workspaces")
+      txt_out(lst, sep = "\n", indent = 2)
       ans <- confirm_execution(q = F)
     }
 
     # 2. Close workspaces
+    close_workspace(lst)
 
     # 3. Save LTE
     .lte_save.()

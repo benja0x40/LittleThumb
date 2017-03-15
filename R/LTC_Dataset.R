@@ -63,6 +63,11 @@ make_path.LT_Dataset <- function(obj, name) {
   flp
 }
 
+# =============================================================================.
+# Path to data files
+# -----------------------------------------------------------------------------.
+
+
 # > Dataset ####################################################################
 
 # =============================================================================.
@@ -285,7 +290,7 @@ create_dataset <- function(
   # Register dataset
   x <- list(
     id = dts$id, workspace = workspace, name = dts$name, items = nrow(dts$TD),
-    path = dts$MD$path, is_primary = dts$is_primary
+    is_primary = dts$is_primary, path = dts$MD$path, lt_path = path
   )
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
 }
@@ -305,15 +310,29 @@ open_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
   LTE <- .lte_env.()
 
   chk <- 0
-  chk <- chk + 1 * (length(files) > 0)
-  chk <- chk + 2 * (length(source_path) == 1)
-  chk <- chk + 4 * (! is.null(ann))
+  chk <- chk +  1 * (length(id) > 0)
+  chk <- chk +  2 * (length(name) == length(workspace))
+  chk <- chk +  4 * (length(workspace) == 1)
+  chk <- chk +  8 * (length(name) == 1)
+  chk <- chk + 16 * (length(workspace) > 1)
+  chk <- chk + 32 * (length(name) > 1)
 
 
+  x <- lt_load(file = "/media/SSD512GB/TESTS/TestWorkspace1/_LittleThumb_/datasets/TDX.txt")
+  # ids
+  if(chk == 1) {
+    chk <- 0
+  }
+  # {workspace, name} one to one
+  if(chk %in% c(2 + 4 + 8, 2 + 16 + 32)) {
+    chk <- 0
+  }
+  # one workspace, several names
+  if(chk == 4 + 32) {
+    chk <- 0
+  }
+  if(chk != 0) stop("incorrect arguments")
 
-  # 1. Create LT_Channel in LT_Workspace with name = dataset name
-  # 2. Load each data as R object in the LT_Channel
-  #    need to provide a file importer
 
 }
 # =============================================================================.
@@ -322,6 +341,18 @@ open_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 close_dataset <- function(name, workspace = NULL) {
 
   LTE <- .lte_env.()
+
+}
+# =============================================================================.
+# Load data into a workspace environment
+# -----------------------------------------------------------------------------.
+load_data <- function(id = NULL, workspace = NULL, name = NULL) {
+
+  LTE <- .lte_env.()
+
+  # 1. Create LT_Channel in LT_Workspace with name = dataset name
+  # 2. Load each data as R object in the LT_Channel
+  #    need to provide a file importer
 
 }
 
