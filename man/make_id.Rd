@@ -4,7 +4,7 @@
 \alias{make_id}
 \title{make_id}
 \usage{
-make_id(n = 1, tag = "")
+make_id(n = 1, tag = "LT")
 }
 \arguments{
 \item{n}{number of identifiers to be generated}

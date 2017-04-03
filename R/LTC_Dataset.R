@@ -7,7 +7,6 @@
 #' @include LTF_TextRepresentation.R
 #' @include LTF_FileSystem.R
 
-
 # Class definitions & implementations
 #' @include LTC_TabularData.R
 #' @include LTC_MetaData.R
@@ -53,20 +52,30 @@ lt_path.LT_Dataset <- function(obj, workspace, config, path_label = "DTSDIR") {
 }
 
 # =============================================================================.
-# Path to data files
+# Path to dataset folder
 # -----------------------------------------------------------------------------.
-make_path.LT_Dataset <- function(obj, name) {
-  kid <- obj$MD$keys$id
-  kfl <- obj$MD$keys$files
-  idx <- match(name, obj$TD[[kid]])
-  flp <- paste0(obj$MD$path, obj$TD[[kfl]][idx])
-  flp
+self_path.LT_Dataset <- function(obj) {
+  obj$MD$path
 }
 
 # =============================================================================.
 # Path to data files
 # -----------------------------------------------------------------------------.
-
+elements_path.LT_Dataset <- function(obj, name = NULL) {
+  kid <- obj$MD$keys$id
+  kfl <- obj$MD$keys$files
+  if(is.null(name)) idx <- rep(T, nrow(obj$TD))
+  else idx <- match(name, obj$TD[[kid]])
+  flp <- paste0(obj$MD$path, "/", obj$TD[[kfl]][idx])
+  flp
+}
+# =============================================================================.
+# Path to data files
+# -----------------------------------------------------------------------------.
+elements_name <- function(obj) {
+  kid <- obj$MD$keys$id
+  obj$TD[[kid]]
+}
 
 # > Dataset ####################################################################
 
@@ -256,8 +265,8 @@ create_dataset <- function(
   dts$MD$source$files <- flp
 
   if(is.null(ann)) {
-    dts$keys$id <- "name"
-    dts$keys$files <- "file"
+    dts$MD$keys$id <- "name"
+    dts$MD$keys$files <- "file"
     dts$TD <- data.frame(
       name = basename(flp), file = basename(flp), stringsAsFactors = F
     )
@@ -302,58 +311,112 @@ delete_dataset <- function(name, workspace = NULL) {
   LTE <- .lte_env.()
 
 }
-# =============================================================================.
-# Load data into a workspace environment
-# -----------------------------------------------------------------------------.
-open_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 
-  LTE <- .lte_env.()
+# =============================================================================.
+# TODO: make sure the workspaces are opened
+# -----------------------------------------------------------------------------.
+apply2data <- function(
+  executor, fun, workspace = NULL, dataset = NULL, element = NULL, ...
+) {
+
+  env <- globalenv()
+
+  id <- NULL
 
   chk <- 0
   chk <- chk +  1 * (length(id) > 0)
-  chk <- chk +  2 * (length(name) == length(workspace))
+  chk <- chk +  2 * (length(dataset) == length(workspace))
   chk <- chk +  4 * (length(workspace) == 1)
-  chk <- chk +  8 * (length(name) == 1)
+  chk <- chk +  8 * (length(dataset) == 1)
   chk <- chk + 16 * (length(workspace) > 1)
-  chk <- chk + 32 * (length(name) > 1)
+  chk <- chk + 32 * (length(dataset) > 1)
 
-
-  x <- lt_load(file = "/media/SSD512GB/TESTS/TestWorkspace1/_LittleThumb_/datasets/TDX.txt")
   # ids
-  if(chk == 1) {
+  if(chk == 1) stop("not implemented")
+  # one or several workspaces, no dataset
+  if(chk %in% c(4, 16)) {
     chk <- 0
+    for(i in 1:length(workspace)) {
+      for(dataset in names(env[[workspace[i]]]@datasets)) {
+        executor(workspace[i], env[[workspace]]@datasets[[dataset]], fun, ...)
+      }
+    }
   }
-  # {workspace, name} one to one
-  if(chk %in% c(2 + 4 + 8, 2 + 16 + 32)) {
+  # {workspace, dataset} one to one
+  if(chk %in% c(2 + 16 + 32)) {
     chk <- 0
+    for(i in 1:length(workspace)) {
+      idx <- which_dataset(workspace = workspace[i], name = dataset[i])
+      executor(workspace[i], env[[workspace[i]]]@datasets[[idx]], fun, ...)
+    }
   }
-  # one workspace, several names
+  # one workspace, one datasets
+  if(chk == 2 + 4 + 8) {
+    chk <- 0
+    idx <- which_dataset(workspace = workspace, name = dataset)
+    executor(workspace, env[[workspace]]@datasets[[idx]], fun, ...)
+  }
+  # one workspace, several datasets
   if(chk == 4 + 32) {
     chk <- 0
+    idx <- which_dataset(workspace = workspace, name = dataset)
+    for(i in idx) executor(workspace, env[[workspace]]@datasets[[i]], fun, ...)
   }
   if(chk != 0) stop("incorrect arguments")
-
-
 }
+
 # =============================================================================.
-# Remove data from a workspace environment
+# Load data from workspace/dataset folders into the workspace environment
 # -----------------------------------------------------------------------------.
-close_dataset <- function(name, workspace = NULL) {
+load_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, reader = read.delim, ...
+) {
 
   LTE <- .lte_env.()
 
+  rd <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    flp <- paste0(self_path(env[[wks]]), "/", elements_path(dts))
+    env[[wks]][[dts$name]] <- lapply(flp, FUN = fun, ...)
+    names(env[[wks]][[dts$name]]) <- elements_name(dts)
+  }
+
+  apply2data(executor = rd, fun = reader, workspace, dataset, element, ...)
 }
 # =============================================================================.
-# Load data into a workspace environment
+# Save data from the workspace environment into workspace/dataset folders
 # -----------------------------------------------------------------------------.
-load_data <- function(id = NULL, workspace = NULL, name = NULL) {
+save_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
+) {
 
   LTE <- .lte_env.()
 
-  # 1. Create LT_Channel in LT_Workspace with name = dataset name
-  # 2. Load each data as R object in the LT_Channel
-  #    need to provide a file importer
+  wd <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    flp <- paste0(self_path(env[[wks]]), "/", elements_path(dts))
+    for(lbl in elements_name(dts)) {
+      writer(env[[wks]][[dts$name]][[lbl]], flp, ...)
+    }
+  }
 
+  apply2data(executor = wd, fun = writer, workspace, dataset, element, ...)
+}
+# =============================================================================.
+# Remove (unload) data from the workspace environment
+# -----------------------------------------------------------------------------.
+close_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
+) {
+
+  LTE <- .lte_env.()
+
+  cd <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    env[[wks]][[dts$name]] <- NULL
+  }
+
+  apply2data(executor = cd, fun = NULL, workspace, dataset, element, ...)
 }
 
 

@@ -34,7 +34,7 @@ valid_id <- function(x, type = "R", error = F) {
 # -----------------------------------------------------------------------------.
 #' @return \code{character}
 # -----------------------------------------------------------------------------.
-make_id <- function(n = 1, tag = "") {
+make_id <- function(n = 1, tag = "LT") {
   tag <- paste0(tag, format(Sys.time(), "%Y%m%d_%H%M_"))
   key <- sapply(rep("", n), tempfile, tmpdir = "")
   paste0(tag, basename(key))

@@ -115,3 +115,7 @@ list_datasets(detailed = T)
 open_workspace("WS1")
 open_workspace("WS2")
 
+load_data(workspace = "WS2", stringsAsFactors = F)
+close_data(workspace = "WS2")
+
+# open_dataset(workspace = "WS2")

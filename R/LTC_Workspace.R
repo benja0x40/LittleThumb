@@ -49,16 +49,9 @@ LT_Workspace <- function(...) {
 # > FileSystem #################################################################
 
 # =============================================================================.
-# Path to dataset definition
+# Path to workspace folder
 # -----------------------------------------------------------------------------.
-lt_path.LT_Workspace <- function(obj) {
-  obj@path
-}
-
-# =============================================================================.
-# Path to dataset definition
-# -----------------------------------------------------------------------------.
-make_path.LT_Workspace <- function(obj, name) {
+self_path.LT_Workspace <- function(obj) {
   obj@path
 }
 
@@ -176,10 +169,12 @@ open_workspace <- function(name, path = NULL) {
     register_value(LTE$workspaces, x = lbl, v = "is_opened") <- T
   }
 
-  # Auto load existing datasets and jobs
+  # Auto load existing dataset and job lists
   if(nrow(LTE$datasets) > 0) {
     dts <- td_selector(LTE$datasets, workspace == lbl, "lt_path")
     if(length(dts) > 0)  env[[lbl]]@datasets <- lapply(dts, lt_load)
+    ids <- td_selector(LTE$datasets, workspace == lbl, "id")
+    names(env[[lbl]]@datasets) <- ids
   }
 }
 # =============================================================================.

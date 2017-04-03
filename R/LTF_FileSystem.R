@@ -9,6 +9,10 @@ create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
 check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
 
 lt_path <- function (obj, ...) { UseMethod("lt_path", obj) }
+self_path <- function (obj, ...) { UseMethod("self_path", obj) }
+elements_path <- function (obj, ...) { UseMethod("elements_path", obj) }
+elements_name <- function (obj, ...) { UseMethod("elements_name", obj) }
+
 # lt_save <- function (obj, ...) { UseMethod("lt_save", obj) }
 # lt_load <- function (con, ...) { UseMethod("lt_load", obj) }
 # -----------------------------------------------------------------------------.
