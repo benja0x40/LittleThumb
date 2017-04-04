@@ -57,6 +57,11 @@ lt_path.LT_Dataset <- function(obj, workspace, config, path_label = "DTSDIR") {
 self_path.LT_Dataset <- function(obj) {
   obj$MD$path
 }
+# -----------------------------------------------------------------------------.
+`self_path<-.LT_Dataset` <- function(obj, path) {
+  obj$MD$path <- path
+  obj
+}
 
 # =============================================================================.
 # Path to data files
@@ -66,8 +71,7 @@ elements_path.LT_Dataset <- function(obj, name = NULL) {
   kfl <- obj$MD$keys$files
   if(is.null(name)) idx <- rep(T, nrow(obj$TD))
   else idx <- match(name, obj$TD[[kid]])
-  flp <- paste0(obj$MD$path, "/", obj$TD[[kfl]][idx])
-  flp
+  obj$TD[[kfl]][idx]
 }
 # =============================================================================.
 # Path to data files
@@ -133,33 +137,17 @@ list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
 # - from files within a folder
 # - from a given list of files
 # -----------------------------------------------------------------------------.
-# Make minimal creation procedure (+ retrieve ideas below)
-# and then complexify procedure to include annotations and key columns
-
 create_dataset <- function(
   workspace, source_path = NULL, files = NULL, pattern = NULL,
-  annotations = NULL, id_column = NULL, file_columns = NULL,
+  annotations = NULL, id_column = "name", file_columns = "file",
   name = NULL, path = NULL, delete_source = F, ask = T
 ) {
-
-  # TODO: Cleanup
-  # workspace <- "WS1"
-  # source_path <- "../DOWNLOADS/systemPipeR/inst/unitTests/"
-  # files <- NULL
-  # pattern <- ".*\\.fastq$"
-  # name <- NULL
-  # path <- "RAWREADS"
-  # delete_source <- F
-  # ask <- F
 
   LTE <- .lte_env.()
 
   # Make workspace /////////////////////////////////////////////////////////////
 
-  # Workspace must be registered???   TODO: allow to define new workspace
   chk <- is_registered(LTE$workspaces, x = workspace, error = T)
-
-  # Create workspace if necessary
   chk <- with(LTE$workspaces, is_created[match(workspace, name)])
   if(! chk) create_workspace(workspace)
 
@@ -198,23 +186,22 @@ create_dataset <- function(
 
   if(! is.null(annotations)) {
 
-    chk <- file.exists(annotations)
-    checklist(chk, annotations, "missing annotation file")
-
-    ann <- read.delim(annotations, stringsAsFactors = F)
+    if(is.data.frame(annotations)) {
+      ann <- annotations
+      annotations <- "data.frame"
+    } else {
+      chk <- file.exists(annotations)
+      checklist(chk, annotations, "missing annotation file")
+      ann <- read.delim(annotations, stringsAsFactors = F)
+    }
 
     # Update meta data
     dts$MD$source$annotations <- annotations
 
-    if(! is.null(id_column)) {
-      chk <- is_key(ann, id_column, error = T)
-      dts$MD$keys$id <- id_column
-    } else stop("missing id_column")
+    chk <- is_key(ann, id_column, error = T)
+    dts$MD$keys$id <- id_column
 
-    if(! is.null(file_columns)) {
-      chk <- is_key(ann, file_columns, error = T)
-      dts$MD$keys$files <- file_columns
-    } else stop("missing file_columns")
+    dts$MD$keys$files <- file_columns
 
     dts$TD <- ann
   }
@@ -231,31 +218,40 @@ create_dataset <- function(
   chk <- chk + 1 * (length(files) > 0)
   chk <- chk + 2 * (length(source_path) == 1)
   chk <- chk + 4 * (! is.null(ann))
+  chk <- chk + 8 * (file_columns %in% colnames(ann))
 
   # Source: files
-  if(chk == 1) flp <- files
+  if(chk %in% c(1, 1 + 4)) flp <- sapply(files, make_path)
 
   # Source: path
-  if(chk == 2) {
+  if(chk %in% c(2, 2 + 4)) {
     flp <- dir(source_path, include.dirs = F)
     if(! is.null(pattern)) {
       flp <- flp[grepl(pattern, flp, perl = T, ignore.case = F)]
     }
-    flp <- paste0(source_path, "/", flp)
-  }
-
-  # Source: source_path/files
-  if(chk == 3) {
     flp <- sapply(paste0(source_path, "/", flp), make_path)
   }
 
-  # Source: source_path/ann[, "file"]
-  if(bitAnd(4, chk)) {
+  # Source: path/files
+  if(chk %in% c(3, 3 + 4)) {
+    flp <- sapply(paste0(source_path, "/", files), make_path)
+  }
+
+  # Source: ann[, "file"]
+  if(chk == 4 + 8) {
+    flp <- with(dts, TD[, MD$keys$files])
+    flp <- sapply(flp, make_path)
+  }
+
+  # Source: path/ann[, "file"]
+  if(chk == 2 + 4 + 8) {
     flp <- with(dts, TD[, MD$keys$files])
     flp <- sapply(paste0(source_path, "/", flp), make_path)
   }
 
-  # Source: annotation + file column
+  if(length(flp) == 0) stop("incorrect arguments")
+
+  # Resolved paths
   flp <- as.character(sapply(flp, make_path))
   chk <- file.exists(flp)
   checklist(chk, flp, "missing files")
@@ -265,11 +261,12 @@ create_dataset <- function(
   dts$MD$source$files <- flp
 
   if(is.null(ann)) {
-    dts$MD$keys$id <- "name"
-    dts$MD$keys$files <- "file"
-    dts$TD <- data.frame(
-      name = basename(flp), file = basename(flp), stringsAsFactors = F
-    )
+    ann <- data.frame(basename(flp), basename(flp), stringsAsFactors = F)
+    colnames(ann) <- c(id_column, file_columns)
+    dts$TD <- ann
+
+  } else {
+    dts$TD[[file_columns]] <- basename(flp)
   }
 
   # Copy data files ////////////////////////////////////////////////////////////
@@ -302,20 +299,59 @@ create_dataset <- function(
     is_primary = dts$is_primary, path = dts$MD$path, lt_path = path
   )
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
+
+  # Update LTE /////////////////////////////////////////////////////////////////
+  .lte_save.()
 }
+
+# =============================================================================.
+# Move/Rename dataset
+# -----------------------------------------------------------------------------.
+clone_dataset <- function(workspace, dataset, name, path = NULL) {
+
+  LTE <- .lte_env.()
+  env <- globalenv()
+
+  dts <- env[[workspace]]@datasets[[dataset]]
+  obj$MD$source <- list(id = dts$id, name = dts$name)
+  dts$id <- make_id()
+  dts$name <- name
+  dts$is_primary <- F
+  if(! is.null(path)) self_path(dts) <- path
+
+  # Save the cloned dataset definition
+  path <- lt_path(dts, workspace, LTE$config)
+  lt_save(dts, path)
+
+  # Store the cloned dataset definition
+  env[[workspace]]@datasets[[dts$name]] <- dts
+  env[[workspace]][[dts$name]] <- env[[workspace]][[dataset]]
+
+  # Register the cloned dataset
+  x <- list(
+    id = dts$id, workspace = workspace, name = dts$name, items = nrow(dts$TD),
+    is_primary = dts$is_primary, path = dts$MD$path, lt_path = path
+  )
+
+  LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
+}
+
+# =============================================================================.
+# Move/Rename dataset
+# -----------------------------------------------------------------------------.
+move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
+
 # =============================================================================.
 # Delete dataset definition and associated data from a workspace folder
 # -----------------------------------------------------------------------------.
-delete_dataset <- function(name, workspace = NULL) {
-
-  LTE <- .lte_env.()
-
-}
+# delete_dataset <- function(workspace, dataset) { }
+# clone_dataset <- function(workspace, dataset, name, path = NULL) { }
+# merge_datasets <- function(workspace, dataset1, dataset2, name, path = NULL, delete = F) { }
 
 # =============================================================================.
 # TODO: make sure the workspaces are opened
 # -----------------------------------------------------------------------------.
-apply2data <- function(
+apply2dataset <- function(
   executor, fun, workspace = NULL, dataset = NULL, element = NULL, ...
 ) {
 
@@ -372,16 +408,35 @@ load_data <- function(
   workspace = NULL, dataset = NULL, element = NULL, reader = read.delim, ...
 ) {
 
-  LTE <- .lte_env.()
-
   rd <- function(wks, dts, fun, ...) {
     env <- globalenv()
-    flp <- paste0(self_path(env[[wks]]), "/", elements_path(dts))
+    flp <- paste(
+      self_path(env[[wks]]), self_path(dts), elements_path(dts), sep = "/"
+    )
     env[[wks]][[dts$name]] <- lapply(flp, FUN = fun, ...)
     names(env[[wks]][[dts$name]]) <- elements_name(dts)
   }
+  apply2dataset(executor = rd, fun = reader, workspace, dataset, element, ...)
+}
+# =============================================================================.
+# Move data from workspace/dataset to workspace/dataset
+# -----------------------------------------------------------------------------.
+move_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, path, ...
+) {
 
-  apply2data(executor = rd, fun = reader, workspace, dataset, element, ...)
+  mv <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    src <- paste(
+      self_path(env[[wks]]), self_path(dts), elements_path(dts), sep = "/"
+    )
+    tgt <- paste(
+      self_path(env[[wks]]), path, elements_path(dts), sep = "/"
+    )
+    ### execute(paste("mv -f", src, tgt)) ###
+    ### env[[wks]][[dts$name]] ###
+  }
+  apply2dataset(executor = mv, fun = NULL, workspace, dataset, element, ...)
 }
 # =============================================================================.
 # Save data from the workspace environment into workspace/dataset folders
@@ -390,33 +445,29 @@ save_data <- function(
   workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
 ) {
 
-  LTE <- .lte_env.()
-
   wd <- function(wks, dts, fun, ...) {
     env <- globalenv()
-    flp <- paste0(self_path(env[[wks]]), "/", elements_path(dts))
+    flp <- paste(
+      self_path(env[[wks]]), self_path(dts), elements_path(dts), sep = "/"
+    )
     for(lbl in elements_name(dts)) {
       writer(env[[wks]][[dts$name]][[lbl]], flp, ...)
     }
   }
-
-  apply2data(executor = wd, fun = writer, workspace, dataset, element, ...)
+  apply2dataset(executor = wd, fun = writer, workspace, dataset, element, ...)
 }
 # =============================================================================.
 # Remove (unload) data from the workspace environment
 # -----------------------------------------------------------------------------.
 close_data <- function(
-  workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
+  workspace = NULL, dataset = NULL, element = NULL, ...
 ) {
-
-  LTE <- .lte_env.()
 
   cd <- function(wks, dts, fun, ...) {
     env <- globalenv()
     env[[wks]][[dts$name]] <- NULL
   }
-
-  apply2data(executor = cd, fun = NULL, workspace, dataset, element, ...)
+  apply2dataset(executor = cd, fun = NULL, workspace, dataset, element, ...)
 }
 
 

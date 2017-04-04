@@ -5,7 +5,7 @@
 # -----------------------------------------------------------------------------.
 make_test_data <- function(path, tag, n = 10, m = 100) {
 
-  dir.create(path, showWarnings = F)
+  dir.create(path, showWarnings = F, recursive = T)
 
   ann  <- data.frame(
     name = paste0(tag, "_", LETTERS[1:n]),
@@ -41,7 +41,6 @@ something_to_test <- function(path = NULL) {
   LTE <- .lte_env.()
   cfg <- LTE$config
 
-
   if(is.null(path)) path <- make_path(cfg, "USRDIR")
 
   make_test_data(make_path(path, "TestDataX"), tag = "TDX", n = 2, m = 100)
@@ -65,43 +64,46 @@ something_to_test <- function(path = NULL) {
 # TESTS ########################################################################
 
 # =============================================================================.
-something_to_test(path = "/media/SSD512GB/TESTS/")
+root_path <- "./DEVTESTS"
+root_path <- "/media/SSD512GB/TESTS"
+
+something_to_test(path = root_path)
 
 list_workspaces(detailed = T)
 
 open_workspace("WS1")
 create_dataset(
   "WS1", name = "TDX",
-  source_path = "/media/SSD512GB/TESTS/TestDataX/", pattern = "TD"
+  source_path = make_path(root_path, "TestDataX"), pattern = "TD"
 )
 create_dataset(
   "WS1", name = "TDY",
-  source_path = "/media/SSD512GB/TESTS/TestDataY/", pattern = "TD"
+  source_path = make_path(root_path, "TestDataY"), pattern = "TD"
 )
 create_dataset(
   "WS1", name = "TDZ",
-  source_path = "/media/SSD512GB/TESTS/TestDataZ/", pattern = "TD"
+  source_path = make_path(root_path, "TestDataZ"), pattern = "TD"
 )
 
 open_workspace("WS2")
 create_dataset(
   "WS2", path = "TDX",
-  source_path = "/media/SSD512GB/TESTS/TestDataX/", pattern = "TD",
-  annotations = "/media/SSD512GB/TESTS/TestDataX/Annotations.txt",
+  source_path = make_path(root_path, "TestDataX"), pattern = "TD",
+  annotations = make_path(root_path, "TestDataX", "Annotations.txt"),
   id_column = "name", file_columns = "file"
 )
 
 create_dataset(
   "WS2", path = "TDY",
-  source_path = "/media/SSD512GB/TESTS/TestDataY/", pattern = "TD",
-  annotations = "/media/SSD512GB/TESTS/TestDataY/Annotations.txt",
+  source_path = make_path(root_path, "TestDataY"), pattern = "TD",
+  annotations = make_path(root_path, "TestDataY", "Annotations.txt"),
   id_column = "name", file_columns = "file"
 )
 
 create_dataset(
   "WS2", path = "TDZ",
-  source_path = "/media/SSD512GB/TESTS/TestDataZ/",
-  annotations = "/media/SSD512GB/TESTS/TestDataZ/Annotations.txt",
+  source_path = make_path(root_path, "TestDataZ"),
+  annotations = make_path(root_path, "TestDataZ", "Annotations.txt"),
   id_column = "name", file_columns = "file"
 )
 
@@ -118,4 +120,44 @@ open_workspace("WS2")
 load_data(workspace = "WS2", stringsAsFactors = F)
 close_data(workspace = "WS2")
 
-# open_dataset(workspace = "WS2")
+# =============================================================================.
+resetLittleThumb(ask = F)
+rm(list = ls())
+openLittleThumb()
+
+# =============================================================================.
+root_path <- "/data/ANALYSIS_LabProjects/Project_ChIP-seq_Normalization/FMO_SpikeIN_20160811"
+define_workspace("WS1", "~/LT_DEV_TESTS")
+create_workspace("WS1")
+open_workspace("WS1")
+
+ann <- read.delim(
+  make_path(root_path, "SampleAnnotations.txt"), stringsAsFactors = F
+)
+lst <- paste0(root_path, "/ALL_RDATA/ALN/", ann$Name, ".rdata")
+checklist(file.exists(lst), lst)
+
+# stop("Here")
+
+create_dataset(
+  "WS1", path = "MAPPED_READS", files = lst,
+  annotations = ann,
+  id_column = "Name", file_columns = "file"
+)
+
+load_data("WS1", reader = readRDS)
+
+filter_reads <- function(
+  workspace = NULL, dataset = NULL, element = NULL, ...
+) {
+
+  fr <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    env[[wks]][[dts$name]] <- lapply(
+      env[[wks]][[dts$name]], function(x) x[with(x) < 76]
+    )
+  }
+  apply2dataset(executor = cd, fun = NULL, workspace, dataset, element, ...)
+}
+
+

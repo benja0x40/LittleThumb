@@ -54,6 +54,11 @@ LT_Workspace <- function(...) {
 self_path.LT_Workspace <- function(obj) {
   obj@path
 }
+# -----------------------------------------------------------------------------.
+`self_path<-.LT_Workspace` <- function(obj, path) {
+  obj@path <- path
+  obj
+}
 
 # > Workspace ##################################################################
 
@@ -153,6 +158,7 @@ delete_workspace <- function(name, ask = T) {
 open_workspace <- function(name, path = NULL) {
 
   LTE <- .lte_env.()
+  env <- globalenv()
   lbl <- name # to avoid ambiguity
 
   chk <- td_selector(LTE$workspaces, name == lbl, v = "is_created")
@@ -160,8 +166,6 @@ open_workspace <- function(name, path = NULL) {
 
   chk <- td_selector(LTE$workspaces, name == lbl, v = "is_opened")
   if(! chk) {
-
-    env <- globalenv()
     env[[lbl]] <- LT_Workspace()
     env[[lbl]]@name <- lbl
     env[[lbl]]@path <- td_selector(LTE$workspaces, name == lbl, v = "path")
@@ -169,7 +173,7 @@ open_workspace <- function(name, path = NULL) {
     register_value(LTE$workspaces, x = lbl, v = "is_opened") <- T
   }
 
-  # Auto load existing dataset and job lists
+  # Auto load existing datasets
   if(nrow(LTE$datasets) > 0) {
     dts <- td_selector(LTE$datasets, workspace == lbl, "lt_path")
     if(length(dts) > 0)  env[[lbl]]@datasets <- lapply(dts, lt_load)
