@@ -25,7 +25,7 @@ options('download.file.method.GEOquery' = 'libcurl')
 # =============================================================================.
 # External configuration
 # -----------------------------------------------------------------------------.
-MAPPING_INDEXES <- paste0(config_path(), "/MAPPING_INDEXES.txt")
+MAPPING_INDEXES <- make_path(config_path(), "MAPPING_INDEXES.txt")
 
 if(! file.exists(MAPPING_INDEXES)) stop("package is broken")
 MAPPING_INDEXES <- read.delim(MAPPING_INDEXES, stringsAsFactors = F)
@@ -36,10 +36,9 @@ MAPPING_INDEXES <- filter(MAPPING_INDEXES, hostname == host_name())
 # -----------------------------------------------------------------------------.
 STARTTIME <- Sys.time()
 TODAY     <- format(STARTTIME, "%d.%m.%Y")
-JOBID     <- job_identifier()
+JOBID     <- make_id()
 LAUNCHDIR <- getwd()
 CMDFILE   <- "commands.sh"
-AUTODIR   <- ".AUTOMATION."
 ANNDIR    <- "_METADATA_"
 JOBFILE   <- paste0(ANNDIR, "/JOBS.txt")
 LOGDIR    <- "_LOGFILES_"
@@ -57,35 +56,32 @@ THREADSNBR <- 4
 
 # =============================================================================.
 # Developer informations (to be hidden)
+# help to manage command syntaxes and to make sure modules start within a clean
+# environment
 # -----------------------------------------------------------------------------.
-msg_line("=")
-print(cmd_line()) # help to manage command syntaxes
-msg_line()
-print(ls()) # help to make sure modules start within a clean environment
-msg_line()
+txt_out(x = "=")
+txt_out(cmd_line())
+txt_out(x = "-")
+txt_out(paste(ls(), collapse = "\n"))
+txt_out(x = "-")
 # -----------------------------------------------------------------------------.
 JOBARGS <- cmd_args()
 # -----------------------------------------------------------------------------.
-rex <- "^import-geo "
-if(grepl(rex, JOBARGS, perl = T)) {
-  JOBARGS <- job_args(rex, JOBARGS)
-  rm(rex)
-  source(paste0(modules_path(), "/ImportDataFromGEO.R"))
+for(cmd in list_commands()) {
+  rex <- paste0("^", cmd, " ")
+  if(grepl(rex, JOBARGS, perl = T)) {
+    JOBARGS <- job_args(rex, JOBARGS)
+    rm(rex)
+    source(list_commands(detailed = T)$path[match(cmd, list_commands())])
+  }
 }
 # -----------------------------------------------------------------------------.
-rex <- "^import-basespace "
-if(grepl(rex, JOBARGS, perl = T)) {
-  JOBARGS <- job_args(rex, JOBARGS)
-  rm(rex)
-  source(paste0(modules_path(), "/ImportDataFromBaseSpace.R"))
-}
-# -----------------------------------------------------------------------------.
-rex <- "^(littlethumb) +map-reads +(.*)"
-if(grepl(rex, JOBARGS, perl = T)) {
-  JOBARGS <- job_args(rex, JOBARGS)
-  rm(rex)
-  source(paste0(modules_path(), "/ReadsMapping.R"))
-}
+# rex <- "^(littlethumb) +map-reads +(.*)"
+# if(grepl(rex, JOBARGS, perl = T)) {
+#   JOBARGS <- job_args(rex, JOBARGS)
+#   rm(rex)
+#   source(paste0(modules_path(), "/ReadsMapping.R"))
+# }
 # -----------------------------------------------------------------------------.
 
 # EXIT #########################################################################

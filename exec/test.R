@@ -137,7 +137,7 @@ ann <- read.delim(
 lst <- paste0(root_path, "/ALL_RDATA/ALN/", ann$Name, ".rdata")
 checklist(file.exists(lst), lst)
 
-# stop("Here")
+stop("Here")
 
 create_dataset(
   "WS1", path = "MAPPED_READS", files = lst,

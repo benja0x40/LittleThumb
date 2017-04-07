@@ -41,7 +41,7 @@ License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-Collate:
+Collate: 
     'LTF_FileSystem.R'
     'LTF_TextRepresentation.R'
     'LTF_Registration.R'
@@ -56,4 +56,5 @@ Collate:
     'LTC_Dataset.R'
     'LTE.R'
     'LTF_SelfInstallation.R'
+    'LTF_data.frame.R'
     'zzz.R'
