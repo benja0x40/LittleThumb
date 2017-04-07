@@ -27,7 +27,7 @@ suggestMappingIndexes <- function(ann, midx, cmd) {
   ann$mapping_index <- ""
   x <- ann$organism_ch1
   for(i in 1:length(x)) {
-    r <- genomeBuilds(x[i], style = "UCSC")
+    r <- GenomeInfoDb::genomeBuilds(x[i], style = "UCSC")
     for(j in nrow(r):1) {
       asm <- as.character(r[j, 3])
       chk <- with(midx, ucscID == asm & mapper == cmd)

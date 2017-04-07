@@ -60,7 +60,7 @@ geo_meta_data <- function(ids, characteristics = T, remove_ch = T, ...) {
   row.names(ann) <- ids
 
   for(lbl in ids) {
-    gsm[[lbl]] <- getGEO(lbl)
+    gsm[[lbl]] <- GEOquery::getGEO(lbl)
     ann[lbl, "name"] <- gsub(" ", "_", gsm[[lbl]]@header$title)
     if("relation" %in% names(gsm[[lbl]]@header)) {
       s.i <- which(

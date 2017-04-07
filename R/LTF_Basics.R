@@ -230,9 +230,8 @@ checklist <- function(chk, lst, msg = "", spc = "\n") {
 #
 # -----------------------------------------------------------------------------.
 confirm_execution <- function(q = T) {
-  x <- readline("Proceed [y/n]? ")
-  print("Here")
-  print(x)
+  txt_out("Proceed [y/n]? ")
+  x <- readLines(file("stdin"), n = 1)
   r <- T
   if(! grepl("^(y|yes)$", x, perl = T, ignore.case = T)) {
     cat("Cancelled\n")

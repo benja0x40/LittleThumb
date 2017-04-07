@@ -72,7 +72,10 @@ for(cmd in list_commands()) {
   if(grepl(rex, JOBARGS, perl = T)) {
     JOBARGS <- job_args(rex, JOBARGS)
     rm(rex)
-    source(list_commands(detailed = T)$path[match(cmd, list_commands())])
+    source(
+      list_commands(detailed = T)$path[match(cmd, list_commands())],
+      echo = F, verbose = F
+    )
   }
 }
 # -----------------------------------------------------------------------------.
