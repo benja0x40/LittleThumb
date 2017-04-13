@@ -70,7 +70,7 @@ validateMappingIndexes <- function(x, midx, cmd) {
   }
 
   # Test if mapping index is available
-  chk <- filter(midx, mapper == cmd & identifier %in% x)$index_available
+  chk <- dplyr::filter(midx, mapper == cmd & identifier %in% x)$index_available
   if(! all(chk)) {
     stop("index not available ", paste(x[! chk], collapse = ", "), call. = F)
   }

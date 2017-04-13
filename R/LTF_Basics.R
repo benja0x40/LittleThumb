@@ -289,9 +289,9 @@ log_file <- function(d = ".") {
 # -----------------------------------------------------------------------------.
 msg_header <- function(tag, ...) {
   txt_out("#", x = "=", ...)
-  txt_out("# [ ", tag, " ] ", cmd_line(), "\n", sep = "", ...)
+  txt_out("# [ ", tag, " ] ", cmd_line(), sep = "", ...)
   txt_out("#", x = "-", ...)
-  txt_out("# LAUNCHDIR = ", LAUNCHDIR, "\n", sep = "", ...)
+  txt_out("# LAUNCHDIR = ", LAUNCHDIR, sep = "", ...)
   txt_out("#", x = "-", ...)
   txt_out(...)
 }

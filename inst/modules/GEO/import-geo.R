@@ -168,6 +168,13 @@ if(ASK2RUN) confirm_execution()
 # Cleanup
 rm(opt, option_list)
 
+# DEBUG VALUES #################################################################
+# QUERY  <- "GSE63195"
+# UPDATE <- F
+# SPLFILTER <- NULL
+# SPLIDS <- NULL
+# SRADBFILE <- "/media/SSD512GB/tst1/SRAmetadb_07.04.2017.sqlite"
+
 # START LOGFILE ################################################################
 
 # =============================================================================.

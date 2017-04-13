@@ -3,23 +3,23 @@
 # 1. Perform reads mapping of a complete dataset
 # - ------------------------------------------ -
 #
-# $ HTS.ReadsMapping.R MyDatasetFile
+# $ littlethumb map-reads MyDatasetFile
 #
 # 2. Perform reads mapping of a subset of samples
 # - ------------------------------------------- -
 #
 # Provide the GEO accession number of each sample
-# $ HTS.ReadsMapping.R -q MyDatasetFile MySampleId1 MySampleId2
+# $ littlethumb map-reads -q MyDatasetFile MySampleId1 MySampleId2
 #
 # Provide meta data filters to select samples
-# $ HTS.ReadsMapping.R -f "library_strategy=ChIP-Seq" MyDatasetFile
+# $ littlethumb map-reads -f "library_strategy=ChIP-Seq" MyDatasetFile
 
 # CONFIGURATION ################################################################
 
 # =============================================================================.
 # Internal configuration
 # -----------------------------------------------------------------------------.
-DTSFILE   <- paste0(ANNDIR, "/LittleThumb.", JOBID, ".txt") # dataset description
+DTSFILE   <- paste0(ANNDIR, "/map-reads.", JOBID) # dataset description
 # -----------------------------------------------------------------------------.
 # Supported mappers
 MAPPERS <- data.frame(
@@ -44,7 +44,7 @@ MAPPERS <- data.frame(
 # Default values
 MAP_CMD <- "bowtie"
 MAP_PAR <- ""
-MAP_IDX <- "genomic_hg38,genomic_dm3" #
+MAP_IDX <- "genomic_mm10,genomic_dm3" #
 INPDIR  <- "_RAWREADS_"
 OUTDIR  <- "_MAPPEDREADS_"
 # -----------------------------------------------------------------------------.
@@ -158,12 +158,16 @@ if(ASK2RUN) confirm_execution()
 # Cleanup
 rm(opt, option_list)
 
+# DEBUG VALUES #################################################################
+QUERY <- "_METADATA_/BaseSpace.job_3ce25f5f7a2f.txt"
+SPLFILTER <- ""
+SPLIDS <- ""
+
+# PREPARE MAPPING ##############################################################
+
 # =============================================================================.
 # Resolve dataset
 # -----------------------------------------------------------------------------.
-QUERY <- "_METADATA_/BaseSpace.job_3ce25f5f7a2f.txt"
-QUERY <- "~/Dropbox/Workflow/BaseSpace.job_3ce25f5f7a2f.txt"
-# ---------------------------------------------------------------------------.
 dts_ann <- read.delim(QUERY, stringsAsFactors = F)
 if(! all(c("fastq_file") %in% colnames(dts_ann))) {
   stop("incorrect dataset description file")
@@ -176,13 +180,6 @@ if(! all(c("fastq_file") %in% colnames(dts_ann))) {
 # Filter samples based on meta data
 if(SPLFILTER != "") dts_ann <- filter_samples(dts_ann, SPLFILTER)
 if(nrow(dts_ann) == 0) stop("meta data filter resulted in empty selection")
-# ---------------------------------------------------------------------------.
-# Make a copy of the dataset definition file if necessary (for consistency)
-# DTSFILE <- paste0(ROOTDIR, "/", ANNDIR, "/", basename(QUERY))
-# if(! file.exists(DTSFILE)) {
-#   file.copy(QUERY, DTSFILE)
-# }
-# DTSFILE <- paste0(ANNDIR, "/", basename(DTSFILE))
 
 # =============================================================================.
 # Resolve mapping command
@@ -230,8 +227,8 @@ for(lbl in idx) {
   validateMappingIndexes(dts_ann[[lbl]], MAPPING_INDEXES, MAP_CMD)
 }
 
-MAPPING_INDEXES <- filter(MAPPING_INDEXES, mapper == MAP_CMD)
-MAPPING_INDEXES <- filter(
+MAPPING_INDEXES <- dplyr::filter(MAPPING_INDEXES, mapper == MAP_CMD)
+MAPPING_INDEXES <- dplyr::filter(
   MAPPING_INDEXES, identifier %in% as.vector(as.matrix(dts_ann[, idx]))
 )
 
@@ -244,34 +241,144 @@ MAPPING_INDEXES <- filter(
 fastq_paths <- paste0(ROOTDIR, "/", INPDIR, "/", dts_ann$fastq_file)
 if(! all(file.exists(fastq_paths))) stop("missing fastq files")
 
-fastq_paths <- paste0("../", INPDIR, "/", dts_ann$fastq_file)
+fastq_paths <- paste0(INPDIR, "/", dts_ann$fastq_file)
 output_list <- gsub("\\.fastq.gz$", "", basename(dts_ann$fastq_file))
 
 # =============================================================================.
-# Build full commands
+# Output datasets
 # -----------------------------------------------------------------------------.
-cmd <- matrix("", nrow(dts_ann), md_nbr("mapping_index", dts_ann))
-colnames(cmd) <- md_lst("mapping_index", dts_ann)
+n_cmd <- length(md_lst("mapping_command", dts_ann))
+n_par <- length(md_lst("mapping_options", dts_ann))
+n_idx <- length(md_lst("mapping_index", dts_ann))
 
-if(MAP_CMD == "bowtie") {
-  for(idx in md_lst("mapping_index", dts_ann)) {
-    MIDX <- match(dts_ann[[idx]], MAPPING_INDEXES$identifier)
-    MIDX <- MAPPING_INDEXES$index_path[MIDX]
-    cmd[, idx] <- paste0(
-      "gunzip -c ", fastq_paths, " | bowtie -p ", THREADSNBR, MAP_PAR, "--sam ",
-      MIDX, " /dev/stdin ", output_list, ".sam"
-      # " --un ", output_list, ".unmapped.fastq"
+col_lst <- c(
+  md_lst("mapping_command", dts_ann),
+  md_lst("mapping_options", dts_ann),
+  md_lst("mapping_index", dts_ann)
+)
+
+chk <- 0
+
+chk <- chk +   2 * (n_cmd == n_par)
+chk <- chk +   4 * (n_cmd == n_idx)
+chk <- chk +   8 * (n_par == n_idx)
+
+chk <- chk +  16 * (n_cmd == 1)
+chk <- chk +  32 * (n_par == 1)
+chk <- chk +  64 * (n_idx == 1)
+
+chk <- chk + 128 * (n_cmd > 1)
+chk <- chk + 256 * (n_par > 1)
+chk <- chk + 512 * (n_idx > 1)
+
+err <- T
+# n(command, parameters, index)
+if(bitAnd(chk, 2 + 4 + 8) == 2 + 4 + 8) err <- F
+# n(command), parameters, index
+if(bitAnd(chk, 128 + 32 + 64) == 128 + 32 + 64) err <- F
+# command, n(parameters), index
+if(bitAnd(chk, 16 + 256 + 64) == 16 + 256 + 64) err <- F
+# command, parameters, n(index)
+if(bitAnd(chk, 16 + 32 + 512) == 16 + 32 + 512) err <- F
+# *** TODO ***
+# n(command, parameters), index
+# command, n(parameters, index)
+# n(command, index), parameters
+
+if(err)  stop("incorrect mapping arguments")
+
+n_dts <- max(n_cmd, n_par, n_idx)
+DTSLST <- vector("list", n_dts)
+output_paths <- rep("", n_dts)
+DTSFILE <- rep("", n_dts)
+
+for(i in 1:n_dts) {
+  idx <- which(! colnames(dts_ann) %in% col_lst)
+  idx <- c(idx, match(md_lst("mapping_command", dts_ann)[min(i, n_cmd)], colnames(dts_ann)))
+  idx <- c(idx, match(md_lst("mapping_options", dts_ann)[min(i, n_par)], colnames(dts_ann)))
+  idx <- c(idx, match(md_lst("mapping_index", dts_ann)[min(i, n_idx)], colnames(dts_ann)))
+  DTSLST[[i]] <- dts_ann[, idx]
+  colnames(DTSLST[[i]])[ncol(DTSLST[[i]]) - 2:0] <- c(
+    "mapping_command", "mapping_options", "mapping_index"
+  )
+  DTSLST[[i]]$bam_file = paste0(output_list, ".bam")
+  output_paths[i] <- paste0(
+    OUTDIR, "/",
+    unique(DTSLST[[i]][, "mapping_command"]), "/",
+    unique(DTSLST[[i]][, "mapping_index"])
+  )
+  DTSFILE[i]   <- with(
+    DTSLST[[i]],
+    paste0(
+      ANNDIR, "/", JOBID,
+      ".map-reads_", unique(mapping_command), "_", unique(mapping_index), ".txt"
     )
-
-  }
-}
-if(MAP_CMD == "bowtie2") {
-  # gunzip -c $FPATH | bowtie -p $CFG_CPU $CFG_OPT --sam "$GENOME_INDEX1" /dev/stdin "$MAPPED_READS1.sam" # --un "$MAPPED_READS1.unmapped.fastq"
-  MIDX <- match(dts_ann$mapping_index, MAPPING_INDEXES$identifier)
-  MIDX <- MAPPING_INDEXES$index_path[MIDX]
-  cmd <- paste0(
-    "gunzip -c ", fastq_paths, " | bowtie -p ", THREADSNBR, MAP_PAR, "--sam ", MIDX, " /dev/stdin "
   )
 }
-if(MAP_CMD == "STAR") {
+
+# =============================================================================.
+# Build mapping commands
+# -----------------------------------------------------------------------------.
+cmd_lst <- vector("list", length(DTSLST))
+for(i in 1:n_dts) {
+  cmd <- unique(DTSLST[[i]][, "mapping_command"])
+  prm <- unique(DTSLST[[i]][, "mapping_options"])
+  idx <- unique(DTSLST[[i]][, "mapping_index"])
+  if(length(cmd) > 1) stop("heterogeneous mapping commands")
+  if(length(prm) > 1) stop("heterogeneous mapping options")
+  if(length(idx) > 1) stop("heterogeneous mapping indexes")
+
+  idx <-  match(idx, MAPPING_INDEXES$identifier)
+  idx <- MAPPING_INDEXES$index_path[idx]
+  if(cmd == "bowtie") {
+    exe <- paste0(
+      "gunzip -c ", fastq_paths, " | bowtie -p ", THREADSNBR, prm, "--sam ",
+      idx, " /dev/stdin | samtools view -bSF4 - > ", output_paths[i], "/", output_list, ".bam"
+    )
+  }
+  if(cmd == "bowtie2") {
+    exe <- paste0(
+      "gunzip -c ", fastq_paths, " | bowtie2 -p ", THREADSNBR, prm, "-x ", idx,
+      " -U /dev/stdin | samtools view -bSF4 - > ", output_paths[i], "/", output_list, ".bam"
+    )
+  }
+  if(cmd == "STAR") {
+  }
+  cmd_lst[[i]] <- exe
 }
+
+# START LOGFILE ################################################################
+
+# =============================================================================.
+# Create output directory if necessary and redirect outputs to log file
+# -----------------------------------------------------------------------------.
+LOGFILE <- log_file(paste0(ROOTDIR, "/", LOGDIR))
+sink(LOGFILE, split = T)
+sink(LOGFILE, type = "message")
+
+# MAP READS ####################################################################
+
+# =============================================================================.
+setwd(ROOTDIR)
+# -----------------------------------------------------------------------------.
+CMDFILE <- file(CMDFILE, open = "a")
+msg_header(
+  paste(JOBID, "|", format(STARTTIME, "%d.%m.%Y %H:%M:%S")), file = CMDFILE
+)
+msg_command()
+# -----------------------------------------------------------------------------.
+cmd <- paste("mkdir -p", c(LOGDIR, ANNDIR, output_paths))
+STATUS <- execute(cmd)
+msg_command(cmd, "Make output directories", chrono = F, status = STATUS[1])
+# =============================================================================.
+# Map reads and save corresponding metadata
+# -----------------------------------------------------------------------------.
+for(i in 1:n_dts) {
+  cmd <- cmd_lst[[i]]
+  STATUS <- c(execute(cmd), STATUS)
+  msg_command(cmd, "Map reads", status = STATUS[1])
+  write.table(
+    DTSLST[[i]], DTSFILE[i], quote = F, sep = "\t", row.names = F, col.names = T
+  )
+}
+# =============================================================================.

@@ -18,7 +18,9 @@ The code below installs R and Bioconductor packages required by LittleThumb.
 pkg <- installed.packages()[, "Package"]
 
 # CRAN packages
-lst <- c("devtools", "stringr", "dplyr", "jsonlite", "optparse")
+lst <- c(
+"devtools", "lazyeval", "stringr", "dplyr", "jsonlite", "optparse", "igraph"
+)
 lst <- setdiff(lst, pkg)
 if(length(lst) > 0) {
   install.packages(lst, repos = "https://cloud.r-project.org/")
@@ -47,6 +49,7 @@ cd ~/DataImportTools/LittleThumb
 git pull
 
 # Build package
+cd ..
 R CMD build LittleThumb
 ```
 
