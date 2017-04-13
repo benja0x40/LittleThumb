@@ -41,8 +41,8 @@ tycho.bric.ku.dk	genomic	bowtie	genomic_dm3	dm3				/k/genomes/dm3/index/bowtie/d
 tycho.bric.ku.dk	genomic	bowtie	genomic_dm6	dm6			/k/genomes/dm6/fa/merged/dm6.fa	/k/genomes/dm6/index/bowtie/dm6
 tycho.bric.ku.dk	genomic	bowtie	genomic_hg18	hg18			/k/genomes/hg18/fa/merged/hg18_full.fa	/k/genomes/hg18/index/bowtie/hg18
 tycho.bric.ku.dk	genomic	bowtie	genomic_hg19	hg19			/k/genomes/hg19/fa/merged/hg19_full.fa	/k/genomes/hg19/index/bowtie/hg19
-tycho.bric.ku.dk	genomic	bowtie	genomic_hg38	hg38			/k/genomes/hg38/fa/merged/hg38_full.fa	/k/genomes/hg38/index/bowtie/hg38
-tycho.bric.ku.dk	genomic	bowtie	genomic_mm10	mm10			/k/genomes/mm10/fa/merged/mm10_full.fa	/k/genomes/mm10/index/bowtie/mm10
+tycho.bric.ku.dk	genomic	bowtie	genomic_hg38	hg38			/k/genomes/hg38/fa/merged/hg38_full.fa	/k/genomes/hg38/index/bowtie_full/hg38
+tycho.bric.ku.dk	genomic	bowtie	genomic_mm10	mm10			/k/genomes/mm10/fa/merged/mm10_full.fa	/k/genomes/mm10/index/bowtie_full/mm10
 tycho.bric.ku.dk	genomic	bowtie	genomic_mm9	mm9			/k/genomes/mm9/fa/merged/mm9_full.fa	/k/genomes/mm9/index/bowtie/mm9
 tycho.bric.ku.dk	genomic	bowtie	genomic_rn5	rn5				/k/genomes/rn5/index/bowtie/rn5
 tycho.bric.ku.dk	genomic	bowtie	genomic_sacCer3	sacCer3			/k/genomes/sacCer3/fa/merged/sacCer3.fa	/k/genomes/sacCer3/index/bowtie/saccer3
@@ -53,8 +53,8 @@ tycho.bric.ku.dk	genomic	bowtie2	genomic_dm3	dm3				/k/genomes/dm3/index/bowtie2
 tycho.bric.ku.dk	genomic	bowtie2	genomic_dm6	dm6			/k/genomes/dm6/fa/merged/dm6_full.fa	/k/genomes/dm6/index/bowtie2/dm6
 tycho.bric.ku.dk	genomic	bowtie2	genomic_hg18	hg18			/k/genomes/hg18/fa/merged/hg18_full.fa	/k/genomes/hg18/index/bowtie2/hg18
 tycho.bric.ku.dk	genomic	bowtie2	genomic_hg19	hg19			/k/genomes/hg19/fa/merged/hg19_full.fa	/k/genomes/hg19/index/bowtie2/hg19
-tycho.bric.ku.dk	genomic	bowtie2	genomic_hg38	hg38			/k/genomes/hg38/fa/merged/hg38_full.fa	/k/genomes/hg38/index/bowtie2/hg38
-tycho.bric.ku.dk	genomic	bowtie2	genomic_mm10	mm10			/k/genomes/mm10/fa/merged/mm10_full.fa	/k/genomes/mm10/index/bowtie2/mm10
+tycho.bric.ku.dk	genomic	bowtie2	genomic_hg38	hg38			/k/genomes/hg38/fa/merged/hg38_full.fa	/k/genomes/hg38/index/bowtie2_full/hg38
+tycho.bric.ku.dk	genomic	bowtie2	genomic_mm10	mm10			/k/genomes/mm10/fa/merged/mm10_full.fa	/k/genomes/mm10/index/bowtie2_full/mm10
 tycho.bric.ku.dk	genomic	bowtie2	genomic_mm9	mm9			/k/genomes/mm9/fa/merged/mm9_canonical.fa	/k/genomes/mm9/index/bowtie2/mm9
 tycho.bric.ku.dk	genomic	bowtie2	genomic_rn5	rn5				/k/genomes/rn5/index/bowtie2/rn5
 tycho.bric.ku.dk	genomic	bowtie2	genomic_sacCer3	sacCer3			/k/genomes/sacCer3/fa/merged/sacCer3.fa	/k/genomes/sacCer3/index/bowtie2/saccer3
