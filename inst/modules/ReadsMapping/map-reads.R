@@ -159,9 +159,9 @@ if(ASK2RUN) confirm_execution()
 rm(opt, option_list)
 
 # DEBUG VALUES #################################################################
-QUERY <- "_METADATA_/BaseSpace.job_3ce25f5f7a2f.txt"
-SPLFILTER <- ""
-SPLIDS <- ""
+# QUERY <- "_METADATA_/BaseSpace.job_3ce25f5f7a2f.txt"
+# SPLFILTER <- ""
+# SPLIDS <- ""
 
 # PREPARE MAPPING ##############################################################
 
