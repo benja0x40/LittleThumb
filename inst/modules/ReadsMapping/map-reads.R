@@ -150,9 +150,9 @@ OUTDIR     <- opt$options$output
 QUERY     <- opt$options$query
 SPLFILTER <- opt$options$filter
 SPLIDS    <- opt$args
-MAP_CMD   <- opt$mapper
-MAP_PAR   <- opt$parameters
-MAP_IDX   <- opt$index
+MAP_CMD   <- opt$options$mapper
+MAP_PAR   <- opt$options$parameters
+MAP_IDX   <- opt$options$index
 # -----------------------------------------------------------------------------.
 # Display options and confirm execution
 if(VERBOSE) print_options(opt$options, opt$args, lbl = "Query")
