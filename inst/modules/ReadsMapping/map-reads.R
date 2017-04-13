@@ -44,7 +44,7 @@ MAPPERS <- data.frame(
 # Default values
 MAP_CMD <- "bowtie"
 MAP_PAR <- ""
-MAP_IDX <- "genomic_mm10,genomic_dm3" #
+MAP_IDX <- ""
 INPDIR  <- "_RAWREADS_"
 OUTDIR  <- "_MAPPEDREADS_"
 # -----------------------------------------------------------------------------.
@@ -150,6 +150,9 @@ OUTDIR     <- opt$options$output
 QUERY     <- opt$options$query
 SPLFILTER <- opt$options$filter
 SPLIDS    <- opt$args
+MAP_CMD   <- opt$mapper
+MAP_PAR   <- opt$parameters
+MAP_IDX   <- opt$index
 # -----------------------------------------------------------------------------.
 # Display options and confirm execution
 if(VERBOSE) print_options(opt$options, opt$args, lbl = "Query")
