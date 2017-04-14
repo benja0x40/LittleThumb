@@ -59,7 +59,7 @@ basespace_dataset <- function(mnt, prj) {
   }
   ann <- data.frame(ann, stringsAsFactors = F)
   ann$project        <- prj
-  ann$basemount.host <- host_name()
+  ann$basemount.host <- LittleThumb::host_name()
   ann$basemount.path <- paste0(dirname(flist), "/Files")
   ann
 }

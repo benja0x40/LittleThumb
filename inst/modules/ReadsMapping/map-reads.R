@@ -17,11 +17,8 @@
 # CONFIGURATION ################################################################
 
 # =============================================================================.
-# Internal configuration
-# -----------------------------------------------------------------------------.
-DTSFILE   <- paste0(ANNDIR, "/map-reads.", JOBID) # dataset description
-# -----------------------------------------------------------------------------.
 # Supported mappers
+# -----------------------------------------------------------------------------.
 MAPPERS <- data.frame(
   command = c("bowtie", "bowtie2", "bwa", "STAR"),
   website = c(
@@ -121,7 +118,7 @@ option_list <- list(
 # -----------------------------------------------------------------------------.
 cat("\n")
 opt <- parse_args(
-  OptionParser(option_list = option_list), args = JOBARGS,
+  OptionParser(option_list = option_list), args = cmd_args(-1, as.string = F),
   positional_arguments = TRUE
 )
 # -----------------------------------------------------------------------------.
@@ -162,9 +159,15 @@ if(ASK2RUN) confirm_execution()
 rm(opt, option_list)
 
 # DEBUG VALUES #################################################################
-# QUERY <- "_METADATA_/BaseSpace.job_3ce25f5f7a2f.txt"
+# QUERY <- "_ANNOTATIONS_/BaseSpace.job_3ce25f5f7a2f.txt"
 # SPLFILTER <- ""
 # SPLIDS <- ""
+# -----------------------------------------------------------------------------.
+# QUERY <- "_ANNOTATIONS_/import-basespace.ESC_BRD.LT20170414_1738_2e9e1a9a1ac1.txt"
+# SPLFILTER <- ""
+# SPLIDS <- ""
+# MAP_CMD <- "bwa"
+# MAP_IDX <- "genomic_dm6,genomic_mm10"
 
 # PREPARE MAPPING ##############################################################
 
@@ -310,11 +313,12 @@ for(i in 1:n_dts) {
     unique(DTSLST[[i]][, "mapping_command"]), "/",
     unique(DTSLST[[i]][, "mapping_index"])
   )
+  # dataset description
   DTSFILE[i]   <- with(
     DTSLST[[i]],
     paste0(
-      ANNDIR, "/", JOBID,
-      ".map-reads_", unique(mapping_command), "_", unique(mapping_index), ".txt"
+      ANNDIR, "/", cmd_args(1), ".",
+      unique(mapping_command), "_", unique(mapping_index), ".", JOBID, ".txt"
     )
   )
 }
@@ -335,18 +339,29 @@ for(i in 1:n_dts) {
   idx <- MAPPING_INDEXES$index_path[idx]
   if(cmd == "bowtie") {
     exe <- paste0(
-      "gunzip -c ", fastq_paths, " | bowtie -p ", THREADSNBR, prm, "--sam ",
-      idx, " /dev/stdin | samtools view -bSF4 - > ", output_paths[i], "/", output_list, ".bam"
+      "gunzip -c ", fastq_paths, " | bowtie -p ", THREADSNBR, " ",
+      prm, "--sam ", idx, " /dev/stdin | samtools view -bSF4 - > ",
+      output_paths[i], "/", output_list, ".bam"
     )
   }
   if(cmd == "bowtie2") {
     exe <- paste0(
-      "gunzip -c ", fastq_paths, " | bowtie2 -p ", THREADSNBR, prm, "-x ", idx,
-      " -U /dev/stdin | samtools view -bSF4 - > ", output_paths[i], "/", output_list, ".bam"
+      "gunzip -c ", fastq_paths, " | bowtie2 -p ", THREADSNBR, " ",
+      prm, "-x ", idx, " -U /dev/stdin | samtools view -bSF4 - > ",
+      output_paths[i], "/", output_list, ".bam"
+    )
+  }
+  if(cmd == "bwa") {
+    exe <- paste0(
+      "bwa aln -t ", THREADSNBR, " ", prm, " ", idx, " <(gunzip -c '", fastq_paths, "')",
+      " | bwa samse ", idx, " - <(gunzip -c '",  fastq_paths, "')",
+      " | samtools view -bSF4 - > ", output_paths[i], "/", output_list, ".bam"
     )
   }
   if(cmd == "STAR") {
   }
+  # cleanup
+  exe <- stringr::str_trim(gsub(" +", " ", exe, perl = T))
   cmd_lst[[i]] <- exe
 }
 

@@ -75,7 +75,7 @@ self_path.LT_Workspace <- function(obj) {
 # -----------------------------------------------------------------------------.
 define_workspace <- function(name, path) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
 
   chk <- check_class(name, "character", error = T)
   chk <- check_class(path, "character", error = T)
@@ -98,7 +98,7 @@ define_workspace <- function(name, path) {
 # -----------------------------------------------------------------------------.
 list_workspaces <- function(detailed = F, x = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
 
   wks <- LTE$workspaces
   if(nrow(wks) > 0) {
@@ -115,7 +115,7 @@ list_workspaces <- function(detailed = F, x = NULL) {
 # -----------------------------------------------------------------------------.
 create_workspace <- function(name, path = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   lbl <- name # to avoid ambiguity
 
   if(! is.null(path)) define_workspace(lbl, path)
@@ -132,7 +132,7 @@ create_workspace <- function(name, path = NULL) {
 # -----------------------------------------------------------------------------.
 delete_workspace <- function(name, ask = T) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   lbl <- name # to avoid ambiguity
   flp <- with(LTE$workspaces, path[match(lbl, name)])
 
@@ -157,7 +157,7 @@ delete_workspace <- function(name, ask = T) {
 # -----------------------------------------------------------------------------.
 open_workspace <- function(name, path = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   env <- globalenv()
   lbl <- name # to avoid ambiguity
 
@@ -186,7 +186,7 @@ open_workspace <- function(name, path = NULL) {
 # -----------------------------------------------------------------------------.
 close_workspace <- function(name) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   lbl <- name # to avoid ambiguity
 
   chk <- is_registered.data.frame(LTE$workspaces, "name", lbl, error = T)

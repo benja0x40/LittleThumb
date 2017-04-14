@@ -32,10 +32,6 @@
 # CONFIGURATION ################################################################
 
 # =============================================================================.
-# Internal configuration
-# -----------------------------------------------------------------------------.
-DTSFILE   <- paste0(ANNDIR, "/GEO.SRA.", JOBID, ".txt") # dataset description
-# =============================================================================.
 # Define user options
 # -----------------------------------------------------------------------------.
 # Default values
@@ -109,7 +105,7 @@ option_list <- list(
 # -----------------------------------------------------------------------------.
 cat("\n")
 opt <- parse_args(
-  OptionParser(option_list = option_list), args = JOBARGS,
+  OptionParser(option_list = option_list), args = cmd_args(-1, as.string = F),
   positional_arguments = TRUE
 )
 # -----------------------------------------------------------------------------.
@@ -270,6 +266,9 @@ if(! UPDATE) {
   if(any(chk)) {
     stop("identifiers of samples to be imported conflict with existant ones")
   }
+  # ---------------------------------------------------------------------------.
+  # dataset description
+  DTSFILE  <- paste0(ANNDIR, "/", cmd_args(1), ".", QUERY, ".", JOBID, ".txt")
 }
 
 # =============================================================================.

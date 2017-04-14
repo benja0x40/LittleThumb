@@ -37,7 +37,7 @@ test_that("openLittleThumb", {
 
   expect_true(.lte_is_loaded.())
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   cfg <- LTE$config
 
   expect_is(cfg, "LT_Config")

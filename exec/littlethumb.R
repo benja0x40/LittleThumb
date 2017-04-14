@@ -20,6 +20,10 @@ options('download.file.method.GEOquery' = 'libcurl')
 # Alternatively:
 # options('download.file.method.GEOquery' = 'wget')
 
+# LITTLETHUMB | START ##########################################################
+
+openLittleThumb()
+
 # COMMON CONFIG ################################################################
 
 # =============================================================================.
@@ -38,10 +42,10 @@ STARTTIME <- Sys.time()
 TODAY     <- format(STARTTIME, "%d.%m.%Y")
 JOBID     <- make_id()
 LAUNCHDIR <- getwd()
-CMDFILE   <- "commands.sh"
-ANNDIR    <- "_METADATA_"
-JOBFILE   <- paste0(ANNDIR, "/JOBS.txt")
-LOGDIR    <- "_LOGFILES_"
+ANNDIR    <- "_ANNOTATIONS_" # make_path(lt_env()$config, "DTSDIR")
+CMDFILE   <- make_path(lt_env()$config, "CMDFILE")  # "commands.sh"
+JOBFILE   <- make_path(lt_env()$config, "JOBSFILE") # paste0(ANNDIR, "/JOBS.txt")
+LOGDIR    <- make_path(lt_env()$config, "LOGSDIR")  # "_LOGFILES_"
 MAXTRIES <- 10
 TRYDELAY <- 60
 # =============================================================================.
@@ -65,12 +69,9 @@ txt_out(x = "-")
 txt_out(paste(ls(), collapse = "\n"))
 txt_out(x = "-")
 # -----------------------------------------------------------------------------.
-JOBARGS <- cmd_args()
-# -----------------------------------------------------------------------------.
 for(cmd in list_commands()) {
-  rex <- paste0("^", cmd, " ")
-  if(grepl(rex, JOBARGS, perl = T)) {
-    JOBARGS <- job_args(rex, JOBARGS)
+  rex <- paste0("^", cmd, "( |$)")
+  if(grepl(rex, cmd_args(1), perl = T)) {
     rm(rex)
     source(
       list_commands(detailed = T)$path[match(cmd, list_commands())],
@@ -78,13 +79,6 @@ for(cmd in list_commands()) {
     )
   }
 }
-# -----------------------------------------------------------------------------.
-# rex <- "^(littlethumb) +map-reads +(.*)"
-# if(grepl(rex, JOBARGS, perl = T)) {
-#   JOBARGS <- job_args(rex, JOBARGS)
-#   rm(rex)
-#   source(paste0(modules_path(), "/ReadsMapping.R"))
-# }
 # -----------------------------------------------------------------------------.
 
 # EXIT #########################################################################
@@ -94,24 +88,26 @@ STATUS <- all(STATUS)
 # =============================================================================.
 # Save job informations
 # -----------------------------------------------------------------------------.
-txt <- c(
-  jobid       = JOBID,
-  date        = format(STARTTIME, "%d.%m.%Y"),
-  time        = format(STARTTIME, "%H:%M:%S"),
-  duration    = timepoint(STARTTIME),
-  completion  = STATUS,
-  dataset     = basename(DTSFILE),
-  action      = cmd_name(),
-  parameters  = cmd_args(),
-  # launch.path = LAUNCHDIR,
-  # root.path   = ROOTDIR,
-  input.dir   = INPDIR,
-  output.dir  = OUTDIR
-)
-if(! file.exists(JOBFILE)) {
-  cat(paste(names(txt), collapse = "\t"), "\n", file = JOBFILE, sep = "")
+for(dts in DTSFILE) {
+  txt <- c(
+    jobid       = JOBID,
+    date        = format(STARTTIME, "%d.%m.%Y"),
+    time        = format(STARTTIME, "%H:%M:%S"),
+    duration    = timepoint(STARTTIME),
+    completion  = STATUS,
+    dataset     = basename(dts),
+    action      = cmd_args(1),
+    parameters  = cmd_args(-1),
+    # launch.path = LAUNCHDIR,
+    # root.path   = ROOTDIR,
+    input.dir   = INPDIR,
+    output.dir  = OUTDIR
+  )
+  if(! file.exists(JOBFILE)) {
+    cat(paste(names(txt), collapse = "\t"), "\n", file = JOBFILE, sep = "")
+  }
+  cat(paste(txt, collapse = "\t"), "\n", file = JOBFILE, sep = "", append = T)
 }
-cat(paste(txt, collapse = "\t"), "\n", file = JOBFILE, sep = "", append = T)
 # =============================================================================.
 # Close file connexions
 # -----------------------------------------------------------------------------.

@@ -45,7 +45,7 @@ is.LT_Dataset <- function(x) { inherits(x, "LT_Dataset") }
 # Path to dataset definition
 # -----------------------------------------------------------------------------.
 lt_path.LT_Dataset <- function(obj, workspace, config, path_label = "DTSDIR") {
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   path <- with(LTE$workspaces, path[match(workspace, name)])
   path <- make_path(path, make_path(config, path_label), obj$name, ext = ".txt")
   path
@@ -88,7 +88,7 @@ elements_name <- function(obj) {
 # -----------------------------------------------------------------------------.
 which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
 
   # TODO: should be based on reg_idx in data.frame Registration interface
   idx <- integer()
@@ -110,7 +110,7 @@ which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 # -----------------------------------------------------------------------------.
 list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
 
   if(is.null(workspace)) {
     workspace <- list_workspaces()
@@ -143,7 +143,7 @@ create_dataset <- function(
   name = NULL, path = NULL, delete_source = F, ask = T
 ) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
 
   # Make workspace /////////////////////////////////////////////////////////////
 
@@ -309,7 +309,7 @@ create_dataset <- function(
 # -----------------------------------------------------------------------------.
 clone_dataset <- function(workspace, dataset, name, path = NULL) {
 
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   env <- globalenv()
 
   dts <- env[[workspace]]@datasets[[dataset]]

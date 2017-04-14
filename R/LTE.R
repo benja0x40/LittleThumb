@@ -41,7 +41,7 @@
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-.lte_env. <- function(auto_start = T, silent = T, error = ! auto_start) {
+lt_env <- function(auto_start = T, silent = T, error = ! auto_start) {
   if(auto_start & ! .lte_is_loaded.(silent, error)) openLittleThumb()
   get(.lte_name.(), pos = globalenv())
 }
@@ -49,7 +49,7 @@
 #
 # -----------------------------------------------------------------------------.
 .lte_save. <- function() {
-  LTE <- .lte_env.(auto_start = F)
+  LTE <- lt_env(auto_start = F)
   saveRDS(LTE, .lte_path.(LTE$config))
 }
 # =============================================================================.
@@ -81,7 +81,7 @@ openLittleThumb <- function() {
       chk <- assign(
         .lte_name.(), new.env(parent = globalenv()), pos = globalenv()
       )
-      LTE <- .lte_env.()
+      LTE <- lt_env()
       LTE$start_time       <- Sys.time()
       LTE$config           <- cfg   # LT_Config
       LTE$workspaces       <- LT_TabularData()

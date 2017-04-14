@@ -38,7 +38,7 @@ make_test_data <- function(path, tag, n = 10, m = 100) {
 something_to_test <- function(path = NULL) {
 
   resetLittleThumb(ask = F)
-  LTE <- .lte_env.()
+  LTE <- lt_env()
   cfg <- LTE$config
 
   if(is.null(path)) path <- make_path(cfg, "USRDIR")

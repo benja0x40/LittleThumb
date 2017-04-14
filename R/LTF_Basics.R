@@ -93,8 +93,15 @@ cmd_name <- function() {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-cmd_args <- function() {
-  paste(commandArgs(trailingOnly = T), collapse = " ")
+cmd_args <- function(x = NULL, as.string = T) {
+  r <- commandArgs(trailingOnly = T)
+  if(length(r) == 0) {
+    if(as.string) r <- ""
+  } else {
+    if(! is.null(x)) r <- r[x]
+    if(as.string) r <- stringr::str_trim(base::paste(r, collapse = " "))
+  }
+  r
 }
 
 # =============================================================================.
@@ -204,13 +211,6 @@ txt_out <- function(..., file = "", append = F) {
 # EXECUTION ####################################################################
 
 # =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-job_args <-function(rex, x) {
-  unlist(str_split(str_trim(gsub(rex, "", x)), " "))
-}
-
-# =============================================================================.
 #' checklist
 # -----------------------------------------------------------------------------.
 #' @param chk logical vector
@@ -244,6 +244,7 @@ confirm_execution <- function(q = T) {
 #
 # -----------------------------------------------------------------------------.
 execute <- function(x, ...) {
+  x <- paste("echo", shQuote(x), "| bash")
   all(sapply(x, system, ...) == 0)
 }
 
@@ -275,25 +276,13 @@ print_options <- function(opt, args, lbl) {
 #
 # -----------------------------------------------------------------------------.
 log_file <- function(d = ".") {
-  f <- paste(
-    cmd_name(),
-    format(STARTTIME, "%d.%m.%Y"), format(STARTTIME, "%Hh%Mm%S"), JOBID,
-    sep = "_"
+  f <- paste0(
+    cmd_args(1),
+    ".", format(STARTTIME, "%d.%m.%Y"), "_", format(STARTTIME, "%Hh%Mm%S"), ".",
+    JOBID
   )
   system(paste("mkdir -p", d))
   file(paste0(d, "/", f, ".txt"), open = "w")
-}
-
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-msg_header <- function(tag, ...) {
-  txt_out("#", x = "=", ...)
-  txt_out("# [ ", tag, " ] ", cmd_line(), sep = "", ...)
-  txt_out("#", x = "-", ...)
-  txt_out("# LAUNCHDIR = ", LAUNCHDIR, sep = "", ...)
-  txt_out("#", x = "-", ...)
-  txt_out(...)
 }
 
 # =============================================================================.
@@ -315,3 +304,14 @@ msg_command <- function(cmd = NULL, comment = NULL, chrono = T, status = NULL) {
   flush(CMDFILE)
 }
 
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+msg_header <- function(tag, ...) {
+  txt_out("#", x = "=", ...)
+  txt_out("# [ ", tag, " ] ", cmd_args(1), sep = "", ...)
+  txt_out("#", x = "-", ...)
+  txt_out("# COMMAND = ", cmd_line(), sep = "", ...)
+  txt_out("# WORKDIR = ", LAUNCHDIR, sep = "", ...)
+  txt_out("#", x = "-", ...)
+}
