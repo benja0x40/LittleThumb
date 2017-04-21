@@ -59,7 +59,15 @@ self_path.LT_Dataset <- function(obj) {
 }
 # -----------------------------------------------------------------------------.
 `self_path<-.LT_Dataset` <- function(obj, path) {
+
+  LTE <- lt_env()
+
+  # Update path in the dataset register
+  i <- which_dataset(id = obj$id)
+  if(! is.na(i)) LTE$datasets$path[i] <- path
+
   obj$MD$path <- path
+
   obj
 }
 
@@ -130,6 +138,33 @@ list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
 }
 
 # =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+# change_dataset_path <- function(workspace, dataset, path) {
+#
+#   LTE <- lt_env()
+#   env <- globalenv()
+#
+#   dataset_id <- td_selector(
+#     LTE$datasets, workspace == workspace & name == dataset, "id"
+#   )
+#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
+# }
+
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+get_dataset_object <- function(workspace, dataset) {
+
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+get_dataset_index <- function(context = c("wks", "reg"), workspace, dataset) {
+
+}
+
+# =============================================================================.
 # Create dataset definition and copy associated data inside a workspace folder
 # -----------------------------------------------------------------------------.
 # Use cases:
@@ -171,7 +206,6 @@ create_dataset <- function(
 
   # Make default meta data
   dts$MD$path    <- path
-  dts$is_primary <- T
   dts$MD$source  <- list(annotations = NULL, files = NULL)
   dts$MD$keys    <- list(id = NULL, files = NULL)
 
@@ -271,7 +305,11 @@ create_dataset <- function(
 
   # Copy data files ////////////////////////////////////////////////////////////
 
-  file.copy(from = flp, to = path, overwrite = F, copy.date = T)
+  chk <- normalizePath(flp) != normalizePath(path)
+  if(any(chk)) {
+    message("Copying files...")
+    file.copy(from = flp[chk], to = path[chk], overwrite = F, copy.date = T)
+  }
 
   if(delete_source) {
     del <- T
@@ -296,7 +334,7 @@ create_dataset <- function(
   # Register dataset
   x <- list(
     id = dts$id, workspace = workspace, name = dts$name, items = nrow(dts$TD),
-    is_primary = dts$is_primary, path = dts$MD$path, lt_path = path
+    path = dts$MD$path, lt_path = path
   )
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
 
@@ -305,18 +343,20 @@ create_dataset <- function(
 }
 
 # =============================================================================.
-# Move/Rename dataset
+#
 # -----------------------------------------------------------------------------.
 clone_dataset <- function(workspace, dataset, name, path = NULL) {
 
   LTE <- lt_env()
   env <- globalenv()
 
-  dts <- env[[workspace]]@datasets[[dataset]]
-  obj$MD$source <- list(id = dts$id, name = dts$name)
+  dataset_id <- td_selector(
+    LTE$datasets, workspace == workspace & name == dataset, "id"
+  )
+  dts <- env[[workspace]]@datasets[[dataset_id]]
+  dts$MD$source <- list(id = dts$id, name = dts$name)
   dts$id <- make_id()
   dts$name <- name
-  dts$is_primary <- F
   if(! is.null(path)) self_path(dts) <- path
 
   # Save the cloned dataset definition
@@ -324,13 +364,15 @@ clone_dataset <- function(workspace, dataset, name, path = NULL) {
   lt_save(dts, path)
 
   # Store the cloned dataset definition
-  env[[workspace]]@datasets[[dts$name]] <- dts
-  env[[workspace]][[dts$name]] <- env[[workspace]][[dataset]]
+  env[[workspace]]@datasets[[dts$id]] <- dts
+
+  # do not copy loaded data
+  # env[[workspace]][[dts$name]] <- env[[workspace]][[dataset]]
 
   # Register the cloned dataset
   x <- list(
     id = dts$id, workspace = workspace, name = dts$name, items = nrow(dts$TD),
-    is_primary = dts$is_primary, path = dts$MD$path, lt_path = path
+    path = dts$MD$path, lt_path = path
   )
 
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
@@ -418,6 +460,26 @@ load_data <- function(
   }
   apply2dataset(executor = rd, fun = reader, workspace, dataset, element, ...)
 }
+
+# =============================================================================.
+# Save data from the workspace environment into workspace/dataset folders
+# -----------------------------------------------------------------------------.
+save_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
+) {
+
+  wd <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    flp <- paste(
+      self_path(env[[wks]]), self_path(dts), elements_path(dts), sep = "/"
+    )
+    names(flp) <- elements_name(dts)
+    for(lbl in elements_name(dts)) {
+      writer(env[[wks]][[dts$name]][[lbl]], flp[lbl], ...)
+    }
+  }
+  apply2dataset(executor = wd, fun = writer, workspace, dataset, element, ...)
+}
 # =============================================================================.
 # Move data from workspace/dataset to workspace/dataset
 # -----------------------------------------------------------------------------.
@@ -437,24 +499,6 @@ move_data <- function(
     ### env[[wks]][[dts$name]] ###
   }
   apply2dataset(executor = mv, fun = NULL, workspace, dataset, element, ...)
-}
-# =============================================================================.
-# Save data from the workspace environment into workspace/dataset folders
-# -----------------------------------------------------------------------------.
-save_data <- function(
-  workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
-) {
-
-  wd <- function(wks, dts, fun, ...) {
-    env <- globalenv()
-    flp <- paste(
-      self_path(env[[wks]]), self_path(dts), elements_path(dts), sep = "/"
-    )
-    for(lbl in elements_name(dts)) {
-      writer(env[[wks]][[dts$name]][[lbl]], flp, ...)
-    }
-  }
-  apply2dataset(executor = wd, fun = writer, workspace, dataset, element, ...)
 }
 # =============================================================================.
 # Remove (unload) data from the workspace environment

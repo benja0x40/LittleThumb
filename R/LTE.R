@@ -98,6 +98,8 @@ openLittleThumb <- function() {
 closeLittleThumb <- function(ask = T) {
   if(.lte_is_loaded.()) {
 
+
+    LTE <- lt_env()
     lst <- list_workspaces(detailed = F, is_opened == TRUE)
 
     # 1. Confirm execution
@@ -108,7 +110,11 @@ closeLittleThumb <- function(ask = T) {
     }
 
     # 2. Close workspaces
-    close_workspace(lst)
+    # TODO: handle this in close_workspace
+    lst <- lst[lst %in% ls(envir = globalenv())]
+    if(length(lst) > 0) close_workspace(lst)
+
+    LTE$workspaces$is_opened <- F
 
     # 3. Save LTE
     .lte_save.()

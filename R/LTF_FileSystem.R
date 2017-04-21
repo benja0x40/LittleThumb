@@ -8,11 +8,15 @@ list_paths <- function (obj, ...) { UseMethod("list_paths", obj) }
 create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
 check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
 
-lt_path <- function (obj, ...) { UseMethod("lt_path", obj) }
+
 self_path <- function (obj, ...) { UseMethod("self_path", obj) }
 `self_path<-` <- function (obj, ...) { UseMethod("self_path<-", obj) }
+
 elements_path <- function (obj, ...) { UseMethod("elements_path", obj) }
+`elements_path<-` <- function (obj, ...) { UseMethod("elements_path<-", obj) }
+
 elements_name <- function (obj, ...) { UseMethod("elements_name", obj) }
+`elements_name<-` <- function (obj, ...) { UseMethod("elements_name<-", obj) }
 
 # lt_save <- function (obj, ...) { UseMethod("lt_save", obj) }
 # lt_load <- function (con, ...) { UseMethod("lt_load", obj) }
@@ -31,18 +35,22 @@ check_paths.default <- function (obj, ...) {
 }
 # -----------------------------------------------------------------------------.
 
-# FUNCTIONS ####################################################################
+# SELF DEFINITION I/O ##########################################################
 
 # =============================================================================.
-# clear_path
+#' lt_path
 # -----------------------------------------------------------------------------.
-clear_path <- function(x) {
-  cmd <- paste0("cd ", dirname(x), "; rm -Rf ", basename(x))
-  execute(cmd)
-}
+#' @description self defintion path of an object
+#' @param obj either an LT_Config, LT_Workspace or LT_Dataset object
+#' @return lt_path returns the path to the object's self definition
+# -----------------------------------------------------------------------------.
+lt_path         <- function (obj, ...) { UseMethod("lt_path", obj) }
+lt_path.default <- function (obj, ...) { NextMethod("lt_path", obj, ...) }
+
 # =============================================================================.
 #' lt_save
 # -----------------------------------------------------------------------------.
+#' @description save the self definition of an object
 #' @param obj object
 #' @param file path or connexion
 # -----------------------------------------------------------------------------.
@@ -52,6 +60,7 @@ lt_save <- function(obj, file, ...) {
 # =============================================================================.
 #' lt_load
 # -----------------------------------------------------------------------------.
+#' @description load an object from its self definition
 #' @param file path or connexion
 #' @return object
 # -----------------------------------------------------------------------------.
@@ -66,6 +75,25 @@ lt_load <- function(file, ...) {
   class(txt) <- cls
   txt2obj(txt, ...)
 }
+
+# SELF LOCATION ################################################################
+
+
+# ELEMENTS #################################################################
+
+
+
+
+# FUNCTIONS ####################################################################
+
+# =============================================================================.
+# clear_path
+# -----------------------------------------------------------------------------.
+clear_path <- function(x) {
+  cmd <- paste0("cd ", dirname(x), "; rm -Rf ", basename(x))
+  execute(cmd)
+}
+
 # =============================================================================.
 # Vectorized version of make_path
 # -----------------------------------------------------------------------------.

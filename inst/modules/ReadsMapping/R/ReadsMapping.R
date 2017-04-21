@@ -1,10 +1,17 @@
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-availableMappingIndexes <- function(midx) {
+availableMappingIndexes <- function(
+  host = host_name(), profile = NULL, mapper = NULL
+) {
 
-  host <- Sys.info()["nodename"]
-  midx <- midx[midx$hostname == host,]
+  midx <- make_path(config_path(), "MAPPING_INDEXES.txt")
+  if(! file.exists(midx)) stop("package is broken")
+  midx <- read.delim(midx, stringsAsFactors = F)
+
+  if(! is.null(host)) midx <- midx[midx$hostname == host,]
+  if(! is.null(profile)) midx <- midx[midx$profile == profile,]
+  if(! is.null(mapper)) midx <- midx[midx$mapper == mapper,]
 
   txt <- midx$sequence_path
   chk <- file.exists(txt)

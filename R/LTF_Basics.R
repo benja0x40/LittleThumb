@@ -56,7 +56,8 @@ load_modules <- function() {
   for(fpath in lst) {
     exe <- c(exe, dir(fpath, full.names = T, pattern = "\\.R$"))
   }
-  sapply(exe, source, local = baseenv())
+  # asNamespace("LittleThumb") == environment(lt_env)
+  sapply(exe, source, local = as.environment("package:LittleThumb"))
 }
 
 # =============================================================================.

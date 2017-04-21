@@ -29,12 +29,14 @@ openLittleThumb()
 # =============================================================================.
 # External configuration
 # -----------------------------------------------------------------------------.
-MAPPING_INDEXES <- make_path(config_path(), "MAPPING_INDEXES.txt")
+# MAPPING_INDEXES <- make_path(config_path(), "MAPPING_INDEXES.txt")
+# if(! file.exists(MAPPING_INDEXES)) stop("package is broken")
+# MAPPING_INDEXES <- read.delim(MAPPING_INDEXES, stringsAsFactors = F)
+# MAPPING_INDEXES <- availableMappingIndexes(MAPPING_INDEXES)
+# MAPPING_INDEXES <- filter(MAPPING_INDEXES, hostname == host_name())
 
-if(! file.exists(MAPPING_INDEXES)) stop("package is broken")
-MAPPING_INDEXES <- read.delim(MAPPING_INDEXES, stringsAsFactors = F)
-MAPPING_INDEXES <- availableMappingIndexes(MAPPING_INDEXES)
-MAPPING_INDEXES <- filter(MAPPING_INDEXES, hostname == host_name())
+MAPPING_INDEXES <- availableMappingIndexes()
+
 # =============================================================================.
 # Internal configuration
 # -----------------------------------------------------------------------------.
