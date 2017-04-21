@@ -13,5 +13,5 @@ lt_load(file, ...)
 object
 }
 \description{
-lt_load
+load an object from its self definition
 }

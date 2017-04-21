@@ -12,5 +12,5 @@ lt_save(obj, file, ...)
 \item{file}{path or connexion}
 }
 \description{
-lt_save
+save the self definition of an object
 }
