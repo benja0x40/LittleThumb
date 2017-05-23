@@ -46,17 +46,23 @@ LT_Workspace <- function(...) {
 
 # METHODS ######################################################################
 
-# > FileSystem #################################################################
+# > FileSystem : self location #################################################
 
 # =============================================================================.
 # Path to workspace folder
 # -----------------------------------------------------------------------------.
-self_path.LT_Workspace <- function(obj) {
-  obj@path
-}
+self_path.LT_Workspace <- function(obj) { obj@path }
 # -----------------------------------------------------------------------------.
-`self_path<-.LT_Workspace` <- function(obj, path) {
-  obj@path <- path
+`self_path<-.LT_Workspace` <- function(obj, value) {
+
+  LTE <- lt_env()
+
+  # Update path in the workspace register
+  i <- match(obj@name, LTE$workspaces$name)
+  if(! is.na(i)) LTE$workspaces$path[i] <- value
+
+  obj@path <- value
+
   obj
 }
 
@@ -126,6 +132,8 @@ create_workspace <- function(name, path = NULL) {
 
   idx <- which(td_selector(LTE$workspaces, name == lbl))
   LTE$workspaces[idx, "is_created"] <- T
+
+  .lte_save.()
 }
 # =============================================================================.
 # Delete workspace folders
@@ -151,11 +159,13 @@ delete_workspace <- function(name, ask = T) {
 
     clear_path(flp)
   }
+
+  .lte_save.()
 }
 # =============================================================================.
 # Load workspace environment in R
 # -----------------------------------------------------------------------------.
-open_workspace <- function(name, path = NULL) {
+open_workspace <- function(name, path = NULL, reopen = F) {
 
   LTE <- lt_env()
   env <- globalenv()
@@ -165,7 +175,7 @@ open_workspace <- function(name, path = NULL) {
   if(! chk) stop("workspace has to be created before it can be opened")
 
   chk <- td_selector(LTE$workspaces, name == lbl, v = "is_opened")
-  if(! chk) {
+  if(reopen | ! chk) {
     env[[lbl]] <- LT_Workspace()
     env[[lbl]]@name <- lbl
     env[[lbl]]@path <- td_selector(LTE$workspaces, name == lbl, v = "path")

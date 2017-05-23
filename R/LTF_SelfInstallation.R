@@ -123,7 +123,11 @@ installLittleThumb <- function() {
   }
 
   # Add path to ~/bin/littlethumb
-  bashrc  <- paste0(home_path(), "/.bashrc")
+  if(Sys.info()["sysname"] == "Darwin") {
+    bashrc  <- paste0(home_path(), "/.bash_profile")
+  } else {
+    bashrc  <- paste0(home_path(), "/.bashrc")
+  }
   if(! file.exists(bashrc)) {
     cmd <- paste("touch", bashrc)
     if(! all(execute(cmd))) stop("failed to create ~/.bashrc file")

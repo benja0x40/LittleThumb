@@ -39,37 +39,41 @@ is.LT_Dataset <- function(x) { inherits(x, "LT_Dataset") }
 
 # METHODS ######################################################################
 
-# > FileSystem #################################################################
+# > FileSystem : self definition ###############################################
 
 # =============================================================================.
 # Path to dataset definition
 # -----------------------------------------------------------------------------.
-lt_path.LT_Dataset <- function(obj, workspace, config, path_label = "DTSDIR") {
+lt_path.LT_Dataset <- function(
+  obj, workspace, config = lt_cfg(), path_label = "DTSDIR"
+) {
   LTE <- lt_env()
   path <- with(LTE$workspaces, path[match(workspace, name)])
   path <- make_path(path, make_path(config, path_label), obj$name, ext = ".txt")
   path
 }
 
+# > FileSystem : self location #################################################
+
 # =============================================================================.
 # Path to dataset folder
 # -----------------------------------------------------------------------------.
-self_path.LT_Dataset <- function(obj) {
-  obj$MD$path
-}
+self_path.LT_Dataset <- function(obj) { obj$MD$path }
 # -----------------------------------------------------------------------------.
-`self_path<-.LT_Dataset` <- function(obj, path) {
+`self_path<-.LT_Dataset` <- function(obj, value) {
 
   LTE <- lt_env()
 
   # Update path in the dataset register
   i <- which_dataset(id = obj$id)
-  if(! is.na(i)) LTE$datasets$path[i] <- path
+  if(length(i) > 0) LTE$datasets$path[i] <- value
 
-  obj$MD$path <- path
+  obj$MD$path <- value
 
   obj
 }
+
+# > FileSystem : elements ######################################################
 
 # =============================================================================.
 # Path to data files
@@ -84,7 +88,7 @@ elements_path.LT_Dataset <- function(obj, name = NULL) {
 # =============================================================================.
 # Path to data files
 # -----------------------------------------------------------------------------.
-elements_name <- function(obj) {
+elements_name.LT_Dataset <- function(obj) {
   kid <- obj$MD$keys$id
   obj$TD[[kid]]
 }
@@ -100,18 +104,49 @@ which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 
   # TODO: should be based on reg_idx in data.frame Registration interface
   idx <- integer()
-  if(! is.null(id)) {
-    idx <- match(id, LTE$datasets$id)
-  } else {
-    chk <- ! any(is.null(workspace), is.null(name))
-    checklist(chk, lst = "", msg = "workspace and name required")
-    idx <- base::intersect(
-      which(LTE$datasets$name %in% name),
-      which(LTE$datasets$workspace %in% workspace)
-    )
+  if(! is.null(workspace)) {
+    idx <- which(LTE$datasets$workspace %in% workspace)
   }
-
+  if(! is.null(name)) {
+    k <- which(LTE$datasets$name %in% name)
+    if(length(idx) > 0) k <- base::intersect(idx, k)
+    idx <- k
+  }
+  if(! is.null(id)) {
+    k <- which(LTE$datasets$id %in% id)
+    if(length(idx) > 0) k <- base::intersect(idx, k)
+    idx <- k
+  }
   idx
+}
+
+# =============================================================================.
+# Return registered dataset names
+# -----------------------------------------------------------------------------.
+dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
+  LTE <- lt_env()
+  dts <- NULL
+  idx <- which_dataset(id, workspace, name)
+  if(length(idx) > 0) {
+    wks <- get(LTE$datasets$workspace[idx], pos = globalenv())
+    dts <- wks@datasets[[idx]]
+    if(is.null(dts)) dts <- lt_load(LTE$datasets$lt_path[idx])
+  }
+  dts
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+dataset_md <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$MD
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$TD
 }
 # =============================================================================.
 # Return registered dataset names
@@ -212,7 +247,7 @@ create_dataset <- function(
   # Create destination path
   path <- with(LTE$workspaces, path[match(workspace, name)])
   path <- make_path(path, dts$MD$path)
-  dir.create(path, showWarnings = F)
+  dir.create(path, recursive = T, showWarnings = F)
 
   # Make annotations ///////////////////////////////////////////////////////////
 
@@ -305,10 +340,11 @@ create_dataset <- function(
 
   # Copy data files ////////////////////////////////////////////////////////////
 
-  chk <- normalizePath(flp) != normalizePath(path)
+  # TODO: better management should be done here
+  chk <- ! basename(flp) %in% dir(path)
   if(any(chk)) {
     message("Copying files...")
-    file.copy(from = flp[chk], to = path[chk], overwrite = F, copy.date = T)
+    file.copy(from = flp[chk], to = path, overwrite = F, copy.date = T)
   }
 
   if(delete_source) {
@@ -329,7 +365,7 @@ create_dataset <- function(
 
   # Store dataset definition
   env <- globalenv()
-  env[[workspace]]@datasets[[dts$name]] <- dts
+  env[[workspace]]@datasets[[dts$id]] <- dts
 
   # Register dataset
   x <- list(
@@ -345,7 +381,9 @@ create_dataset <- function(
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-clone_dataset <- function(workspace, dataset, name, path = NULL) {
+clone_dataset <- function(
+  workspace, dataset, name, path = NULL, files = NULL, file_columns = NULL
+) {
 
   LTE <- lt_env()
   env <- globalenv()
@@ -357,7 +395,19 @@ clone_dataset <- function(workspace, dataset, name, path = NULL) {
   dts$MD$source <- list(id = dts$id, name = dts$name)
   dts$id <- make_id()
   dts$name <- name
-  if(! is.null(path)) self_path(dts) <- path
+  if(! is.null(path)) {
+    self_path(dts) <- path
+    path <- make_path(self_path(env[[workspace]]), path)
+    dir.create(path, recursive = T, showWarnings = F)
+  }
+
+  # Data binding
+  if(! is.null(file_columns)) {
+    dts$MD$keys$files <- file_columns
+  }
+  if(! is.null(files)) {
+    dts$TD[[dts$MD$keys$files]] <- files
+  }
 
   # Save the cloned dataset definition
   path <- lt_path(dts, workspace, LTE$config)
@@ -366,8 +416,10 @@ clone_dataset <- function(workspace, dataset, name, path = NULL) {
   # Store the cloned dataset definition
   env[[workspace]]@datasets[[dts$id]] <- dts
 
-  # do not copy loaded data
-  # env[[workspace]][[dts$name]] <- env[[workspace]][[dataset]]
+  # Copy loaded data
+  if(! is.null(env[[workspace]][[dataset]])) {
+    env[[workspace]][[dts$name]] <- env[[workspace]][[dataset]]
+  }
 
   # Register the cloned dataset
   x <- list(
@@ -376,6 +428,9 @@ clone_dataset <- function(workspace, dataset, name, path = NULL) {
   )
 
   LTE$datasets <- rbind(LTE$datasets, x, stringsAsFactors = F)
+
+  # Update LTE /////////////////////////////////////////////////////////////////
+  .lte_save.()
 }
 
 # =============================================================================.
@@ -387,7 +442,6 @@ move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
 # Delete dataset definition and associated data from a workspace folder
 # -----------------------------------------------------------------------------.
 # delete_dataset <- function(workspace, dataset) { }
-# clone_dataset <- function(workspace, dataset, name, path = NULL) { }
 # merge_datasets <- function(workspace, dataset1, dataset2, name, path = NULL, delete = F) { }
 
 # =============================================================================.
@@ -458,6 +512,7 @@ load_data <- function(
     env[[wks]][[dts$name]] <- lapply(flp, FUN = fun, ...)
     names(env[[wks]][[dts$name]]) <- elements_name(dts)
   }
+  message("Loading data...")
   apply2dataset(executor = rd, fun = reader, workspace, dataset, element, ...)
 }
 
@@ -478,6 +533,7 @@ save_data <- function(
       writer(env[[wks]][[dts$name]][[lbl]], flp[lbl], ...)
     }
   }
+  message("Saving data...")
   apply2dataset(executor = wd, fun = writer, workspace, dataset, element, ...)
 }
 # =============================================================================.

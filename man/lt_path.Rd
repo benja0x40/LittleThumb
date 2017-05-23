@@ -13,5 +13,5 @@ lt_path(obj, ...)
 lt_path returns the path to the object's self definition
 }
 \description{
-self defintion path of an object
+path to the self definition of an object
 }

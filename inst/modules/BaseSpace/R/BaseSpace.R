@@ -31,7 +31,10 @@ basespace_available <- function(mnt) {
   file.exists(paste0(mnt, "/Projects"))
 }
 # =============================================================================.
-#
+#' basespace_projects
+# -----------------------------------------------------------------------------.
+#' @param mnt BaseSpace mount path
+#' @return basespace_projects returns a character vector of project names
 # -----------------------------------------------------------------------------.
 basespace_projects <- function(mnt) {
   dir(paste0(mnt, "/Projects"))
@@ -48,7 +51,11 @@ basespace_properties <- function(x) {
   v
 }
 # =============================================================================.
-#
+#' basespace_dataset
+# -----------------------------------------------------------------------------.
+#' @param mnt BaseSpace mount path
+#' @param prj project name
+#' @return basespace_dataset returns a data.frame of sample properties
 # -----------------------------------------------------------------------------.
 basespace_dataset <- function(mnt, prj) {
   fpath <- paste0(mnt, "/Projects/", prj, "/Samples")

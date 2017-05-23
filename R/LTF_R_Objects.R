@@ -163,4 +163,3 @@ reassign <- function(obj, pos, src = globalenv(), keep = F) {
 #   f <- paste0("is.", name)
 #   assign(f, function(x) { inherits(x, name) }, pos = parent.env(environment()))
 # }
-

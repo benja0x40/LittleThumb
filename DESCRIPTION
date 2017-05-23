@@ -55,6 +55,7 @@ Collate:
     'LTC_Workspace.R'
     'LTC_Dataset.R'
     'LTE.R'
+    'LTF_RData.R'
     'LTF_SelfInstallation.R'
     'LTF_data.frame.R'
     'zzz.R'

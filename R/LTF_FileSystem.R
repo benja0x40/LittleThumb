@@ -1,46 +1,9 @@
-# GENERIC ######################################################################
-
-# =============================================================================.
-# Interfaces
-# -----------------------------------------------------------------------------.
-make_path <- function (obj, ...) { UseMethod("make_path", obj) }
-list_paths <- function (obj, ...) { UseMethod("list_paths", obj) }
-create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
-check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
-
-
-self_path <- function (obj, ...) { UseMethod("self_path", obj) }
-`self_path<-` <- function (obj, ...) { UseMethod("self_path<-", obj) }
-
-elements_path <- function (obj, ...) { UseMethod("elements_path", obj) }
-`elements_path<-` <- function (obj, ...) { UseMethod("elements_path<-", obj) }
-
-elements_name <- function (obj, ...) { UseMethod("elements_name", obj) }
-`elements_name<-` <- function (obj, ...) { UseMethod("elements_name<-", obj) }
-
-# lt_save <- function (obj, ...) { UseMethod("lt_save", obj) }
-# lt_load <- function (con, ...) { UseMethod("lt_load", obj) }
-# -----------------------------------------------------------------------------.
-make_path.default <- function (obj, ...) {
-  NextMethod("make_path", obj, ...)
-}
-list_paths.default <- function (obj, ...) {
-  NextMethod("list_paths", obj, ...)
-}
-create_paths.default <- function (obj, ...) {
-  NextMethod("create_paths", obj, ...)
-}
-check_paths.default <- function (obj, ...) {
-  NextMethod("check_paths", obj, ...)
-}
-# -----------------------------------------------------------------------------.
-
-# SELF DEFINITION I/O ##########################################################
+# SELF DEFINITION ##############################################################
 
 # =============================================================================.
 #' lt_path
 # -----------------------------------------------------------------------------.
-#' @description self defintion path of an object
+#' @description path to the self definition of an object
 #' @param obj either an LT_Config, LT_Workspace or LT_Dataset object
 #' @return lt_path returns the path to the object's self definition
 # -----------------------------------------------------------------------------.
@@ -78,11 +41,86 @@ lt_load <- function(file, ...) {
 
 # SELF LOCATION ################################################################
 
+# =============================================================================.
+#' self_path
+# -----------------------------------------------------------------------------.
+#' @description path to workspaces and datasets
+#' @param obj either an LT_Workspace or LT_Dataset object
+#' @return self_path returns the path to the workspace or dataset
+# -----------------------------------------------------------------------------.
+self_path <- function (obj, ...) {
+  UseMethod("self_path", obj)
+}
+self_path.default <- function (obj, ...) {
+  NextMethod("self_path", obj, ...)
+}
+# -----------------------------------------------------------------------------.
+`self_path<-` <- function (obj, ...) {
+  UseMethod("self_path<-", obj)
+}
+`self_path<-.default` <- function (obj, ...) {
+  NextMethod("self_path<-", obj, ...)
+}
 
-# ELEMENTS #################################################################
+# ELEMENTS #####################################################################
 
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+elements_path <- function (obj, ...) {
+  UseMethod("elements_path", obj)
+}
+elements_path.default <- function (obj, ...) {
+  NextMethod("elements_path", obj, ...)
+}
+# -----------------------------------------------------------------------------.
+`elements_path<-` <- function (obj, ...) {
+  UseMethod("elements_path<-", obj)
+}
+`elements_path<-.default` <- function (obj, ...) {
+  NextMethod("elements_path<-", obj, ...)
+}
 
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+elements_name <- function (obj, ...) {
+  UseMethod("elements_name", obj)
+}
+elements_name.default <- function (obj, ...) {
+  NextMethod("elements_name", obj, ...)
+}
+# -----------------------------------------------------------------------------.
+`elements_name<-` <- function (obj, ...) {
+  UseMethod("elements_name<-", obj)
+}
+`elements_name<-.default` <- function (obj, ...) {
+  NextMethod("elements_name<-", obj, ...)
+}
 
+# GENERIC ######################################################################
+
+# =============================================================================.
+# Interfaces
+# -----------------------------------------------------------------------------.
+make_path <- function (obj, ...) { UseMethod("make_path", obj) }
+list_paths <- function (obj, ...) { UseMethod("list_paths", obj) }
+create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
+check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
+# -----------------------------------------------------------------------------.
+make_path.default <- function (obj, ...) {
+  NextMethod("make_path", obj, ...)
+}
+list_paths.default <- function (obj, ...) {
+  NextMethod("list_paths", obj, ...)
+}
+create_paths.default <- function (obj, ...) {
+  NextMethod("create_paths", obj, ...)
+}
+check_paths.default <- function (obj, ...) {
+  NextMethod("check_paths", obj, ...)
+}
+# -----------------------------------------------------------------------------.
 
 # FUNCTIONS ####################################################################
 
@@ -90,7 +128,7 @@ lt_load <- function(file, ...) {
 # clear_path
 # -----------------------------------------------------------------------------.
 clear_path <- function(x) {
-  cmd <- paste0("cd ", dirname(x), "; rm -Rf ", basename(x))
+  cmd <- paste0("cd ", dirname(x), "; rm -Rf ", basename(x), " &>/dev/null")
   execute(cmd)
 }
 

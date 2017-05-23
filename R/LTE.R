@@ -48,9 +48,21 @@ lt_env <- function(auto_start = T, silent = T, error = ! auto_start) {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
+lt_cfg <- function() {
+  lt_env()$config
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
 .lte_save. <- function() {
   LTE <- lt_env(auto_start = F)
+
+  opn <- LTE$workspaces$is_opened
+  if(length(opn) > 0) LTE$workspaces$is_opened <- F
+
   saveRDS(LTE, .lte_path.(LTE$config))
+
+  LTE$workspaces$is_opened <- opn
 }
 # =============================================================================.
 #' openLittleThumb
