@@ -130,6 +130,9 @@ dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
   dts <- NULL
   idx <- which_dataset(id, workspace, name)
   if(length(idx) > 0) {
+    wks <- LTE$datasets$workspace[idx]
+    chk <- with(LTE$workspaces, is_opened[match(wks, name)])
+    if(! chk) stop("workspace is not opened ", wks)
     wks <- get(LTE$datasets$workspace[idx], pos = globalenv())
     dts <- wks@datasets[[idx]]
     if(is.null(dts)) dts <- lt_load(LTE$datasets$lt_path[idx])
