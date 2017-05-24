@@ -103,20 +103,22 @@ which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
   LTE <- lt_env()
 
   # TODO: should be based on reg_idx in data.frame Registration interface
-  idx <- integer()
+  idx <- NULL
   if(! is.null(workspace)) {
     idx <- which(LTE$datasets$workspace %in% workspace)
   }
   if(! is.null(name)) {
     k <- which(LTE$datasets$name %in% name)
-    if(length(idx) > 0) k <- base::intersect(idx, k)
+    if(! is.null(idx)) k <- base::intersect(idx, k)
     idx <- k
   }
   if(! is.null(id)) {
     k <- which(LTE$datasets$id %in% id)
-    if(length(idx) > 0) k <- base::intersect(idx, k)
+    if(! is.null(idx))  k <- base::intersect(idx, k)
     idx <- k
   }
+  if(is.null(idx)) idx <- integer()
+
   idx
 }
 
@@ -388,9 +390,9 @@ clone_dataset <- function(
   LTE <- lt_env()
   env <- globalenv()
 
-  dataset_id <- td_selector(
-    LTE$datasets, workspace == workspace & name == dataset, "id"
-  )
+  idx <- which_dataset(workspace = workspace, name = dataset)
+  dataset_id <- LTE$datasets$id[idx]
+
   dts <- env[[workspace]]@datasets[[dataset_id]]
   dts$MD$source <- list(id = dts$id, name = dts$name)
   dts$id <- make_id()
