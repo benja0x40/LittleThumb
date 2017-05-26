@@ -3,7 +3,9 @@
 # =============================================================================.
 # Interfaces
 # -----------------------------------------------------------------------------.
+#' @export
 rownames2col <- function (x, ...) { UseMethod("rownames2col", x) }
+#' @export
 col2rownames <- function (x, ...) { UseMethod("col2rownames", x) }
 # -----------------------------------------------------------------------------.
 rownames2col.default <- function (x, ...) { NextMethod("rownames2col", x, ...) }
@@ -34,6 +36,7 @@ col2rownames.data.frame <- function(x, rnc) {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
+#' @export
 add_class <- function(obj, name) {
   class(obj) <- append(name, class(obj))
   obj
@@ -52,6 +55,7 @@ add_class <- function(obj, name) {
 # =============================================================================.
 #' check_class
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description
 #' verify if R object belong to requested classes
 #'
@@ -80,6 +84,7 @@ check_class <- function(x, class, lst = F, strict = T, error = F) {
 #'   \link{assign},
 #'   \link{environment}
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description
 #' copy or move an R object from the source environment \code{src} to the target
 #' environment \code{pos}.

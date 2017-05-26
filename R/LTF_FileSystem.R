@@ -3,6 +3,7 @@
 # =============================================================================.
 #' lt_path
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description path to the self definition of an object
 #' @param obj either an LT_Config, LT_Workspace or LT_Dataset object
 #' @return lt_path returns the path to the object's self definition
@@ -13,6 +14,7 @@ lt_path.default <- function (obj, ...) { NextMethod("lt_path", obj, ...) }
 # =============================================================================.
 #' lt_save
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description save the self definition of an object
 #' @param obj object
 #' @param file path or connexion
@@ -23,6 +25,7 @@ lt_save <- function(obj, file, ...) {
 # =============================================================================.
 #' lt_load
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description load an object from its self definition
 #' @param file path or connexion
 #' @return object
@@ -44,6 +47,7 @@ lt_load <- function(file, ...) {
 # =============================================================================.
 #' self_path
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description path to workspaces and datasets
 #' @param obj either an LT_Workspace or LT_Dataset object
 #' @return self_path returns the path to the workspace or dataset
@@ -101,12 +105,19 @@ elements_name.default <- function (obj, ...) {
 # GENERIC ######################################################################
 
 # =============================================================================.
-# Interfaces
+#' make_path
 # -----------------------------------------------------------------------------.
-make_path <- function (obj, ...) { UseMethod("make_path", obj) }
-list_paths <- function (obj, ...) { UseMethod("list_paths", obj) }
+#' @export
+#' @param obj
+#' @param ...
+#'
+#' @return path
+# -----------------------------------------------------------------------------.
+make_path    <- function (obj, ...) { UseMethod("make_path", obj) }
+# -----------------------------------------------------------------------------.
+list_paths   <- function (obj, ...) { UseMethod("list_paths", obj) }
 create_paths <- function (obj, ...) { UseMethod("create_paths", obj) }
-check_paths <- function (obj, ...) { UseMethod("check_paths", obj) }
+check_paths  <- function (obj, ...) { UseMethod("check_paths", obj) }
 # -----------------------------------------------------------------------------.
 make_path.default <- function (obj, ...) {
   NextMethod("make_path", obj, ...)
@@ -125,10 +136,19 @@ check_paths.default <- function (obj, ...) {
 # FUNCTIONS ####################################################################
 
 # =============================================================================.
-# clear_path
+#' clear_path
+# -----------------------------------------------------------------------------.
+#' @export
+#' @description recursively delete a given directory.
+#'
+#' @param x path to be deleted (USE WITH CAUTION)
+#'
+#' @return NULL
 # -----------------------------------------------------------------------------.
 clear_path <- function(x) {
-  cmd <- paste0("cd ", dirname(x), "; rm -Rf ", basename(x), " &>/dev/null")
+  cmd <- paste0(
+    "cd ", dirname(x), " &>/dev/null; rm -Rf ", basename(x), " &>/dev/null"
+  )
   execute(cmd)
 }
 
@@ -145,6 +165,7 @@ make_paths <- function(obj, name, root = "", key = 1, value = 2) {
 # =============================================================================.
 #' make_path
 # -----------------------------------------------------------------------------.
+#' @export
 #' @description
 #' Path construction using depth search first.
 #' Note: Does not support multiple occurence of the same path key in the path
@@ -203,6 +224,7 @@ make_path.data.frame <- function(
 # =============================================================================.
 #' make_path
 # -----------------------------------------------------------------------------.
+#' @export
 #' @param ... components of a file path
 #' @param ext file name extension (default = "")
 # -----------------------------------------------------------------------------.

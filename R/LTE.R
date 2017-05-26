@@ -39,15 +39,25 @@
   chk
 }
 # =============================================================================.
-#
+#' lt_env
 # -----------------------------------------------------------------------------.
+#' @param auto_start
+#' @param silent
+#' @param error
+#'
+#' @return the LittleThumb environment
+# -----------------------------------------------------------------------------.
+#' @export
 lt_env <- function(auto_start = T, silent = T, error = ! auto_start) {
   if(auto_start & ! .lte_is_loaded.(silent, error)) openLittleThumb()
   get(.lte_name.(), pos = globalenv())
 }
 # =============================================================================.
-#
+#' lt_cfg
 # -----------------------------------------------------------------------------.
+#' @return the LittleThumb configuration
+# -----------------------------------------------------------------------------.
+#' @export
 lt_cfg <- function() {
   lt_env()$config
 }
@@ -67,6 +77,18 @@ lt_cfg <- function() {
 # =============================================================================.
 #' openLittleThumb
 # -----------------------------------------------------------------------------.
+#' @import methods
+#' @import stringr
+#' @import tibble
+#' @import dplyr
+#' @import jsonlite
+#' @import optparse
+#' @import igraph
+#' @import GEOquery
+#' @import SRAdb
+#' @import GenomeInfoDb
+# -----------------------------------------------------------------------------.
+#' @export
 #' @description
 #' Load or create the LittleThumb environement (LTE), which contains
 #' configuration options as well as the workspace, dataset and job registers.
@@ -95,7 +117,7 @@ openLittleThumb <- function() {
       )
       LTE <- lt_env()
       LTE$start_time       <- Sys.time()
-      LTE$config           <- cfg   # LT_Config
+      LTE$config           <- cfg # LT_Config
       LTE$workspaces       <- LT_TabularData()
       LTE$datasets         <- LT_TabularData()
       LTE$jobs             <- LT_TabularData()
@@ -105,11 +127,15 @@ openLittleThumb <- function() {
   }
 }
 # =============================================================================.
-#
+#' closeLittleThumb
+# -----------------------------------------------------------------------------.
+#' @export
+#' @param ask
+#'
+#' @return NULL
 # -----------------------------------------------------------------------------.
 closeLittleThumb <- function(ask = T) {
   if(.lte_is_loaded.()) {
-
 
     LTE <- lt_env()
     lst <- list_workspaces(detailed = F, is_opened == TRUE)
@@ -136,7 +162,12 @@ closeLittleThumb <- function(ask = T) {
   }
 }
 # =============================================================================.
-#
+#' resetLittleThumb
+# -----------------------------------------------------------------------------.
+#' @export
+#' @param ask
+#'
+#' @return NULL
 # -----------------------------------------------------------------------------.
 resetLittleThumb <- function(ask = T) {
 

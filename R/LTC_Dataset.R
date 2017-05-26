@@ -18,14 +18,7 @@
 # =============================================================================.
 # Inherits from: LT_Data
 # =============================================================================.
-#' LT_Dataset
-# -----------------------------------------------------------------------------.
-#' @description
-#'
-#' @param ...
-#'
-#' @return
-#' an object of class LT_Dataset
+# LT_Dataset
 # -----------------------------------------------------------------------------.
 LT_Dataset <- function(...) {
 
@@ -96,122 +89,31 @@ elements_name.LT_Dataset <- function(obj) {
 # > Dataset ####################################################################
 
 # =============================================================================.
-# Return registered dataset names
-# -----------------------------------------------------------------------------.
-which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
-
-  LTE <- lt_env()
-
-  # TODO: should be based on reg_idx in data.frame Registration interface
-  idx <- NULL
-  if(! is.null(workspace)) {
-    idx <- which(LTE$datasets$workspace %in% workspace)
-  }
-  if(! is.null(name)) {
-    k <- which(LTE$datasets$name %in% name)
-    if(! is.null(idx)) k <- base::intersect(idx, k)
-    idx <- k
-  }
-  if(! is.null(id)) {
-    k <- which(LTE$datasets$id %in% id)
-    if(! is.null(idx))  k <- base::intersect(idx, k)
-    idx <- k
-  }
-  if(is.null(idx)) idx <- integer()
-
-  idx
-}
-
-# =============================================================================.
-# Return registered dataset names
-# -----------------------------------------------------------------------------.
-dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
-  LTE <- lt_env()
-  dts <- NULL
-  idx <- which_dataset(id, workspace, name)
-  if(length(idx) > 0) {
-    wks <- LTE$datasets$workspace[idx]
-    chk <- with(LTE$workspaces, is_opened[match(wks, name)])
-    if(! chk) stop("workspace is not opened ", wks)
-    wks <- get(LTE$datasets$workspace[idx], pos = globalenv())
-    dts <- wks@datasets[[idx]]
-    if(is.null(dts)) dts <- lt_load(LTE$datasets$lt_path[idx])
-  }
-  dts
-}
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-dataset_md <- function(id = NULL, workspace = NULL, name = NULL) {
-  dts <- dataset_object(id, workspace, name)
-  dts$MD
-}
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
-  dts <- dataset_object(id, workspace, name)
-  dts$TD
-}
-# =============================================================================.
-# Return registered dataset names
-# -----------------------------------------------------------------------------.
-list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
-
-  LTE <- lt_env()
-
-  if(is.null(workspace)) {
-    workspace <- list_workspaces()
-  } else {
-    chk <- is_registered.data.frame(LTE$workspaces, x = workspace, error = T)
-  }
-
-  dts <- LTE$datasets
-  if(nrow(dts) > 0) {
-    dts <- dts[dts$workspace %in% workspace, ]
-    if(! detailed) dts <- dts$name
-  } else {
-    if(! detailed) dts <- character()
-  }
-
-  dts
-}
-
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-# change_dataset_path <- function(workspace, dataset, path) {
-#
-#   LTE <- lt_env()
-#   env <- globalenv()
-#
-#   dataset_id <- td_selector(
-#     LTE$datasets, workspace == workspace & name == dataset, "id"
-#   )
-#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
-# }
-
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-get_dataset_object <- function(workspace, dataset) {
-
-}
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-get_dataset_index <- function(context = c("wks", "reg"), workspace, dataset) {
-
-}
-
-# =============================================================================.
-# Create dataset definition and copy associated data inside a workspace folder
+#' create_dataset
 # -----------------------------------------------------------------------------.
 # Use cases:
 # - from a whole folder
 # - from files within a folder
 # - from a given list of files
 # -----------------------------------------------------------------------------.
+#' @description
+#' Create dataset definition and copy associated data inside a workspace folder
+#'
+#' @param workspace
+#' @param source_path
+#' @param files
+#' @param pattern
+#' @param annotations
+#' @param id_column
+#' @param file_columns
+#' @param name
+#' @param path
+#' @param delete_source
+#' @param ask
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 create_dataset <- function(
   workspace, source_path = NULL, files = NULL, pattern = NULL,
   annotations = NULL, id_column = "name", file_columns = "file",
@@ -384,8 +286,150 @@ create_dataset <- function(
 }
 
 # =============================================================================.
+#' list_datasets
+# -----------------------------------------------------------------------------.
+#' @description
+#' Return registered dataset names
+#'
+#' @param workspace
+#' @param detailed
+#' @param x
+#'
+#' @return dataset names
+# -----------------------------------------------------------------------------.
+#' @export
+list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
+
+  LTE <- lt_env()
+
+  if(is.null(workspace)) workspace <- list_workspaces()
+  checklist(
+    workspace %in% LTE$workspaces$name, workspace, msg = "undefined workspace"
+  )
+
+  dts <- LTE$datasets
+  if(nrow(dts) > 0) {
+    dts <- dts[dts$workspace %in% workspace, ]
+    if(! detailed) dts <- dts$name
+  } else {
+    if(! detailed) dts <- character()
+  }
+
+  dts
+}
+# =============================================================================.
+#' which_dataset
+# -----------------------------------------------------------------------------.
+#' @description
+#' Return the register index of datasets
+#'
+#' @param id
+#' @param workspace
+#' @param name
+#'
+#' @return integer
+# -----------------------------------------------------------------------------.
+#' @export
+which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
+
+  LTE <- lt_env()
+
+  # TODO: should be based on reg_idx in data.frame Registration interface
+  idx <- NULL
+  if(! is.null(workspace)) {
+    idx <- which(LTE$datasets$workspace %in% workspace)
+  }
+  if(! is.null(name)) {
+    k <- which(LTE$datasets$name %in% name)
+    if(! is.null(idx)) k <- base::intersect(idx, k)
+    idx <- k
+  }
+  if(! is.null(id)) {
+    k <- which(LTE$datasets$id %in% id)
+    if(! is.null(idx))  k <- base::intersect(idx, k)
+    idx <- k
+  }
+  if(is.null(idx)) idx <- integer()
+
+  idx
+}
+
+# =============================================================================.
+#' dataset_object
+# -----------------------------------------------------------------------------.
+#' @description
+#' Return registered dataset names
+#'
+#' @param id
+#' @param workspace
+#' @param name
+#'
+#' @return object of class LT_Dataset
+# -----------------------------------------------------------------------------.
+#' @export
+dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
+
+  LTE <- lt_env()
+
+  dts <- NULL
+  idx <- which_dataset(id, workspace, name)
+  if(length(idx) > 1) stop("query matches multiple datasets")
+  if(length(idx) > 0) {
+    lti <- LTE$datasets$id[idx]
+    wks <- LTE$datasets$workspace[idx]
+    chk <- with(LTE$workspaces, is_opened[match(wks, name)])
+    if(! chk) stop("workspace is not opened: ", wks)
+    wks <- globalenv()[[wks]]
+    dts <- wks@datasets[[lti]]
+    if(is.null(dts)) dts <- lt_load(LTE$datasets$lt_path[idx])
+  }
+
+  dts
+}
+# =============================================================================.
 #
 # -----------------------------------------------------------------------------.
+#' @export
+dataset_md <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$MD
+}
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+#' @export
+dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$TD
+}
+
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+# change_dataset_path <- function(workspace, dataset, path) {
+#
+#   LTE <- lt_env()
+#   env <- globalenv()
+#
+#   dataset_id <- td_selector(
+#     LTE$datasets, workspace == workspace & name == dataset, "id"
+#   )
+#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
+# }
+
+# =============================================================================.
+#' clone_dataset
+# -----------------------------------------------------------------------------.
+#' @param workspace
+#' @param dataset
+#' @param name
+#' @param path
+#' @param files
+#' @param file_columns
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 clone_dataset <- function(
   workspace, dataset, name, path = NULL, files = NULL, file_columns = NULL
 ) {
@@ -450,8 +494,20 @@ move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
 # merge_datasets <- function(workspace, dataset1, dataset2, name, path = NULL, delete = F) { }
 
 # =============================================================================.
+#' apply2dataset
+# -----------------------------------------------------------------------------.
 # TODO: make sure the workspaces are opened
 # -----------------------------------------------------------------------------.
+#' @param executor
+#' @param fun
+#' @param workspace
+#' @param dataset
+#' @param element
+#' @param ...
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 apply2dataset <- function(
   executor, fun, workspace = NULL, dataset = NULL, element = NULL, ...
 ) {
@@ -503,8 +559,20 @@ apply2dataset <- function(
 }
 
 # =============================================================================.
-# Load data from workspace/dataset folders into the workspace environment
+#' load_data
 # -----------------------------------------------------------------------------.
+#' @description
+#' Load data from workspace/dataset folders into the workspace environment
+#'
+#' @param workspace
+#' @param dataset
+#' @param element
+#' @param reader
+#' @param ...
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 load_data <- function(
   workspace = NULL, dataset = NULL, element = NULL, reader = read.delim, ...
 ) {
@@ -522,8 +590,20 @@ load_data <- function(
 }
 
 # =============================================================================.
-# Save data from the workspace environment into workspace/dataset folders
+#' save_data
 # -----------------------------------------------------------------------------.
+#' @description
+#' Save data from the workspace environment into workspace/dataset folders
+#'
+#' @param workspace
+#' @param dataset
+#' @param element
+#' @param writer
+#' @param ...
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 save_data <- function(
   workspace = NULL, dataset = NULL, element = NULL, writer = write.table, ...
 ) {

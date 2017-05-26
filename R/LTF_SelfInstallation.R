@@ -104,6 +104,7 @@
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
+#' @export
 installLittleThumb <- function() {
 
   # Find path of the executable script in package LittleThumb

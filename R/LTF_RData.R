@@ -90,6 +90,7 @@ rdataPath <- function(path = NULL, name = NULL) {
 #' loadObj(a)
 #' print(a)
 # -----------------------------------------------------------------------------.
+#' @export
 saveObj <- function(obj, path = NULL, name = NULL, ...) {
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
@@ -165,6 +166,7 @@ saveObj <- function(obj, path = NULL, name = NULL, ...) {
 #' loadObj(a)
 #' print(a)
 # -----------------------------------------------------------------------------.
+#' @export
 loadObj <- function(
   obj, path = NULL, name = NULL, need = F, pos = .GlobalEnv, overload = F, ...
 ) {
@@ -195,6 +197,7 @@ loadObj <- function(
   ! is.null(res)
 }
 # -----------------------------------------------------------------------------.
+#' @export
 availableObj <- function(obj, path = NULL, name = NULL) {
   obj.name <- name
   if(is.null(obj.name) & ! missing(obj)) {

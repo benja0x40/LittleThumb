@@ -7,6 +7,9 @@
 \method{create_paths}{LT_Config}(obj, x = NULL, root = "", key = 1,
   value = 2)
 }
+\arguments{
+\item{value}{}
+}
 \description{
 create_paths
 }

@@ -6,6 +6,12 @@
 \usage{
 \method{make_path}{LT_Config}(obj, name, root = "", key = 1, value = 2)
 }
+\arguments{
+\item{value}{}
+}
+\value{
+path
+}
 \description{
-make_path
+path assembly
 }

@@ -50,7 +50,6 @@ Collate:
     'LTC_MetaData.R'
     'LTC_TabularData.R'
     'LTC_Data.R'
-    'LTC_Channel.R'
     'LTC_Config.R'
     'LTC_Workspace.R'
     'LTC_Dataset.R'

@@ -28,20 +28,15 @@ trash <- setClass(
   prototype = prototype(name = "", path = "", datasets = list(), jobs = list())
 )
 # =============================================================================.
-#' LT_Workspace
-# -----------------------------------------------------------------------------.
-#' @description
-#'
-#' @param ...
-#'
-#' @return
-#' an object of class LT_Dataset
+# LT_Workspace
 # -----------------------------------------------------------------------------.
 LT_Workspace <- function(...) {
 
   obj <- new("LT_Workspace")
   obj
 }
+# -----------------------------------------------------------------------------.
+is.LT_Workspace <- function(x) { inherits(x, "LT_Workspace") }
 # -----------------------------------------------------------------------------.
 
 # METHODS ######################################################################
@@ -77,8 +72,9 @@ self_path.LT_Workspace <- function(obj) { obj@path }
 #' @param name
 #' @param path
 #'
-#' @return
+#' @return NULL
 # -----------------------------------------------------------------------------.
+#' @export
 define_workspace <- function(name, path) {
 
   LTE <- lt_env()
@@ -100,8 +96,15 @@ define_workspace <- function(name, path) {
   .lte_save.()
 }
 # =============================================================================.
-# Return workspace names
+# list_workspaces
 # -----------------------------------------------------------------------------.
+#' @param detailed
+#'
+#' @param x
+#'
+#' @return workspace names
+# -----------------------------------------------------------------------------.
+#' @export
 list_workspaces <- function(detailed = F, x = NULL) {
 
   LTE <- lt_env()
@@ -117,8 +120,16 @@ list_workspaces <- function(detailed = F, x = NULL) {
   wks
 }
 # =============================================================================.
-# Create workspace folders
+#' create_workspace
 # -----------------------------------------------------------------------------.
+#' @description Create workspace folders
+#' @param name
+#'
+#' @param path
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 create_workspace <- function(name, path = NULL) {
 
   LTE <- lt_env()
@@ -136,8 +147,14 @@ create_workspace <- function(name, path = NULL) {
   .lte_save.()
 }
 # =============================================================================.
-# Delete workspace folders
+#' delete_workspace
 # -----------------------------------------------------------------------------.
+#' @description Delete workspace folders
+#' @param name
+#'
+#' @param ask
+# -----------------------------------------------------------------------------.
+#' @export
 delete_workspace <- function(name, ask = T) {
 
   LTE <- lt_env()
@@ -163,8 +180,16 @@ delete_workspace <- function(name, ask = T) {
   .lte_save.()
 }
 # =============================================================================.
-# Load workspace environment in R
+#' open_workspace
 # -----------------------------------------------------------------------------.
+#' @description Load workspace environment in R
+#' @param name
+#' @param path
+#' @param reopen
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 open_workspace <- function(name, path = NULL, reopen = F) {
 
   LTE <- lt_env()
@@ -192,8 +217,14 @@ open_workspace <- function(name, path = NULL, reopen = F) {
   }
 }
 # =============================================================================.
-# Remove workspace environment from R
+#' close_workspace
 # -----------------------------------------------------------------------------.
+#' @description Remove workspace environment from R
+#' @param name
+#'
+#' @return NULL
+# -----------------------------------------------------------------------------.
+#' @export
 close_workspace <- function(name) {
 
   LTE <- lt_env()

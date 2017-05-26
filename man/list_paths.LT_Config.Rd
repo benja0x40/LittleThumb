@@ -6,6 +6,12 @@
 \usage{
 \method{list_paths}{LT_Config}(obj, x = NULL, key = 1)
 }
+\arguments{
+\item{key}{}
+}
+\value{
+path names
+}
 \description{
 list_paths
 }

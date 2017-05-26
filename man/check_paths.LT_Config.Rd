@@ -7,6 +7,12 @@
 \method{check_paths}{LT_Config}(obj, x = NULL, root = "", key = 1,
   value = 2, error = F)
 }
+\arguments{
+\item{error}{}
+}
+\value{
+logical
+}
 \description{
 check_paths
 }

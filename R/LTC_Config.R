@@ -19,7 +19,7 @@
 # =============================================================================.
 # Inherits from: LT_Data
 # =============================================================================.
-#' LT_Config
+# LT_Config
 # -----------------------------------------------------------------------------.
 #' @description
 #' @param ...
@@ -44,6 +44,16 @@ is.LT_Config <- function(x) { inherits(x, "LT_Config") }
 # =============================================================================.
 #' make_path
 # -----------------------------------------------------------------------------.
+#' @export
+#' @description path assembly
+#' @param obj
+#' @param name
+#' @param root
+#' @param key
+#' @param value
+#'
+#' @return path
+# -----------------------------------------------------------------------------.
 make_path.LT_Config <- function(obj, name, root = "", key = 1, value = 2) {
 
   make_path(
@@ -54,12 +64,28 @@ make_path.LT_Config <- function(obj, name, root = "", key = 1, value = 2) {
 # =============================================================================.
 #' list_paths
 # -----------------------------------------------------------------------------.
+#' @export
+#' @param obj
+#' @param x
+#' @param key
+#'
+#' @return path names
+# -----------------------------------------------------------------------------.
 list_paths.LT_Config <- function(obj, x = NULL, key = 1) {
   lst <- td_selector(obj$TD, x, v = key)
   lst
 }
 # =============================================================================.
 #' create_paths
+# -----------------------------------------------------------------------------.
+#' @export
+#' @param obj
+#' @param x
+#' @param root
+#' @param key
+#' @param value
+#'
+#' @return NULL
 # -----------------------------------------------------------------------------.
 create_paths.LT_Config <- function(
   obj, x = NULL, root = "", key = 1, value = 2
@@ -72,6 +98,16 @@ create_paths.LT_Config <- function(
 }
 # =============================================================================.
 #' check_paths
+# -----------------------------------------------------------------------------.
+#' @export
+#' @param obj
+#' @param x
+#' @param root
+#' @param key
+#' @param value
+#' @param error
+#'
+#' @return logical
 # -----------------------------------------------------------------------------.
 check_paths.LT_Config <- function(
   obj, x = NULL, root = "", key = 1, value = 2, error = F
