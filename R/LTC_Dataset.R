@@ -512,6 +512,7 @@ apply2dataset <- function(
   executor, fun, workspace = NULL, dataset = NULL, element = NULL, ...
 ) {
 
+  LTE <- lt_env()
   env <- globalenv()
 
   id <- NULL
@@ -531,7 +532,8 @@ apply2dataset <- function(
     chk <- 0
     for(i in 1:length(workspace)) {
       for(dataset in names(env[[workspace[i]]]@datasets)) {
-        executor(workspace[i], env[[workspace]]@datasets[[dataset]], fun, ...)
+        dts <- dataset_object(workspace = workspace[i], name = dataset)
+        executor(workspace[i], dts, fun, ...)
       }
     }
   }
@@ -539,21 +541,24 @@ apply2dataset <- function(
   if(chk %in% c(2 + 16 + 32)) {
     chk <- 0
     for(i in 1:length(workspace)) {
-      idx <- which_dataset(workspace = workspace[i], name = dataset[i])
-      executor(workspace[i], env[[workspace[i]]]@datasets[[idx]], fun, ...)
+      dts <- dataset_object(workspace = workspace[i], name = dataset[i])
+      executor(workspace[i], dts, fun, ...)
     }
   }
   # one workspace, one datasets
   if(chk == 2 + 4 + 8) {
     chk <- 0
-    idx <- which_dataset(workspace = workspace, name = dataset)
-    executor(workspace, env[[workspace]]@datasets[[idx]], fun, ...)
+    dts <- dataset_object(workspace = workspace, name = dataset)
+    executor(workspace, dts, fun, ...)
   }
   # one workspace, several datasets
   if(chk == 4 + 32) {
     chk <- 0
     idx <- which_dataset(workspace = workspace, name = dataset)
-    for(i in idx) executor(workspace, env[[workspace]]@datasets[[i]], fun, ...)
+    for(i in idx) {
+      dts <- dataset_object(id = LTE$datasets$id[i])
+      executor(workspace, dts, fun, ...)
+    }
   }
   if(chk != 0) stop("incorrect arguments")
 }
