@@ -240,7 +240,8 @@ create_dataset <- function(
     ann <- data.frame(basename(flp), basename(flp), stringsAsFactors = F)
     colnames(ann) <- c(id_column, file_columns)
     dts$TD <- ann
-
+    dts$MD$keys$id <- id_column
+    dts$MD$keys$files <- file_columns
   } else {
     dts$TD[[file_columns]] <- basename(flp)
   }
@@ -404,20 +405,6 @@ dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
 }
 
 # =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-# change_dataset_path <- function(workspace, dataset, path) {
-#
-#   LTE <- lt_env()
-#   env <- globalenv()
-#
-#   dataset_id <- td_selector(
-#     LTE$datasets, workspace == workspace & name == dataset, "id"
-#   )
-#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
-# }
-
-# =============================================================================.
 #' clone_dataset
 # -----------------------------------------------------------------------------.
 #' @param workspace
@@ -483,6 +470,20 @@ clone_dataset <- function(
 }
 
 # =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+# change_dataset_path <- function(workspace, dataset, path) {
+#
+#   LTE <- lt_env()
+#   env <- globalenv()
+#
+#   dataset_id <- td_selector(
+#     LTE$datasets, workspace == workspace & name == dataset, "id"
+#   )
+#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
+# }
+
+# =============================================================================.
 # Move/Rename dataset
 # -----------------------------------------------------------------------------.
 move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
@@ -513,7 +514,6 @@ apply2dataset <- function(
 ) {
 
   LTE <- lt_env()
-  env <- globalenv()
 
   id <- NULL
 
@@ -530,10 +530,11 @@ apply2dataset <- function(
   # one or several workspaces, no dataset
   if(chk %in% c(4, 16)) {
     chk <- 0
-    for(i in 1:length(workspace)) {
-      for(dataset in names(env[[workspace[i]]]@datasets)) {
-        dts <- dataset_object(workspace = workspace[i], name = dataset)
-        executor(workspace[i], dts, fun, ...)
+    for(j in 1:length(workspace)) {
+      idx <- which_dataset(workspace = workspace[j])
+      for(i in idx) {
+        dts <- dataset_object(id = LTE$datasets$id[i])
+        executor(workspace[j], dts, fun, ...)
       }
     }
   }

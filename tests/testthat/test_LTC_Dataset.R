@@ -122,7 +122,7 @@ test_that("create_dataset", {
   WS1 <- globalenv()[["WS1"]]
   WS2 <- globalenv()[["WS2"]]
 
-  # Tests
+  # Test ////
   expect_identical(LTE$datasets$workspace, rep(c("WS1", "WS2"), each = 3))
 
   expect_identical(LTE$datasets$name, rep(c("TDX", "TDY", "TDZ"), 2))
@@ -131,6 +131,22 @@ test_that("create_dataset", {
 
   expect_identical(names(WS1@datasets), LTE$datasets$id[1:3])
   expect_identical(names(WS2@datasets), LTE$datasets$id[4:6])
+
+  res <- c("TDY_A.txt", "TDY_B.txt", "TDY_C.txt", "TDY_D.txt")
+  expect_identical(elements_name(WS1@datasets[[2]]), res)
+  expect_identical(elements_path(WS1@datasets[[2]]), res)
+  expect_identical(elements_path(WS2@datasets[[2]]), res)
+  res <- c("TDY_A", "TDY_B", "TDY_C", "TDY_D")
+  expect_identical(elements_name(WS2@datasets[[2]]), res)
+
+  md <- WS1@datasets[[2]]$MD
+  expect_identical(md$keys$id, "name")
+  expect_identical(md$keys$files, "file")
+
+  md <- WS2@datasets[[2]]$MD
+  expect_identical(md$keys$id, "name")
+  expect_identical(md$keys$files, "file")
+
   # Cleanup
   cleanup(tst)
 })
@@ -151,7 +167,7 @@ test_that("list_datasets", {
   create_dataset("WS2", name = "TDY", source_path = tst$dataY, pattern = "TD")
   create_dataset("WS2", name = "TDZ", source_path = tst$dataZ, pattern = "TD")
 
-  # Tests
+  # Test ////
   expect_identical(list_datasets(), rep(c("TDX", "TDY", "TDZ"), 2))
   expect_identical(list_datasets(workspace = "WS1"), c("TDX", "TDY", "TDZ"))
   expect_identical(list_datasets(workspace = "WS2"), c("TDX", "TDY", "TDZ"))
@@ -185,7 +201,7 @@ test_that("which_dataset", {
   WS1 <- globalenv()[["WS1"]]
   WS2 <- globalenv()[["WS2"]]
 
-  # Tests
+  # Test ////
   idx <- which_dataset()
   expect_identical(idx, integer(0))
 
@@ -243,7 +259,7 @@ test_that("dataset_object", {
   close_workspace("WS2")
   closeLittleThumb(ask = F)
 
-  # Tests
+  # Test ////
   expect_null(dataset_object())
   expect_error(
     dataset_object(workspace = "WS1"),
@@ -280,6 +296,124 @@ test_that("dataset_object", {
     dataset_object(workspace = "WS2", name = "TDZ"),
     WS2@datasets[[3]]
   )
+
+  # Cleanup
+  cleanup(tst)
+})
+
+# + load_data ------------------------------------------------------------------
+test_that("load_data", {
+
+  # Initializations
+  tst <- something_to_test()
+  open_workspace("WS1")
+  open_workspace("WS2")
+
+  create_dataset("WS1", name = "TDX", source_path = tst$dataX, pattern = "TD")
+  create_dataset("WS1", name = "TDY", source_path = tst$dataY, pattern = "TD")
+  create_dataset("WS1", name = "TDZ", source_path = tst$dataZ, pattern = "TD")
+
+  create_dataset("WS2", name = "TDX", source_path = tst$dataX, pattern = "TD")
+  create_dataset("WS2", name = "TDY", source_path = tst$dataY, pattern = "TD")
+  create_dataset("WS2", name = "TDZ", source_path = tst$dataZ, pattern = "TD")
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+  closeLittleThumb(ask = F)
+
+  # Test ////
+  open_workspace("WS1")
+  open_workspace("WS2")
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
+
+  load_data(workspace = "WS1")
+  expect_identical(ls(pos = WS1), LTE$datasets$name[1:3])
+
+  load_data(workspace = "WS2")
+  expect_identical(ls(pos = WS2), LTE$datasets$name[4:6])
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+
+  # Test ////
+  open_workspace("WS1")
+  open_workspace("WS2")
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
+
+  load_data(workspace = list_workspaces())
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+
+  # Test ////
+  open_workspace("WS1")
+  open_workspace("WS2")
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
+
+  load_data(workspace = c("WS1", "WS2"), dataset = c("TDY", "TDY"))
+  expect_identical(ls(pos = WS1), LTE$datasets$name[2])
+  expect_identical(ls(pos = WS2), LTE$datasets$name[5])
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+
+  # Test ////
+  open_workspace("WS1")
+  open_workspace("WS2")
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
+
+  load_data(workspace = "WS1", dataset = c("TDZ", "TDX"))
+  expect_identical(ls(pos = WS1), LTE$datasets$name[c(1, 3)])
+
+  load_data(workspace = "WS2", dataset = c("TDZ", "TDX"))
+  expect_identical(ls(pos = WS2), LTE$datasets$name[c(4, 6)])
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+
+  # Test ////
+  open_workspace("WS1")
+  open_workspace("WS2")
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+
+  # Cleanup
+  cleanup(tst)
+})
+
+# + apply2dataset --------------------------------------------------------------
+test_that("apply2dataset", {
+
+  # Initializations
+  tst <- something_to_test()
+  open_workspace("WS1")
+  open_workspace("WS2")
+
+  create_dataset("WS1", name = "TDX", source_path = tst$dataX, pattern = "TD") # , annotations = make_path(tst$dataX, "Annotations.txt")
+  create_dataset("WS1", name = "TDY", source_path = tst$dataY, pattern = "TD") # , annotations = make_path(tst$dataY, "Annotations.txt")
+  create_dataset("WS1", name = "TDZ", source_path = tst$dataZ, pattern = "TD") # , annotations = make_path(tst$dataZ, "Annotations.txt")
+
+  create_dataset("WS2", name = "TDX", source_path = tst$dataX, pattern = "TD") # , annotations = make_path(tst$dataX, "Annotations.txt")
+  create_dataset("WS2", name = "TDY", source_path = tst$dataY, pattern = "TD") # , annotations = make_path(tst$dataY, "Annotations.txt")
+  create_dataset("WS2", name = "TDZ", source_path = tst$dataZ, pattern = "TD") # , annotations = make_path(tst$dataZ, "Annotations.txt")
+
+  close_workspace("WS1")
+  close_workspace("WS2")
+  closeLittleThumb(ask = F)
+
+  # Tests
+  open_workspace("WS1")
+  open_workspace("WS2")
+
+  WS1 <- globalenv()[["WS1"]]
+  WS2 <- globalenv()[["WS2"]]
 
   # Cleanup
   cleanup(tst)
