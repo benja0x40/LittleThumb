@@ -359,7 +359,7 @@ which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 #' dataset_object
 # -----------------------------------------------------------------------------.
 #' @description
-#' Return registered dataset names
+#' Return a registered dataset object
 #'
 #' @param id
 #' @param workspace
@@ -387,23 +387,6 @@ dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
 
   dts
 }
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-#' @export
-dataset_md <- function(id = NULL, workspace = NULL, name = NULL) {
-  dts <- dataset_object(id, workspace, name)
-  dts$MD
-}
-# =============================================================================.
-#
-# -----------------------------------------------------------------------------.
-#' @export
-dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
-  dts <- dataset_object(id, workspace, name)
-  dts$TD
-}
-
 # =============================================================================.
 #' clone_dataset
 # -----------------------------------------------------------------------------.
@@ -468,32 +451,22 @@ clone_dataset <- function(
   # Update LTE /////////////////////////////////////////////////////////////////
   .lte_save.()
 }
-
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-# change_dataset_path <- function(workspace, dataset, path) {
-#
-#   LTE <- lt_env()
-#   env <- globalenv()
-#
-#   dataset_id <- td_selector(
-#     LTE$datasets, workspace == workspace & name == dataset, "id"
-#   )
-#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
-# }
-
+#' @export
+dataset_md <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$MD
+}
 # =============================================================================.
-# Move/Rename dataset
+#
 # -----------------------------------------------------------------------------.
-move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
-
-# =============================================================================.
-# Delete dataset definition and associated data from a workspace folder
-# -----------------------------------------------------------------------------.
-# delete_dataset <- function(workspace, dataset) { }
-# merge_datasets <- function(workspace, dataset1, dataset2, name, path = NULL, delete = F) { }
-
+#' @export
+dataset_td <- function(id = NULL, workspace = NULL, name = NULL) {
+  dts <- dataset_object(id, workspace, name)
+  dts$TD
+}
 # =============================================================================.
 #' apply2dataset
 # -----------------------------------------------------------------------------.
@@ -563,7 +536,6 @@ apply2dataset <- function(
   }
   if(chk != 0) stop("incorrect arguments")
 }
-
 # =============================================================================.
 #' load_data
 # -----------------------------------------------------------------------------.
@@ -594,7 +566,6 @@ load_data <- function(
   message("Loading data...")
   apply2dataset(executor = rd, fun = reader, workspace, dataset, element, ...)
 }
-
 # =============================================================================.
 #' save_data
 # -----------------------------------------------------------------------------.
@@ -628,6 +599,47 @@ save_data <- function(
   apply2dataset(executor = wd, fun = writer, workspace, dataset, element, ...)
 }
 # =============================================================================.
+# Remove (unload) data from the workspace environment
+# -----------------------------------------------------------------------------.
+close_data <- function(
+  workspace = NULL, dataset = NULL, element = NULL, ...
+) {
+
+  cd <- function(wks, dts, fun, ...) {
+    env <- globalenv()
+    env[[wks]][[dts$name]] <- NULL # BUG: does not take element into account
+  }
+  apply2dataset(executor = cd, fun = NULL, workspace, dataset, element, ...)
+}
+
+# * * * ########################################################################
+
+# =============================================================================.
+#
+# -----------------------------------------------------------------------------.
+# change_dataset_path <- function(workspace, dataset, path) {
+#
+#   LTE <- lt_env()
+#   env <- globalenv()
+#
+#   dataset_id <- td_selector(
+#     LTE$datasets, workspace == workspace & name == dataset, "id"
+#   )
+#   self_path(env[[workspace]]@datasets[[dataset_id]]) <- path
+# }
+
+# =============================================================================.
+# Delete dataset definition and associated data from a workspace folder
+# -----------------------------------------------------------------------------.
+# delete_dataset <- function(workspace, dataset) { }
+# merge_datasets <- function(workspace, dataset1, dataset2, name, path = NULL, delete = F) { }
+
+# =============================================================================.
+# Move/Rename dataset
+# -----------------------------------------------------------------------------.
+move_dataset <- function(workspace, dataset, name = NULL, path = NULL) { }
+
+# =============================================================================.
 # Move data from workspace/dataset to workspace/dataset
 # -----------------------------------------------------------------------------.
 move_data <- function(
@@ -647,18 +659,4 @@ move_data <- function(
   }
   apply2dataset(executor = mv, fun = NULL, workspace, dataset, element, ...)
 }
-# =============================================================================.
-# Remove (unload) data from the workspace environment
-# -----------------------------------------------------------------------------.
-close_data <- function(
-  workspace = NULL, dataset = NULL, element = NULL, ...
-) {
-
-  cd <- function(wks, dts, fun, ...) {
-    env <- globalenv()
-    env[[wks]][[dts$name]] <- NULL
-  }
-  apply2dataset(executor = cd, fun = NULL, workspace, dataset, element, ...)
-}
-
 

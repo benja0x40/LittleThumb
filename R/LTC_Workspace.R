@@ -120,6 +120,34 @@ list_workspaces <- function(detailed = F, x = NULL) {
   wks
 }
 # =============================================================================.
+#' which_dataset
+# -----------------------------------------------------------------------------.
+#' @description
+#' Return the register index of workspaces
+#'
+#' @param name
+#'
+#' @return integer
+# -----------------------------------------------------------------------------.
+#' @export
+which_workspace <- function(name = NULL) {
+
+}
+# =============================================================================.
+#' workspace_object
+# -----------------------------------------------------------------------------.
+#' @description
+#' Return a registered workspace object
+#'
+#' @param name
+#'
+#' @return object of class LT_Workspace
+# -----------------------------------------------------------------------------.
+#' @export
+workspace_object <- function(name = NULL) {
+
+}
+# =============================================================================.
 #' create_workspace
 # -----------------------------------------------------------------------------.
 #' @description Create workspace folders
