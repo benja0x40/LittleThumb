@@ -13,5 +13,5 @@ dataset_object(id = NULL, workspace = NULL, name = NULL)
 object of class LT_Dataset
 }
 \description{
-Return registered dataset names
+Return a registered dataset object
 }
