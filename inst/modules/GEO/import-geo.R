@@ -234,7 +234,8 @@ if(! UPDATE) {
   # Link GEO samples to SRA entries
   # ---------------------------------------------------------------------------.
   sra <- sraConvert(in_acc = ann$srx, sra_con = sra_dbcon)
-  if(sum(ann$srx != sra$experiment)>0) {
+
+  if(! all(ann$srx %in% sra$experiment)) {
     txt_out(x = "=", file = LOGFILE)
     txt_out("Non matching SRX in GEO and SRA entries", LOGFILE)
     txt_out(x = "-", LOGFILE)
@@ -249,6 +250,9 @@ if(! UPDATE) {
     )
     txt_out(x = "-", LOGFILE)
     stop("importation failed (see logfile)" )
+  } else {
+    sra <- sra[match(ann$srx, sra$experiment), ]
+    rownames(sra) <- NULL
   }
   sra$geo.gse   <- Meta(gse)$geo_accession
   sra$geo.gsm   <- ann$gsm
@@ -268,11 +272,11 @@ if(! UPDATE) {
     txt_out(x = "=", file = LOGFILE)
     txt_out("Unable to build path for ftp download", file = LOGFILE)
     txt_out(x = "-", file = LOGFILE)
-    txt_out(sra$ftp.path, sep = "\n", file = LOGFILE)
+    txt_out(paste(sra$ftp.path, collapse = "\n", sep = ""), file = LOGFILE)
     txt_out(x = "-", file = LOGFILE)
-    txt_out(chk, sep = "\n", file = LOGFILE)
+    txt_out(paste(chk, collapse = "\n", sep = ""), file = LOGFILE)
     txt_out(x = "-", file = LOGFILE)
-    txt_out(ann$srx, sep = "\n", file = LOGFILE)
+    txt_out(paste(ann$srx, collapse = "\n", sep = ""), file = LOGFILE)
     txt_out(x = "-", file = LOGFILE)
     stop("importation failed (see logfile)" )
   }

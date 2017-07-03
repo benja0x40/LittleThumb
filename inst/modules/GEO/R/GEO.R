@@ -82,13 +82,13 @@ geo_meta_data <- function(ids, characteristics = T, remove_ch = T, LOGFILE = std
     lst <- names(gsm[[lbl]]@header)
 
     txt_out("+", lbl, ": found", x = "-", LOGFILE)
-    txt_out(lst, sep = "\n", file = LOGFILE)
+    txt_out(paste(lst, collapse = "\n", sep = ""), file = LOGFILE)
 
     lst <- lst[grepl(rex, lst)]
     lst <- lst[! grepl(skp, lst)]
 
     txt_out("+", lbl, ": filtered", x = "-", LOGFILE)
-    txt_out(lst, sep = "\n", file = LOGFILE)
+    txt_out(paste(lst, collapse = "\n", sep = ""), file = LOGFILE)
     txt_out(x = "-", LOGFILE)
 
     for(elm in lst) {
