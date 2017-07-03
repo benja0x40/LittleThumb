@@ -235,7 +235,20 @@ if(! UPDATE) {
   # ---------------------------------------------------------------------------.
   sra <- sraConvert(in_acc = ann$srx, sra_con = sra_dbcon)
   if(sum(ann$srx != sra$experiment)>0) {
-    stop("Inconsistent SRX")
+    txt_out(x = "=", file = LOGFILE)
+    txt_out("Non matching SRX in GEO and SRA entries", LOGFILE)
+    txt_out(x = "-", LOGFILE)
+    write.table(
+      ann, file = LOGFILE,
+      append = T, quote = F, sep = "\t", row.names = F, col.names = T
+    )
+    txt_out(x = "-", LOGFILE)
+    write.table(
+      sra, file = LOGFILE,
+      append = T, quote = F, sep = "\t", row.names = F, col.names = T
+    )
+    txt_out(x = "-", LOGFILE)
+    stop("importation failed (see logfile)" )
   }
   sra$geo.gse   <- Meta(gse)$geo_accession
   sra$geo.gsm   <- ann$gsm
@@ -252,7 +265,16 @@ if(! UPDATE) {
   }
   chk <- gsub(".*/(SRX[0-9]+)/SRR.*", "\\1", sra$ftp.path, perl=T)
   if(sum(ann$srx != chk)>0) {
-    stop("Inconsistent SRX")
+    txt_out(x = "=", file = LOGFILE)
+    txt_out("Unable to build path for ftp download", file = LOGFILE)
+    txt_out(x = "-", file = LOGFILE)
+    txt_out(sra$ftp.path, sep = "\n", file = LOGFILE)
+    txt_out(x = "-", file = LOGFILE)
+    txt_out(chk, sep = "\n", file = LOGFILE)
+    txt_out(x = "-", file = LOGFILE)
+    txt_out(ann$srx, sep = "\n", file = LOGFILE)
+    txt_out(x = "-", file = LOGFILE)
+    stop("importation failed (see logfile)" )
   }
   sra$geo.title <- ann$name
   sra <- cbind(sra, ann[,4:ncol(ann)])

@@ -59,6 +59,14 @@ geo_meta_data <- function(ids, characteristics = T, remove_ch = T, ...) {
   )
   row.names(ann) <- ids
 
+  txt_out(x = "=", file = LOGFILE)
+  txt_out("Retrieved from Bioconductor SRADB", LOGFILE)
+  txt_out(x = "-", LOGFILE)
+  write.table(
+    ann, file = LOGFILE,
+    append = T, quote = F, sep = "\t", row.names = F, col.names = T
+  )
+
   for(lbl in ids) {
     gsm[[lbl]] <- GEOquery::getGEO(lbl)
     ann[lbl, "name"] <- gsub(" ", "_", gsm[[lbl]]@header$title)
@@ -72,13 +80,22 @@ geo_meta_data <- function(ids, characteristics = T, remove_ch = T, ...) {
       )
     }
     lst <- names(gsm[[lbl]]@header)
+
+    txt_out("+", lbl, ": found", x = "-", LOGFILE)
+    txt_out(lst, sep = "\n", file = LOGFILE)
+
     lst <- lst[grepl(rex, lst)]
     lst <- lst[! grepl(skp, lst)]
+
+    txt_out("+", lbl, ": filtered", x = "-", LOGFILE)
+    txt_out(lst, sep = "\n", file = LOGFILE)
+    txt_out(x = "-", LOGFILE)
+
     for(elm in lst) {
       if(! elm %in% names(ann)) {
         ann[[elm]] <- ""
       }
-      ann[lbl,elm] <- gsm[[lbl]]@header[elm]
+      ann[lbl, elm] <- gsm[[lbl]]@header[elm]
     }
   }
   if(characteristics) {
@@ -86,6 +103,15 @@ geo_meta_data <- function(ids, characteristics = T, remove_ch = T, ...) {
       ann, geo_characteristics(gsm, ids, ...), stringsAsFactors = F
     )
   }
+
+  txt_out(x = "=", file = LOGFILE)
+  txt_out("Imported annotations", LOGFILE)
+  txt_out(x = "-", LOGFILE)
+  write.table(
+    ann, file = LOGFILE,
+    append = T, quote = F, sep = "\t", row.names = F, col.names = T
+  )
+
   if(remove_ch) {
     if(any(grepl(ch2, colnames(ann), perl = T))) {
       stop("found multiple channel information in meta data (i.e. _ch1, _ch2)")
