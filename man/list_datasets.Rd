@@ -7,7 +7,11 @@
 list_datasets(workspace = NULL, detailed = F, x = NULL)
 }
 \arguments{
-\item{x}{}
+\item{workspace}{name}
+
+\item{detailed}{logical (default = F)}
+
+\item{x}{not implemented}
 }
 \value{
 dataset names

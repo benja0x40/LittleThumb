@@ -7,7 +7,11 @@
 dataset_object(id = NULL, workspace = NULL, name = NULL)
 }
 \arguments{
-\item{name}{}
+\item{id}{dataset identifier}
+
+\item{workspace}{name}
+
+\item{name}{dataset name}
 }
 \value{
 object of class LT_Dataset

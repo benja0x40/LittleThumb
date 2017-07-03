@@ -210,7 +210,7 @@ if(! UPDATE) {
   # ===========================================================================.
   # Retrieve meta data of GEO samples
   # ---------------------------------------------------------------------------.
-  gmd <- geo_meta_data(ids)
+  gmd <- geo_meta_data(ids, LOGFILE = LOGFILE)
   gsm <- gmd$gsm
   ann <- gmd$ann
   rm(gmd)

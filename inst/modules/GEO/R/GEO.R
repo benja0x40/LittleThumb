@@ -31,7 +31,7 @@ geo_characteristics <- function(gsm, ids, common = T) {
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
-geo_meta_data <- function(ids, characteristics = T, remove_ch = T, ...) {
+geo_meta_data <- function(ids, characteristics = T, remove_ch = T, LOGFILE = stdout(), ...) {
 
   # regular expression defining meta data to be imported
   rex <- c(

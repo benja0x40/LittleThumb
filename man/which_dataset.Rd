@@ -7,7 +7,11 @@
 which_dataset(id = NULL, workspace = NULL, name = NULL)
 }
 \arguments{
-\item{name}{}
+\item{id}{dataset identifier}
+
+\item{workspace}{name}
+
+\item{name}{dataset name}
 }
 \value{
 integer

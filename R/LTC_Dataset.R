@@ -99,17 +99,17 @@ elements_name.LT_Dataset <- function(obj) {
 #' @description
 #' Create dataset definition and copy associated data inside a workspace folder
 #'
-#' @param workspace
-#' @param source_path
-#' @param files
-#' @param pattern
-#' @param annotations
-#' @param id_column
-#' @param file_columns
-#' @param name
-#' @param path
-#' @param delete_source
-#' @param ask
+#' @param workspace name
+#' @param source_path path
+#' @param files character vector
+#' @param pattern regular expression
+#' @param annotations path
+#' @param id_column column name
+#' @param file_columns column name
+#' @param name dataset name
+#' @param path base path of dataset files
+#' @param delete_source logical (default = F)
+#' @param ask logical (default = T)
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
@@ -292,9 +292,9 @@ create_dataset <- function(
 #' @description
 #' Return registered dataset names
 #'
-#' @param workspace
-#' @param detailed
-#' @param x
+#' @param workspace name
+#' @param detailed logical (default = F)
+#' @param x not implemented
 #'
 #' @return dataset names
 # -----------------------------------------------------------------------------.
@@ -324,9 +324,9 @@ list_datasets <- function(workspace = NULL, detailed = F, x = NULL) {
 #' @description
 #' Return the register index of datasets
 #'
-#' @param id
-#' @param workspace
-#' @param name
+#' @param id dataset identifier
+#' @param workspace name
+#' @param name dataset name
 #'
 #' @return integer
 # -----------------------------------------------------------------------------.
@@ -361,9 +361,9 @@ which_dataset <- function(id = NULL, workspace = NULL, name = NULL) {
 #' @description
 #' Return a registered dataset object
 #'
-#' @param id
-#' @param workspace
-#' @param name
+#' @param id dataset identifier
+#' @param workspace name
+#' @param name dataset name
 #'
 #' @return object of class LT_Dataset
 # -----------------------------------------------------------------------------.
@@ -390,12 +390,12 @@ dataset_object <- function(id = NULL, workspace = NULL, name = NULL) {
 # =============================================================================.
 #' clone_dataset
 # -----------------------------------------------------------------------------.
-#' @param workspace
-#' @param dataset
-#' @param name
-#' @param path
-#' @param files
-#' @param file_columns
+#' @param workspace name
+#' @param dataset name
+#' @param name new dataset
+#' @param path new path
+#' @param files new files
+#' @param file_columns new file column name
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.

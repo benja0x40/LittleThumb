@@ -10,7 +10,27 @@ create_dataset(workspace, source_path = NULL, files = NULL,
   ask = T)
 }
 \arguments{
-\item{ask}{}
+\item{workspace}{name}
+
+\item{source_path}{path}
+
+\item{files}{character vector}
+
+\item{pattern}{regular expression}
+
+\item{annotations}{path}
+
+\item{id_column}{column name}
+
+\item{file_columns}{column name}
+
+\item{name}{dataset name}
+
+\item{path}{base path of dataset files}
+
+\item{delete_source}{logical (default = F)}
+
+\item{ask}{logical (default = T)}
 }
 \description{
 Create dataset definition and copy associated data inside a workspace folder

@@ -8,7 +8,17 @@ clone_dataset(workspace, dataset, name, path = NULL, files = NULL,
   file_columns = NULL)
 }
 \arguments{
-\item{file_columns}{}
+\item{workspace}{name}
+
+\item{dataset}{name}
+
+\item{name}{new dataset}
+
+\item{path}{new path}
+
+\item{files}{new files}
+
+\item{file_columns}{new file column name}
 }
 \description{
 clone_dataset
