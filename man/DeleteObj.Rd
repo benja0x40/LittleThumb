@@ -9,3 +9,4 @@ DeleteObj(obj, path = NULL, name = NULL, ...)
 \description{
 DeleteObj
 }
+\keyword{internal}

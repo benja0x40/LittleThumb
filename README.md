@@ -17,5 +17,5 @@ install_github("benja0x40/LittleThumb", dependencies = T)
 
 ### <a name="documentation"></a>Documentation
 
-See the vignette for documentation and examples.
+See the [vignette](inst/doc/LittleThumb.pdf) for documentation and examples.
 

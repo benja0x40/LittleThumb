@@ -1,21 +1,22 @@
 ---
-title: "LittleThumb documentation"
+title: "LittleThumb"
 author: '[Benjamin Leblanc](https://github.com/benja0x40)'
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 vignette: >
+  %\VignetteIndexEntry{LittleThumb}
+  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 fontsize: 11pt
 output:
-  html_document:
-    number_sections: false
-    toc: true
-    toc_depth: 2
   pdf_document:
     number_sections: false
     toc: true
     toc_depth: 2
+  html_document:
+    number_sections: false
+    toc: true
+    toc_depth: 2
 ---
-
 
 ```{r message=FALSE, include=FALSE}
 library(LittleThumb)
