@@ -1,0 +1,234 @@
+---
+title: "LittleThumb"
+author: '[Benjamin Leblanc](https://github.com/benja0x40)'
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
+vignette: >
+  %\VignetteIndexEntry{LittleThumb}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+fontsize: 11pt
+output:
+  pdf_document:
+    number_sections: false
+    toc: true
+    toc_depth: 2
+  html_document:
+    number_sections: false
+    toc: true
+    toc_depth: 2
+---
+
+```{r message=FALSE, include=FALSE}
+library(LittleThumb)
+
+cfg <- lt_cfg()
+
+# DeleteObj(x)
+# DeleteObj(a, path = "text")
+# DeleteObj(v, path = "values")
+
+unlink("./LT_Tests", recursive = T)
+```
+
+### Repeated script execution using MakeObj
+
+#### Basics
+
+A very simple script named `LT_Test.R`.
+
+```{r script, eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+```
+
+First time execution.
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'}
+```
+
+Second time execution without restarting the R environment.
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'}
+```
+
+Second time execution after restarting the R environment.
+
+```{r include=FALSE}
+# Simulate restarting the R environment
+do.call(LittleThumb, cfg) # Restore default options
+suppressWarnings(rm(x))   # Cleanup
+```
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'}
+```
+
+#### Forcing to reload R objects
+
+```{r include=FALSE}
+x <- 0
+```
+
+By default, R object are loaded only if necessary.
+
+```{r eval=FALSE}
+x <- 0
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=FALSE, echo=FALSE, results='hide', ref.label='script'}
+```
+
+```{r}
+print(x)
+```
+
+Can be done by changing the `overload` global option.
+
+```{r script_reload, eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+LittleThumb(overload = T)
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+```
+
+Can be done by specifying the `overload` argument when calling `MakeObj`.
+
+```{r eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, overload = T, {
+  message("building object x...")
+  x <- pi
+})
+```
+
+Second time execution when forcing to reload the R object.
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_reload'}
+```
+
+```{r}
+print(x)
+```
+
+```{r include=FALSE}
+do.call(LittleThumb, cfg) # Restore default options
+```
+
+#### Forcing to rebuild R objects
+
+```{r}
+MakeObj(x, { x <- 2 * pi })
+```
+
+```{r}
+print(x)
+```
+
+Can be done by changing the `rebuild` global option.
+
+```{r script_rebuild, eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+LittleThumb(rebuild = T)
+
+MakeObj(x, {
+  message("building object x...")
+  x <- 2 * pi
+})
+```
+
+Can be done by specifying the `rebuild` argument when calling `MakeObj`.
+
+```{r eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, rebuild = T, {
+  message("building object x...")
+  x <- 2 * pi
+})
+```
+
+Second time execution forcing to rebuild the R object.
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_rebuild'}
+```
+
+```{r}
+print(x)
+```
+
+```{r include=FALSE}
+do.call(LittleThumb, cfg) # Restore default options
+```
+
+#### Multiple objects, paths and environments
+
+```{r include=FALSE}
+# Simulate restarting the R environment
+do.call(LittleThumb, cfg) # Restore default options
+suppressWarnings(rm(x))   # Cleanup
+```
+
+```{r script_multi, eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests", overload = T)
+
+MakeObj(x, { x <- 2 * pi })
+
+MakeObj(data, rebuild = T, {
+  
+  data <- new.env(parent = globalenv())
+  
+  MakeObj(k, path = "text", env = data, {
+    k <- LETTERS[1:5]
+  })
+  
+  MakeObj(v, path = "values", env = data, {
+    v <- 1:5
+  })
+
+})
+```
+
+```{r eval=FALSE}
+source("LT_Test.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_multi'}
+```
+
+```{r}
+print(data$k)
+print(data$v)
+```

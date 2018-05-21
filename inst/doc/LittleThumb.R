@@ -1,0 +1,227 @@
+## ----message=FALSE, include=FALSE----------------------------------------
+library(LittleThumb)
+
+cfg <- lt_cfg()
+
+# DeleteObj(x)
+# DeleteObj(a, path = "text")
+# DeleteObj(v, path = "values")
+
+unlink("./LT_Tests", recursive = T)
+
+## ----script, eval=FALSE--------------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests")
+#  
+#  MakeObj(x, {
+#    message("building object x...")
+#    x <- pi
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+
+## ----include=FALSE-------------------------------------------------------
+# Simulate restarting the R environment
+do.call(LittleThumb, cfg) # Restore default options
+suppressWarnings(rm(x))   # Cleanup
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+
+## ----include=FALSE-------------------------------------------------------
+x <- 0
+
+## ----eval=FALSE----------------------------------------------------------
+#  x <- 0
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=FALSE, echo=FALSE, results='hide', ref.label='script'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+
+## ------------------------------------------------------------------------
+print(x)
+
+## ----script_reload, eval=FALSE-------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(overload = T)
+#  
+#  MakeObj(x, {
+#    message("building object x...")
+#    x <- pi
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests")
+#  
+#  MakeObj(x, overload = T, {
+#    message("building object x...")
+#    x <- pi
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_reload'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+LittleThumb(overload = T)
+
+MakeObj(x, {
+  message("building object x...")
+  x <- pi
+})
+
+## ------------------------------------------------------------------------
+print(x)
+
+## ----include=FALSE-------------------------------------------------------
+do.call(LittleThumb, cfg) # Restore default options
+
+## ------------------------------------------------------------------------
+MakeObj(x, { x <- 2 * pi })
+
+## ------------------------------------------------------------------------
+print(x)
+
+## ----script_rebuild, eval=FALSE------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(rebuild = T)
+#  
+#  MakeObj(x, {
+#    message("building object x...")
+#    x <- 2 * pi
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests")
+#  
+#  MakeObj(x, rebuild = T, {
+#    message("building object x...")
+#    x <- 2 * pi
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_rebuild'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+LittleThumb(rebuild = T)
+
+MakeObj(x, {
+  message("building object x...")
+  x <- 2 * pi
+})
+
+## ------------------------------------------------------------------------
+print(x)
+
+## ----include=FALSE-------------------------------------------------------
+do.call(LittleThumb, cfg) # Restore default options
+
+## ----include=FALSE-------------------------------------------------------
+# Simulate restarting the R environment
+do.call(LittleThumb, cfg) # Restore default options
+suppressWarnings(rm(x))   # Cleanup
+
+## ----script_multi, eval=FALSE--------------------------------------------
+#  library(LittleThumb)
+#  
+#  LittleThumb(path = "./LT_Tests", overload = T)
+#  
+#  MakeObj(x, { x <- 2 * pi })
+#  
+#  MakeObj(data, rebuild = T, {
+#  
+#    data <- new.env(parent = globalenv())
+#  
+#    MakeObj(k, path = "text", env = data, {
+#      k <- LETTERS[1:5]
+#    })
+#  
+#    MakeObj(v, path = "values", env = data, {
+#      v <- 1:5
+#    })
+#  
+#  })
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("LT_Test.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_multi'----
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests", overload = T)
+
+MakeObj(x, { x <- 2 * pi })
+
+MakeObj(data, rebuild = T, {
+  
+  data <- new.env(parent = globalenv())
+  
+  MakeObj(k, path = "text", env = data, {
+    k <- LETTERS[1:5]
+  })
+  
+  MakeObj(v, path = "values", env = data, {
+    v <- 1:5
+  })
+
+})
+
+## ------------------------------------------------------------------------
+print(data$k)
+print(data$v)
+
