@@ -1,60 +1,14 @@
 Package: LittleThumb
 Type: Package
 Title: LittleThumb
-Version: 0.1.0
+Version: 0.2.0
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports:
-    methods,
-    devtools,
-    lazyeval,
-    stringr,
-    tibble,
-    dplyr,
-    jsonlite,
-    optparse,
-    igraph,
-    GEOquery,
-    SRAdb,
-    GenomeInfoDb
 Depends:
-    R (>= 3.2.0),
-    methods,
-    devtools,
-    lazyeval,
-    stringr,
-    tibble,
-    dplyr,
-    jsonlite,
-    optparse,
-    igraph,
-    GEOquery,
-    SRAdb,
-    GenomeInfoDb
+    R (>= 3.4.0),
 Suggests:
-    testthat,
-    knitr,
-    rmarkdown
-Description: Automation and traceability for sequencing data analysis
-    with R/Bioconductor.
+Description: Crude automation for saving and loading R objects.
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
-VignetteBuilder: knitr
-Collate: 
-    'LTF_FileSystem.R'
-    'LTF_TextRepresentation.R'
-    'LTF_Registration.R'
-    'LTF_R_Objects.R'
-    'LTF_Basics.R'
-    'LTC_MetaData.R'
-    'LTC_TabularData.R'
-    'LTC_Data.R'
-    'LTC_Config.R'
-    'LTC_Workspace.R'
-    'LTC_Dataset.R'
-    'LTE.R'
-    'LTF_RData.R'
-    'LTF_SelfInstallation.R'
-    'LTF_data.frame.R'
-    'zzz.R'

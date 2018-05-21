@@ -1,0 +1,65 @@
+<h1>LittleThumb</h1>
+
+<p>Automation and traceability for sequencing data analysis with R/Bioconductor.</p>
+
+<h3>Package installation</h3>
+
+<h4>Prerequisites</h4>
+
+<ul>
+<li><a href="https://www.r-project.org/">R environment</a> version 3.x</li>
+<li>CRAN packages <code>devtools</code>, <code>stringr</code>, <code>dplyr</code>, <code>jsonlite</code>, <code>optparse</code></li>
+<li><a href="http://www.bioconductor.org/">Bioconductor</a> packages
+<code>S4Vectors</code>, <code>GEOquery</code>, <code>SRAdb</code>, <code>GenomeInfoDb</code></li>
+</ul>
+
+<p>Run the R code below to install CRAN and Bioconductor package dependencies
+for <code>LittleThumb</code>.</p>
+
+<pre><code class="R"># Already installed
+pkg &lt;- installed.packages()[, &quot;Package&quot;]
+
+# CRAN packages
+lst &lt;- c(&quot;devtools&quot;, &quot;lazyeval&quot;, &quot;stringr&quot;, &quot;dplyr&quot;, &quot;jsonlite&quot;, &quot;optparse&quot;, &quot;igraph&quot;)
+lst &lt;- setdiff(lst, pkg)
+if(length(lst) &gt; 0) install.packages(lst, repos = &quot;https://cloud.r-project.org/&quot;)
+
+# Bioconductor packages
+lst &lt;- c(&quot;S4Vectors&quot;, &quot;GEOquery&quot;, &quot;SRAdb&quot;, &quot;GenomeInfoDb&quot;)
+lst &lt;- setdiff(lst, pkg)
+if(length(lst) &gt; 0) {
+  source(&quot;https://bioconductor.org/biocLite.R&quot;)
+  biocLite(lst)
+}
+</code></pre>
+
+<h4>Installation from github</h4>
+
+<p>Run the bash code below to build package <code>LittleThumb</code> from github.</p>
+
+<pre><code class="bash"># Clone github repository
+cd ~/DataImportTools
+git clone git@github.com:benja0x40/LittleThumb.git
+
+# Update cloned repository
+cd ~/DataImportTools/LittleThumb
+git pull
+
+# Build package
+cd ..
+R CMD build LittleThumb
+</code></pre>
+
+<p>Run the R code below to install <code>LittleThumb</code>.</p>
+
+<pre><code class="r"># When package will be public
+# library(&quot;devtools&quot;)
+# install_github(&quot;benja0x40/LittleThumb&quot;)
+
+# Using manually built package archive
+install.packages(&quot;LittleThumb_0.1.0.tar.gz&quot;)
+
+# Post installation
+library(LittleThumb)
+installLittleThumb()
+</code></pre>
