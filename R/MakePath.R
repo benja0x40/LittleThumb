@@ -12,14 +12,15 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-MakePath <- function(..., ext = "") {
-
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
+MakePath <- function(..., ext = NULL, relative = NULL) {
 
   path <- list(...)
   path <- path[! sapply(path, is.null)]
 
-  if(with(cfg, root == T & path != "")) path <- c(cfg$path, path)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(MakePath, cfg, ignore = c("ext", "..."))
+
+  if(relative & ! cfg$path == "") path <- c(cfg$path, path)
 
   if(length(path) > 0) {
     path <- do.call(file.path, path)
@@ -28,7 +29,7 @@ MakePath <- function(..., ext = "") {
     path <- cfg$path
   }
 
-  if(ext != "") path = paste0(path, ext)
+  if(! is.null(ext)) path = paste0(path, ext)
 
   path
 }

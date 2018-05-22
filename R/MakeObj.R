@@ -1,5 +1,3 @@
-# INCLUDES #####################################################################
-
 # =============================================================================.
 #' Automatically make & save or load an R object
 # -----------------------------------------------------------------------------.
@@ -56,17 +54,20 @@ MakeObj <- function(obj, ...) {
   a[n + 1] <- NULL
   a[2] <- NULL
   a[1] <- call("list")
-  a <- eval(a)
+  a <- as.environment(eval(a))
 
   if(is.null(a$name) & ! missing(obj)) {
     a$name <- deparse(substitute(obj))
   }
   if(n < 2 | is.null(a$name)) stop("insufficient arguments")
 
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
-  if(is.null(a$rebuild)) a$rebuild <- cfg$rebuild
-  if(is.null(a$env)) a$env <- cfg$environment
-  if(! is.environment(a$env)) a$env <- parent.frame()
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(AvailableObj, cfg, ignore = "path", env = a)
+  a <- as.list(a)
+
+  if(! is.environment(a$envir)) a$envir <- parent.frame()
+
+  a$rebuild <- LogicalArg(a$name, a$rebuild)
 
   AO <- names(a) %in% formalArgs(AvailableObj) # Arguments for AvailableObj
   LO <- names(a) %in% formalArgs(LoadObj)      # Arguments for LoadObj
@@ -77,8 +78,8 @@ MakeObj <- function(obj, ...) {
     do.call(LoadObj, a[LO])
   } else {
     # Make the R object by evaluating expression x
-    eval(x, envir = a$env)
+    eval(x, envir = a$envir)
     # Save RDS file associated to the R object
-    do.call(SaveObj, c(list(obj = a$env[[a$name]]), a[SO]))
+    do.call(SaveObj, c(list(obj = a$envir[[a$name]]), a[SO]))
   }
 }

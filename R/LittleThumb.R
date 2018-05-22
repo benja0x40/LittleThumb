@@ -1,19 +1,74 @@
 # =============================================================================.
-#' lt_cfg
+#' DefaultArgs ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-lt_cfg <- function() {
+DefaultArgs <- function(f, cfg, ignore = NULL, env = NULL) {
 
-  lst <- c(
-    "path", "root", "extension",
-    "makedir", "rebuild", "overload", "messages",
-    "environment"
-  )
-  r <- options()[paste0("LittleThumb.", lst)]
-  names(r) <- gsub( "^LittleThumb.", "", names(r))
+  if(is.null(env)) {
+    env <- parent.frame()
+    lst <- setdiff(formalArgs(f), ignore)
+  } else {
+    lst <- setdiff(names(cfg), ignore)
+  }
+
+  for(a in lst) {
+    if(is.null(env[[a]]) & ! is.null(cfg[[a]])) {
+      env[[a]] <- cfg[[a]]
+    }
+  }
+}
+
+# =============================================================================.
+#' LogicalArg ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+LogicalArg <- function(x, a) {
+
+  r <- vector("list", length(a))
+
+  if(! is.null(names(a))) {
+    names(r) <- names(a)
+    r[] <- as.logical(a)
+  } else if(is.character(a)) {
+    names(r) <- a
+    r[] <- T
+  } else {
+    names(r) <- x
+    r[] <- as.logical(a)
+  }
+
+  r <- ifelse(is.null(r[[x]]), F, r[[x]])
 
   r
+}
+
+# =============================================================================.
+#' DefaultOptions ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+DefaultOptions <- function() {
+  list(
+    # Path generation
+    path      = "",
+    extension = ".rds",
+    relative  = T,
+
+    # Evaluation
+    envir = NA,
+
+    # Behavior
+    makedir  = T,
+    rebuild  = F,
+    overload = F,
+    remove   = F,
+
+    # Traceability
+    messages = T,
+    history  = "LittleThumb"
+  )
 }
 
 # =============================================================================.
@@ -27,7 +82,7 @@ lt_cfg <- function() {
 #' @param path
 #' default folder used to save R objects.
 #'
-#' @param root
+#' @param relative
 #' logical value. When \code{TRUE} the default folder defines the root path for
 #' all read/write operations automated by LittleThumb, meaning that any path
 #' specified when calling \link{MakeObj}, \link{SaveObj} or \link{LoadObj}
@@ -35,6 +90,11 @@ lt_cfg <- function() {
 #'
 #' @param extension
 #' RDS file extension (default = ".rds").
+#'
+#' @param envir
+#' environment containing R objects for \link{MakeObj}, \link{SaveObj} and
+#' \link{LoadObj}. With the default value (\code{NA}), this environment is
+#' the parent.frame of called LittleThumb functions.
 #'
 #' @param makedir
 #' logical value, if \code{TRUE} non-existing folders are created automatically
@@ -53,34 +113,33 @@ lt_cfg <- function() {
 #' logical value enabling or disabling status messages from LittleThumb
 #' functions (default = T, yes).
 #'
-#' @param environment
-#' environment containing R objects for \link{MakeObj}, \link{SaveObj} and
-#' \link{LoadObj}. With the default value (\code{NA}), this environment is
-#' the parent.frame of called LittleThumb functions.
+#' @param history
+#' file name.
 # -----------------------------------------------------------------------------.
 #' @export
-LittleThumb <- function(
-  path = NULL, root = NULL, extension = NULL,
-  makedir = NULL, rebuild = NULL, overload = NULL, messages = NULL,
-  environment = NULL
-) {
+LittleThumb <- function(...) {
 
-  # Path generation
-  if(! is.null(path)) options(LittleThumb.path = path)
-  if(! is.null(root)) options(LittleThumb.root = root)
-  if(! is.null(extension)) options(LittleThumb.extension = extension)
+  opt <- names(LittleThumb::DefaultOptions())
 
-  # Behavior
-  if(! is.null(makedir))  options(LittleThumb.makedir  = makedir)
-  if(! is.null(rebuild))  options(LittleThumb.rebuild  = rebuild)
-  if(! is.null(overload)) options(LittleThumb.overload = overload)
-  if(! is.null(messages)) options(LittleThumb.messages = messages)
+  cfg <- list(...)
+  cfg <- cfg[names(cfg) %in% opt]
+  cfg <- cfg[! sapply(cfg, is.null)]
 
-  # Evaluation
-  if(! is.null(environment)) options(LittleThumb.environment = environment)
+  if(length(cfg) > 0) {
+    names(cfg) <- paste0("LittleThumb.", names(cfg))
+    options(cfg)
+  } else {
+    cfg <- options()[paste0("LittleThumb.", opt)]
+    names(cfg) <- gsub( "^LittleThumb\\.", "", names(cfg))
+    cfg
+  }
+}
 
-  lst <- list(
-    path, root, extension, makedir, rebuild, overload, environment
-  )
-  if(all(sapply(lst, is.null))) lt_cfg()
+# =============================================================================.
+#' ResetOptions ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+ResetOptions <- function() {
+  do.call(LittleThumb, LittleThumb::DefaultOptions())
 }

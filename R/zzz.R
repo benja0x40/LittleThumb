@@ -3,38 +3,20 @@
 # -----------------------------------------------------------------------------.
 .onAttach <- function(...) {
 
-  # Path generation
-  options(LittleThumb.path = "")
-  options(LittleThumb.root = T)
-  options(LittleThumb.extension = ".rds")
-
-  # Behavior
-  options(LittleThumb.makedir  = T)
-  options(LittleThumb.rebuild  = F)
-  options(LittleThumb.overload = F)
-  options(LittleThumb.messages = T)
-
-  # Evaluation
-  options(LittleThumb.environment = NA)
+  # Insert LittleThumb entries in global options
+  LittleThumb::ResetOptions()
 
 }
+
 # =============================================================================.
 #
 # -----------------------------------------------------------------------------.
 .onDetach <- function(...) {
 
-  # Path generation
-  options(LittleThumb.path = NULL)
-  options(LittleThumb.root = NULL)
-  options(LittleThumb.extension = NULL)
-
-  # Behavior
-  options(LittleThumb.makedir  = NULL)
-  options(LittleThumb.rebuild  = NULL)
-  options(LittleThumb.overload = NULL)
-  options(LittleThumb.messages = NULL)
-
-  # Evaluation
-  options(LittleThumb.environment = NULL)
+  # Delete LittleThumb entries in global options
+  cfg <- options()
+  cfg <- cfg[grepl( "^LittleThumb\\.", names(cfg))]
+  cfg[] <- vector("list", length(cfg))
+  options(cfg)
 
 }

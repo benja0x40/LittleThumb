@@ -17,13 +17,13 @@
 #' accessible via the \link{LittleThumb} function.
 #'
 #' @param name
-#' \strong{reserved for internal use}: optional name of the R object.
+#' \strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 #' When omitted this name is automatically provided by the symbol being passed
 #' as first argument.
 #'
-#' @param env
+#' @param envir
 #' \link{environment} where the R object should be located.
-#' When none is specified this environment is defined by the \code{environment}
+#' When none is specified this environment is defined by the \code{envir}
 #' option accessible via the \link{LittleThumb} function.
 #'
 #' @param ...
@@ -32,26 +32,33 @@
 #' @return NULL
 # -----------------------------------------------------------------------------.
 #' @export
-SaveObj <- function(obj, path = NULL, name = NULL, env = NULL, ...) {
-
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
-  if(is.null(env)) env <- cfg$environment
-  if(! is.environment(env)) env <- parent.frame()
+SaveObj <- function(
+  obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
+  makedir = NULL, messages = NULL, ...
+) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
-  f <- MakePath(path, obj.name, ext = cfg$extension)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(SaveObj, cfg, ignore = c("obj", "path", "name", "..."))
+
+  if(! is.environment(envir)) envir <- parent.frame()
+
+  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
   if(! file.exists(f)) msg <- "[saving]" else msg = "[overwriting]"
 
+  o.e <- exists(x = obj.name, where = envir)
+  if(! o.e) stop("object does not exist ", obj.name)
+
   d <- dirname(f)
-  if(cfg$makedir & d != "" & ! file.exists(d)) {
-    if(cfg$messages) message("[creating] ", d)
+  if(makedir & d != "" & ! file.exists(d)) {
+    if(messages) message("[creating] ", d)
     LittleThumb::mkdir(d)
   }
 
-  if(cfg$messages) message(msg, " ", f)
-  saveRDS(env[[obj.name]], f, ...)
+  if(messages) message(msg, " ", f)
+  saveRDS(envir[[obj.name]], f, ...)
 
   f
 }

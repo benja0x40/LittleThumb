@@ -4,8 +4,9 @@ context("MakeObj")
 # + Basic ----------------------------------------------------------------------
 test_that("Basic", {
 
-  cfg <- lt_cfg() # LittleThumb options
-  # LittleThumb(environment = sys.frame(sys.nframe()))
+  cfg <- LittleThumb() # Global options
+
+  # LittleThumb(envir = sys.frame(sys.nframe()))
 
   f <- MakePath("x", ext = cfg$extension)
   y <- 1:10
@@ -36,11 +37,6 @@ test_that("Basic", {
 
 # + Advanced -------------------------------------------------------------------
 test_that("Advanced", {
-
-  cfg <- lt_cfg() # LittleThumb options
-
-
-  do.call(LittleThumb, cfg) # Restore default values
 
 })
 

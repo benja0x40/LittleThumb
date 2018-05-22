@@ -68,10 +68,16 @@ DeleteObj(a, remove = T)
 AvailableObj(a)
 exists("a")
 
-# Concise way to automatically make/save/load object a
-MakeObj(a, { a <- 1:10 })
+# A verbose way to automatically make/save/load the object 'a' (don't use this)
+if(AvailableObj(a)) {
+  LoadObj(a)
+} else {
+  a <- 1:10
+  SaveObj(a)
+}
 
-print(a)
+# Automatically make/save/load the object 'a'
+MakeObj(a, { a <- 1:10 })
 
 # Cleanup
 DeleteObj(a, remove = T)

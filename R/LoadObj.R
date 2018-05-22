@@ -1,5 +1,3 @@
-# INCLUDES #####################################################################
-
 # =============================================================================.
 #' Load an R object from its associated RDS file
 # -----------------------------------------------------------------------------.
@@ -27,28 +25,30 @@
 # -----------------------------------------------------------------------------.
 #' @export
 LoadObj <- function(
-  obj, path = NULL, name = NULL, env = NULL, overload = NULL, ...
+  obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
+  overload = NULL, messages = NULL, ...
 ) {
-
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
-  if(is.null(env)) env <- cfg$environment
-  if(! is.environment(env)) env <- parent.frame()
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
-  o.e <- exists(x = obj.name, where = env)
 
-  f <- MakePath(path, obj.name, ext = cfg$extension)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(LoadObj, cfg, ignore = c("obj", "path", "name", "..."))
+
+  if(! is.environment(envir)) envir <- parent.frame()
+
+  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
-  if(is.null(overload)) overload <- cfg$overload
+  overload <- LogicalArg(obj.name, overload)
 
+  o.e <- exists(x = obj.name, where = envir)
   if(o.e) msg <- "[overloading]" else msg <- "[loading]"
   if(o.e & ! overload) msg <- "[passing]"
 
-  if(cfg$messages) message(msg, " ", f)
+  if(messages) message(msg, " ", f)
   if(f.e & (overload | ! o.e)) {
-    res <- assign(obj.name, readRDS(f, ...), pos = env)
+    res <- assign(obj.name, readRDS(f, ...), pos = envir)
   }
 }

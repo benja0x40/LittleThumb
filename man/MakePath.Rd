@@ -4,7 +4,7 @@
 \alias{MakePath}
 \title{Concatenate several strings to form a filesystem path}
 \usage{
-MakePath(..., ext = "")
+MakePath(..., ext = NULL, relative = NULL)
 }
 \arguments{
 \item{...}{list of character strings forming a file path.}

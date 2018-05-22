@@ -1,5 +1,3 @@
-# INCLUDES #####################################################################
-
 # =============================================================================.
 #' Delete the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
@@ -20,26 +18,28 @@
 # -----------------------------------------------------------------------------.
 #' @export
 DeleteObj <- function(
-  obj, path = NULL, name = NULL, env = NULL, remove = F, ...
+  obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
+  remove = NULL, messages = NULL, ...
 ) {
-
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
-  if(is.null(env)) env <- cfg$environment
-  if(! is.environment(env)) env <- parent.frame()
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
-  f <- MakePath(path, obj.name, ext = cfg$extension)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(DeleteObj, cfg, ignore = c("obj", "path", "name", "..."))
+
+  if(! is.environment(envir)) envir <- parent.frame()
+
+  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
   f.e <- file.exists(f)
 
   if(f.e) msg <- "[deleting]" else msg <- "[not found]"
-  if(cfg$messages) message(msg, " ", f)
+  if(messages) message(msg, " ", f)
   if(f.e) r <- file.remove(f)
 
   if(remove) {
-    r <- rm(list = obj.name, pos = env, ...)
-    if(cfg$messages) message("[removing] ", obj.name)
+    r <- rm(list = obj.name, pos = envir, ...)
+    if(messages) message("[removing] ", obj.name)
   }
 
 }

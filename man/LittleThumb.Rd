@@ -4,18 +4,21 @@
 \alias{LittleThumb}
 \title{Global options for LittleThumb functions}
 \usage{
-LittleThumb(path = NULL, root = NULL, extension = NULL, makedir = NULL,
-  rebuild = NULL, overload = NULL, messages = NULL, environment = NULL)
+LittleThumb(...)
 }
 \arguments{
 \item{path}{default folder used to save R objects.}
 
-\item{root}{logical value. When \code{TRUE} the default folder defines the root path for
+\item{relative}{logical value. When \code{TRUE} the default folder defines the root path for
 all read/write operations automated by LittleThumb, meaning that any path
 specified when calling \link{MakeObj}, \link{SaveObj} or \link{LoadObj}
 will represent a sub path of the default folder.}
 
 \item{extension}{RDS file extension (default = ".rds").}
+
+\item{envir}{environment containing R objects for \link{MakeObj}, \link{SaveObj} and
+\link{LoadObj}. With the default value (\code{NA}), this environment is
+the parent.frame of called LittleThumb functions.}
 
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
@@ -30,9 +33,7 @@ exist in the R environment.}
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
 functions (default = T, yes).}
 
-\item{environment}{environment containing R objects for \link{MakeObj}, \link{SaveObj} and
-\link{LoadObj}. With the default value (\code{NA}), this environment is
-the parent.frame of called LittleThumb functions.}
+\item{history}{file name.}
 }
 \description{
 Global options for LittleThumb functions

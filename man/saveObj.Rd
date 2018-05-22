@@ -4,7 +4,8 @@
 \alias{SaveObj}
 \title{Save the RDS file associated to an R object}
 \usage{
-SaveObj(obj, path = NULL, name = NULL, env = NULL, ...)
+SaveObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
+  makedir = NULL, messages = NULL, ...)
 }
 \arguments{
 \item{obj}{an R object to be saved as RDS file by the \link{saveRDS} function.}
@@ -13,12 +14,12 @@ SaveObj(obj, path = NULL, name = NULL, env = NULL, ...)
 When none is specified this location is defined by the \code{path} option
 accessible via the \link{LittleThumb} function.}
 
-\item{name}{\strong{reserved for internal use}: optional name of the R object.
+\item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
 
-\item{env}{\link{environment} where the R object should be located.
-When none is specified this environment is defined by the \code{environment}
+\item{envir}{\link{environment} where the R object should be located.
+When none is specified this environment is defined by the \code{envir}
 option accessible via the \link{LittleThumb} function.}
 
 \item{...}{optional arguments passed to the \link{saveRDS} function.}
@@ -54,10 +55,16 @@ DeleteObj(a, remove = T)
 AvailableObj(a)
 exists("a")
 
-# Concise way to automatically make/save/load object a
-MakeObj(a, { a <- 1:10 })
+# A verbose way to automatically make/save/load the object 'a' (don't use this)
+if(AvailableObj(a)) {
+  LoadObj(a)
+} else {
+  a <- 1:10
+  SaveObj(a)
+}
 
-print(a)
+# Automatically make/save/load the object 'a'
+MakeObj(a, { a <- 1:10 })
 
 # Cleanup
 DeleteObj(a, remove = T)

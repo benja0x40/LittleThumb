@@ -14,14 +14,15 @@
 #' \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
 # -----------------------------------------------------------------------------.
 #' @export
-AvailableObj <- function(obj, path = NULL, name = NULL) {
-
-  cfg <- LittleThumb::lt_cfg() # LittleThumb options
+AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
-  f <- MakePath(path, obj.name, ext = cfg$extension)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(AvailableObj, cfg, ignore = c("obj", "path", "name", "..."))
+
+  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
 
   file.exists(f)
 

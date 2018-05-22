@@ -23,9 +23,9 @@ test_that("Basic", {
 # + Advanced -------------------------------------------------------------------
 test_that("Advanced", {
 
-  cfg <- lt_cfg() # LittleThumb options
+  cfg <- LittleThumb() # Global options
 
-  LittleThumb(path = "Somewhere", root = T)
+  LittleThumb(path = "Somewhere", relative = T)
 
   expect_identical(MakePath(), "Somewhere")
 
@@ -33,7 +33,7 @@ test_that("Advanced", {
   expect_identical("Somewhere/x/y/z", MakePath("/x", "y", "z"))
   expect_identical("Somewhere/x/y.z", MakePath("x", "y", ext = ".z"))
 
-  LittleThumb(path = "Somewhere", root = F)
+  LittleThumb(path = "Somewhere", relative = F)
 
   expect_identical(MakePath(), "Somewhere")
 
