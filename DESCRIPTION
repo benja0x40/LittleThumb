@@ -1,16 +1,18 @@
 Package: LittleThumb
 Type: Package
 Title: LittleThumb
-Version: 0.2.3
+Version: 0.2.4
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports: 
 Depends:
-    R (>= 3.4.0),
-Suggests: ,
+    R (>= 3.4.0)
+Suggests:
+    devtools,
+    roxygen2,
     knitr,
     rmarkdown
-Description: Crude automation for saving and loading R objects.
+Description: Automation for saving and loading R objects.
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1

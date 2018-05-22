@@ -12,6 +12,7 @@
   options(LittleThumb.makedir  = T)
   options(LittleThumb.rebuild  = F)
   options(LittleThumb.overload = F)
+  options(LittleThumb.messages = T)
 
   # Evaluation
   options(LittleThumb.environment = NA)
@@ -31,6 +32,7 @@
   options(LittleThumb.makedir  = NULL)
   options(LittleThumb.rebuild  = NULL)
   options(LittleThumb.overload = NULL)
+  options(LittleThumb.messages = NULL)
 
   # Evaluation
   options(LittleThumb.environment = NULL)

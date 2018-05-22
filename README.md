@@ -1,7 +1,7 @@
 LittleThumb
 ================================================================================
 
-Crude automation mechanism for saving and loading R objects to/from RDS files.
+Automation mechanism for saving and loading R objects to/from RDS files.
 
 ### <a name="install"></a>Installation
 

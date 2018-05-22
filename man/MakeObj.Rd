@@ -2,26 +2,82 @@
 % Please edit documentation in R/MakeObj.R
 \name{MakeObj}
 \alias{MakeObj}
-\title{MakeObj}
+\title{Automatically make & save or load an R object}
 \usage{
 MakeObj(obj, ...)
 }
 \arguments{
-\item{obj}{an R object.}
+\item{obj}{an R symbol.}
 
 \item{...}{at least an expression defining the R object, which can be preceded by
-optional parameters passed to the \link{LoadObj} and \link{SaveObj}
-functions (see detail and example sections).}
+optional arguments (see detail and example sections).}
 }
 \description{
-Generate an R object and save it as RData, or skip the generation and load
-this object from previously saved RData if available.
+\code{MakeObj} automatically generates an R object using the provided
+expression and saves the associated RDS file, or skips these two operations
+and loads the previously saved RDS file when it is available, or even avoids
+to do anything when the R object is already defined in the R environment.
+
+The automation performed by MakeObj can be controlled by optional arguments
+and their corresponding global options which are accessible via the
+\link{LittleThumb} function (see detail and example sections).
 }
 \details{
-TODO: documentation
+The \code{MakeObj} function requires at least two arguments: an R symbol
+in the first position (i.e. \code{obj} argument) and an R expression
+in the last position.
+More precisely, the last argument of \code{MakeObj} must be the expression
+generating the R object to be automatically saved or loaded and associated
+to the symbol \code{obj}.
+
+For instance, the following line would automatically make/save/load
+an integer vector named \code{x} and containing values from 1 to 10:
+
+\code{MakeObj(x, { x <- 1:10 })}
+
+The expression provided as last argument can be preceded by optional the
+arguments \code{rebuild} and \code{overlaod} to control the behavior of
+\code{MakeObj}, as well as \code{path} and \code{env} to control the
+location of generated RDS files and R objects (see \link{LittleThumb}).
+}
+\examples{
+# Create a simple R object named 'a'
+a <- 1:10
+
+# Save object a in the current working directory
+SaveObj(a)
+
+# Simulate restarting the R environment
+rm(a)
+
+# Check if object a is available in the R environment (FALSE)
+exists("a")
+
+# Check if an RDS file is available for object a (TRUE)
+AvailableObj(a)
+
+# Load object a from the current working directory
+LoadObj(a)
+
+print(a)
+
+# Delete the RDS file associated to object a and remove the object itself
+DeleteObj(a, remove = T)
+
+# Now both lines below should return FALSE
+AvailableObj(a)
+exists("a")
+
+# Concise way to automatically make/save/load object a
+MakeObj(a, { a <- 1:10 })
+
+print(a)
+
+# Cleanup
+DeleteObj(a, remove = T)
 }
 \seealso{
 \link{LoadObj},
   \link{SaveObj},
-  \link{AvailableObj}
+  \link{LittleThumb}
 }

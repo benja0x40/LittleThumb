@@ -2,11 +2,72 @@
 % Please edit documentation in R/DeleteObj.R
 \name{DeleteObj}
 \alias{DeleteObj}
-\title{DeleteObj}
+\title{Delete the RDS file associated to an R object}
 \usage{
-DeleteObj(obj, path = NULL, name = NULL, ...)
+DeleteObj(obj, path = NULL, name = NULL, env = NULL, remove = F, ...)
+}
+\arguments{
+\item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
+or saved using \link{SaveObj}.}
+
+\item{path}{directory where the RDS file should be located.
+When none is specified this location is defined by the \code{path} option
+accessible via the \link{LittleThumb} function.}
+
+\item{name}{\strong{reserved for internal use}: optional name of the R object.
+When omitted this name is automatically provided by the symbol being passed
+as first argument.}
+
+\item{env}{\link{environment} where the R object should be located.
+When none is specified this environment is defined by the \code{environment}
+option accessible via the \link{LittleThumb} function.}
+
+\item{remove}{logical.}
+
+\item{...}{optional arguments passed to the \link{rm} function.}
 }
 \description{
-DeleteObj
+Delete the RDS file associated to an R object
 }
-\keyword{internal}
+\examples{
+# Create a simple R object named 'a'
+a <- 1:10
+
+# Save object a in the current working directory
+SaveObj(a)
+
+# Simulate restarting the R environment
+rm(a)
+
+# Check if object a is available in the R environment (FALSE)
+exists("a")
+
+# Check if an RDS file is available for object a (TRUE)
+AvailableObj(a)
+
+# Load object a from the current working directory
+LoadObj(a)
+
+print(a)
+
+# Delete the RDS file associated to object a and remove the object itself
+DeleteObj(a, remove = T)
+
+# Now both lines below should return FALSE
+AvailableObj(a)
+exists("a")
+
+# Concise way to automatically make/save/load object a
+MakeObj(a, { a <- 1:10 })
+
+print(a)
+
+# Cleanup
+DeleteObj(a, remove = T)
+}
+\seealso{
+\link{MakeObj},
+  \link{LoadObj},
+  \link{SaveObj},
+  \link{AvailableObj}
+}

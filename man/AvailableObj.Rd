@@ -2,30 +2,67 @@
 % Please edit documentation in R/AvailableObj.R
 \name{AvailableObj}
 \alias{AvailableObj}
-\title{Check if an R object is available as RData}
+\title{Check if the RDS file associated to an R object is available}
 \usage{
 AvailableObj(obj, path = NULL, name = NULL)
 }
 \arguments{
-\item{obj}{an R object previously generated with \link{MakeObj} or saved using
-\link{SaveObj}.}
+\item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
+or saved using \link{SaveObj}.}
 
-\item{path}{specific location where to look for the RData.
-When none is specified this location is defined by the path option accessible
-via \link{LittleThumb}, which by default is the current working directory.}
+\item{path}{directory where the RDS file should be located.
+When none is specified this location is defined by the \code{path} option
+accessible via the \link{LittleThumb} function.}
 
-\item{name}{optional file name. When omitted this name is automatically set to the
-name of the R object being passed as argument.}
+\item{name}{\strong{reserved for internal use}: optional name of the R object.
+When omitted this name is automatically provided by the symbol being passed
+as first argument.}
 }
 \value{
-logical, \code{TRUE} when RData is available and \code{FALSE} otherwise.
+\code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
 }
 \description{
-Check if an R object is available as RData
+Check if the RDS file associated to an R object is available
+}
+\examples{
+# Create a simple R object named 'a'
+a <- 1:10
+
+# Save object a in the current working directory
+SaveObj(a)
+
+# Simulate restarting the R environment
+rm(a)
+
+# Check if object a is available in the R environment (FALSE)
+exists("a")
+
+# Check if an RDS file is available for object a (TRUE)
+AvailableObj(a)
+
+# Load object a from the current working directory
+LoadObj(a)
+
+print(a)
+
+# Delete the RDS file associated to object a and remove the object itself
+DeleteObj(a, remove = T)
+
+# Now both lines below should return FALSE
+AvailableObj(a)
+exists("a")
+
+# Concise way to automatically make/save/load object a
+MakeObj(a, { a <- 1:10 })
+
+print(a)
+
+# Cleanup
+DeleteObj(a, remove = T)
 }
 \seealso{
 \link{LoadObj},
   \link{MakeObj},
-  \link{SaveObj}
+  \link{SaveObj},
+  \link{DeleteObj}
 }
-\keyword{internal}

@@ -4,7 +4,7 @@ context("LittleThumb")
 cfg <- lt_cfg() # LittleThumb options
 lst <- c(
   "path", "root", "extension",
-  "makedir", "rebuild", "overload",
+  "makedir", "rebuild", "overload", "messages",
   "environment"
 )
 
@@ -19,9 +19,10 @@ test_that("Default options", {
   expect_identical(cfg$extension, ".rds")
 
   # Behavior
-  expect_identical(cfg$makedir, T)
-  expect_identical(cfg$rebuild, F)
+  expect_identical(cfg$makedir,  T)
+  expect_identical(cfg$rebuild,  F)
   expect_identical(cfg$overload, F)
+  expect_identical(cfg$messages, T)
 
   # Evaluation
   expect_identical(cfg$environment, NA)

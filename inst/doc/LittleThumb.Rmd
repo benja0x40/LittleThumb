@@ -12,10 +12,6 @@ output:
     number_sections: false
     toc: true
     toc_depth: 2
-  html_document:
-    number_sections: false
-    toc: true
-    toc_depth: 2
 ---
 
 ```{r message=FALSE, include=FALSE}

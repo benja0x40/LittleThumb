@@ -2,35 +2,43 @@
 % Please edit documentation in R/LittleThumb.R
 \name{LittleThumb}
 \alias{LittleThumb}
-\title{Global options}
+\title{Global options for LittleThumb functions}
 \usage{
 LittleThumb(path = NULL, root = NULL, extension = NULL, makedir = NULL,
-  rebuild = NULL, overload = NULL, environment = NULL)
+  rebuild = NULL, overload = NULL, messages = NULL, environment = NULL)
 }
 \arguments{
 \item{path}{default folder used to save R objects.}
 
 \item{root}{logical value. When \code{TRUE} the default folder defines the root path for
 all read/write operations automated by LittleThumb, meaning that any path
-specified when calling \link{MakeObj}, \link{SaveObj}, \link{LoadObj}, or
-\link{AvailableObj} will represent a sub path of the default folder.}
+specified when calling \link{MakeObj}, \link{SaveObj} or \link{LoadObj}
+will represent a sub path of the default folder.}
 
-\item{extension}{RData file extension (default = ".rdata").}
+\item{extension}{RDS file extension (default = ".rds").}
 
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
 
 \item{rebuild}{logical value, if \code{TRUE} forces \link{MakeObj} to regenerate R objects
-even if when the corresponding RData already exist.}
+even if when the associated RDS files already exist.}
 
 \item{overload}{logical value, if \code{TRUE} forces \link{MakeObj} and \link{LoadObj} to
-load R objects from RData even when these objects already exist in the
-R environment.}
+load R objects from associated RDS files even when these objects already
+exist in the R environment.}
+
+\item{messages}{logical value enabling or disabling status messages from LittleThumb
+functions (default = T, yes).}
 
 \item{environment}{environment containing R objects for \link{MakeObj}, \link{SaveObj} and
 \link{LoadObj}. With the default value (\code{NA}), this environment is
 the parent.frame of called LittleThumb functions.}
 }
 \description{
-Global options
+Global options for LittleThumb functions
+}
+\seealso{
+\link{MakeObj},
+  \link{SaveObj},
+  \link{LoadObj}
 }

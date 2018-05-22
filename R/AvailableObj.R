@@ -1,17 +1,18 @@
 # =============================================================================.
-#' Check if an R object is available as RData
+#' Check if the RDS file associated to an R object is available
 # -----------------------------------------------------------------------------.
 #' @seealso
 #'   \link{LoadObj},
 #'   \link{MakeObj},
-#'   \link{SaveObj}
+#'   \link{SaveObj},
+#'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
+#' @example examples/Basics.R
 #' @inheritParams LoadObj
 #'
 #' @return
-#' logical, \code{TRUE} when RData is available and \code{FALSE} otherwise.
+#' \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
 # -----------------------------------------------------------------------------.
-#' @keywords internal
 #' @export
 AvailableObj <- function(obj, path = NULL, name = NULL) {
 

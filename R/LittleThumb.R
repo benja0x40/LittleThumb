@@ -7,7 +7,7 @@ lt_cfg <- function() {
 
   lst <- c(
     "path", "root", "extension",
-    "makedir", "rebuild", "overload",
+    "makedir", "rebuild", "overload", "messages",
     "environment"
   )
   r <- options()[paste0("LittleThumb.", lst)]
@@ -17,7 +17,12 @@ lt_cfg <- function() {
 }
 
 # =============================================================================.
-#' Global options
+#' Global options for LittleThumb functions
+# -----------------------------------------------------------------------------.
+#' @seealso
+#'   \link{MakeObj},
+#'   \link{SaveObj},
+#'   \link{LoadObj}
 # -----------------------------------------------------------------------------.
 #' @param path
 #' default folder used to save R objects.
@@ -25,11 +30,11 @@ lt_cfg <- function() {
 #' @param root
 #' logical value. When \code{TRUE} the default folder defines the root path for
 #' all read/write operations automated by LittleThumb, meaning that any path
-#' specified when calling \link{MakeObj}, \link{SaveObj}, \link{LoadObj}, or
-#' \link{AvailableObj} will represent a sub path of the default folder.
+#' specified when calling \link{MakeObj}, \link{SaveObj} or \link{LoadObj}
+#' will represent a sub path of the default folder.
 #'
 #' @param extension
-#' RData file extension (default = ".rdata").
+#' RDS file extension (default = ".rds").
 #'
 #' @param makedir
 #' logical value, if \code{TRUE} non-existing folders are created automatically
@@ -37,12 +42,16 @@ lt_cfg <- function() {
 #'
 #' @param rebuild
 #' logical value, if \code{TRUE} forces \link{MakeObj} to regenerate R objects
-#' even if when the corresponding RData already exist.
+#' even if when the associated RDS files already exist.
 #'
 #' @param overload
 #' logical value, if \code{TRUE} forces \link{MakeObj} and \link{LoadObj} to
-#' load R objects from RData even when these objects already exist in the
-#' R environment.
+#' load R objects from associated RDS files even when these objects already
+#' exist in the R environment.
+#'
+#' @param messages
+#' logical value enabling or disabling status messages from LittleThumb
+#' functions (default = T, yes).
 #'
 #' @param environment
 #' environment containing R objects for \link{MakeObj}, \link{SaveObj} and
@@ -52,7 +61,7 @@ lt_cfg <- function() {
 #' @export
 LittleThumb <- function(
   path = NULL, root = NULL, extension = NULL,
-  makedir = NULL, rebuild = NULL, overload = NULL,
+  makedir = NULL, rebuild = NULL, overload = NULL, messages = NULL,
   environment = NULL
 ) {
 
@@ -65,6 +74,7 @@ LittleThumb <- function(
   if(! is.null(makedir))  options(LittleThumb.makedir  = makedir)
   if(! is.null(rebuild))  options(LittleThumb.rebuild  = rebuild)
   if(! is.null(overload)) options(LittleThumb.overload = overload)
+  if(! is.null(messages)) options(LittleThumb.messages = messages)
 
   # Evaluation
   if(! is.null(environment)) options(LittleThumb.environment = environment)

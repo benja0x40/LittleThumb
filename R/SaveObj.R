@@ -1,60 +1,35 @@
 # =============================================================================.
-#' Save an R object as RData with semi-automated path and file name
+#' Save the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
 #'   \link{MakeObj},
 #'   \link{LoadObj},
-#'   \link{AvailableObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
+#' @example examples/Basics.R
+#'
 #' @param obj
-#' an R object to be saved as RData.
+#' an R object to be saved as RDS file by the \link{saveRDS} function.
 #'
 #' @param path
-#' specific location used to save the RData.
-#' When none is specified this location is defined by the path option accessible
-#' via \link{LittleThumb}, which by default is the current working directory.
+#' directory where the RDS file should be located.
+#' When none is specified this location is defined by the \code{path} option
+#' accessible via the \link{LittleThumb} function.
 #'
 #' @param name
-#' optional file name. When omitted this name is automatically set to the
-#' name of the R object being passed as argument.
+#' \strong{reserved for internal use}: optional name of the R object.
+#' When omitted this name is automatically provided by the symbol being passed
+#' as first argument.
 #'
 #' @param env
-#' the \link{environment} containing the R object to be saved
-#' (default = .GlobalEnv).
+#' \link{environment} where the R object should be located.
+#' When none is specified this environment is defined by the \code{environment}
+#' option accessible via the \link{LittleThumb} function.
 #'
 #' @param ...
-#' optional parameters passed to the \link{saveRDS} function.
+#' optional arguments passed to the \link{saveRDS} function.
 #'
 #' @return NULL
-# -----------------------------------------------------------------------------.
-#' @examples
-#' # R objects are automatically saved in the current working directory
-#' a <- rep("a", 10)
-#' SaveObj(a)
-#' rm(a)
-#' LoadObj(a)
-#' print(a)
-#' file.remove("a.rdata") # delete the file generated for this example
-#'
-#' # R objects can be saved and loaded from any path
-#' b <- rep("b", 10)
-#' SaveObj(b, path = "MyRData") # path is automatically created if necessary
-#' b <- NULL
-#' LoadObj(b, path = "MyRData")
-#'
-#' # Not yet defined R objects may be created only when no saved version exists
-#' if(! LoadObj(a, "MyRData")) {
-#'   a <- 0
-#'   SaveObj(a, "MyRData")
-#' }
-#' print(a)
-#'
-#' # Saved object can be updated by overwriting
-#' a <- 1
-#' SaveObj(a, path = "MyRData")
-#' rm(a)
-#' LoadObj(a)
-#' print(a)
 # -----------------------------------------------------------------------------.
 #' @export
 SaveObj <- function(obj, path = NULL, name = NULL, env = NULL, ...) {
@@ -71,11 +46,11 @@ SaveObj <- function(obj, path = NULL, name = NULL, env = NULL, ...) {
 
   d <- dirname(f)
   if(cfg$makedir & d != "" & ! file.exists(d)) {
-    message("[creating] ", d)
+    if(cfg$messages) message("[creating] ", d)
     LittleThumb::mkdir(d)
   }
 
-  message(msg, " ", f)
+  if(cfg$messages) message(msg, " ", f)
   saveRDS(env[[obj.name]], f, ...)
 
   f
