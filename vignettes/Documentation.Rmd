@@ -1,7 +1,7 @@
 ---
 title: "LittleThumb documentation"
+subtitle: "`r paste('Package version', packageVersion('LittleThumb'), '-', format(Sys.time(), '%d.%m.%Y'))`"
 author: '[Benjamin Leblanc](https://github.com/benja0x40)'
-date: "`r format(Sys.time(), '%d.%m.%Y')`"
 vignette: >
   %\VignetteIndexEntry{LittleThumb documentation}
   %\VignetteEncoding{UTF-8}
