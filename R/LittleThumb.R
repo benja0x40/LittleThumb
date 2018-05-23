@@ -37,6 +37,13 @@ DefaultOptions <- function() {
 #'   \link{SaveObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
+#' @description
+#' This function sets the default value of arguments used by the main functions
+#' of the LittleThumb package, which allows to control automated saving/loading
+#' operations performed by these functions at the global level.
+#'
+#' functions \code{MakeObj}, \code{LoadObj}, \code{SaveObj} or \code{LoadObj}
+#'
 #' @param path
 #' default folder used to save R objects.
 #'
