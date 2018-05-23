@@ -12,23 +12,23 @@ test_that("Basic", {
   x <- y <- 1:10
 
   expect_error(LoadObj(x))
-  SaveObj(x)
+  saveRDS(x, f)
 
   rm(x)
   expect_false(exists("x"))
 
-  expect_message(LoadObj(x), regexp = "[loading]")
+  expect_message(LoadObj(x), regexp = "loading")
   expect_true(exists("x"))
   expect_identical(x, y)
 
-  expect_message(LoadObj(x), regexp = "[passing]")
+  expect_message(LoadObj(x), regexp = "passing")
   expect_identical(x, y)
 
   x <- 0
-  expect_message(LoadObj(x), regexp = "[passing]")
+  expect_message(LoadObj(x), regexp = "passing")
   expect_identical(x, 0)
 
-  expect_message(LoadObj(x, overload = T), regexp = "[overloading]")
+  expect_message(LoadObj(x, overload = T), regexp = "overloading")
   expect_identical(x, y)
 
   # Cleanup
@@ -39,9 +39,3 @@ test_that("Basic", {
   do.call(LittleThumb, cfg) # Restore default values
   expect_identical(cfg, LittleThumb())
 })
-
-# + Advanced -------------------------------------------------------------------
-test_that("Advanced", {
-
-})
-

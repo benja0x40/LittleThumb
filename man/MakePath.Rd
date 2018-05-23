@@ -10,11 +10,13 @@ MakePath(..., ext = NULL, relative = NULL)
 \item{...}{list of character strings forming a file path.}
 
 \item{ext}{file name extension (default = "", none).}
+
+\item{relative}{TODO: documentation}
 }
 \value{
 \code{MakePath} returns a \code{character} string.
 }
 \description{
-Concatenate several strings to form a filesystem path
+\link{MkPath} is a short alias of function \code{MakePath}.
 }
 \keyword{internal}

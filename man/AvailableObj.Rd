@@ -10,13 +10,15 @@ AvailableObj(obj, path = NULL, name = NULL, relative = NULL)
 \item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
 or saved using \link{SaveObj}.}
 
-\item{path}{directory where the RDS file should be located.
-When none is specified this location is defined by the \code{path} option
-accessible via the \link{LittleThumb} function.}
+\item{path}{directory where the RDS file should be located.}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
+
+\item{relative}{logical value controlling whether the specified \code{path} should be
+absolute or relative to the global \code{path} option accessible via the
+\link{LittleThumb} function (default = T, yes).}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
@@ -46,7 +48,7 @@ LoadObj(a)
 print(a)
 
 # Delete the RDS file associated to object a and remove the object itself
-DeleteObj(a, remove = T)
+DeleteObj(a)
 
 # Now both lines below should return FALSE
 AvailableObj(a)
@@ -63,12 +65,16 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
+# MkObj is a short alias of function MakeObj
+MkObj(a, { a <- 1:10 })
+
 # Cleanup
-DeleteObj(a, remove = T)
+DeleteObj(a)
 }
 \seealso{
-\link{LoadObj},
+\link{LittleThumb},
   \link{MakeObj},
+  \link{LoadObj},
   \link{SaveObj},
   \link{DeleteObj}
 }

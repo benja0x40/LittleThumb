@@ -2,29 +2,38 @@
 #' Save the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
+#'   \link{LittleThumb},
 #'   \link{MakeObj},
 #'   \link{LoadObj},
-#'   \link{LittleThumb}
+#'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
 #' @example examples/Basics.R
+#' @inheritParams LittleThumb
+#'
+#' @details
+#' When unspecified, the value of the following arguments are determined by the
+#' corresponding global options (see \link{LittleThumb}):
+#'
+#' \code{relative}, \code{envir}, \code{makedir} and \code{messages}
 #'
 #' @param obj
 #' an R object to be saved as RDS file by the \link{saveRDS} function.
 #'
 #' @param path
 #' directory where the RDS file should be located.
-#' When none is specified this location is defined by the \code{path} option
-#' accessible via the \link{LittleThumb} function.
 #'
 #' @param name
 #' \strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 #' When omitted this name is automatically provided by the symbol being passed
 #' as first argument.
 #'
+#' @param relative
+#' logical value controlling whether the specified \code{path} should be
+#' absolute or relative to the global \code{path} option accessible via the
+#' \link{LittleThumb} function (default = T, yes).
+#'
 #' @param envir
 #' \link{environment} where the R object should be located.
-#' When none is specified this environment is defined by the \code{envir}
-#' option accessible via the \link{LittleThumb} function.
 #'
 #' @param ...
 #' optional arguments passed to the \link{saveRDS} function.
@@ -41,7 +50,7 @@ SaveObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(SaveObj, cfg, ignore = c("obj", "path", "name", "..."))
+  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = SaveObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 
@@ -54,7 +63,7 @@ SaveObj <- function(
   d <- dirname(f)
   if(makedir & d != "" & ! file.exists(d)) {
     if(messages) message("[creating] ", d)
-    LittleThumb::mkdir(d)
+    LittleThumb::MkDir(d)
   }
 
   if(messages) message(msg, " ", f)

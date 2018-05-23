@@ -2,9 +2,10 @@
 #' Load an R object from its associated RDS file
 # -----------------------------------------------------------------------------.
 #' @seealso
+#'   \link{LittleThumb},
 #'   \link{MakeObj},
 #'   \link{SaveObj},
-#'   \link{LittleThumb}
+#'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
 #' @example examples/Basics.R
 #' @inheritParams SaveObj
@@ -33,7 +34,7 @@ LoadObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(LoadObj, cfg, ignore = c("obj", "path", "name", "..."))
+  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = LoadObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 

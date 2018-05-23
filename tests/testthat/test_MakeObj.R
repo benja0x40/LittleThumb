@@ -14,18 +14,18 @@ test_that("Basic", {
   expect_false(exists("x"))
   expect_false(file.exists(f))
 
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "[saving]")
+  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "saving")
 
   expect_true(file.exists(f))
   expect_true(exists("x"))
   expect_identical(x, y)
 
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "[passing]")
+  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "passing")
 
   rm(x)
   expect_false(exists("x"))
 
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "[loading]")
+  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "loading")
   expect_identical(x, y)
 
   # Cleanup
@@ -34,9 +34,3 @@ test_that("Basic", {
   expect_false(exists("x"))
 
 })
-
-# + Advanced -------------------------------------------------------------------
-test_that("Advanced", {
-
-})
-

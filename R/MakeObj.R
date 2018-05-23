@@ -1,10 +1,21 @@
 # =============================================================================.
+#' Short alias of function MakeObj
+# -----------------------------------------------------------------------------.
+#' @description
+#' \code{MkObj} is a short alias of function \link{MakeObj}.
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+MkObj <- function(...) { MakeObj(...) }
+
+# =============================================================================.
 #' Automatically make & save or load an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
+#'   \link{LittleThumb},
 #'   \link{LoadObj},
 #'   \link{SaveObj},
-#'   \link{LittleThumb}
+#'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
 #' @example examples/Basics.R
 #'
@@ -14,9 +25,11 @@
 #' and loads the previously saved RDS file when it is available, or even avoids
 #' to do anything when the R object is already defined in the R environment.
 #'
-#' The automation performed by MakeObj can be controlled by optional arguments
-#' and their corresponding global options which are accessible via the
-#' \link{LittleThumb} function (see detail and example sections).
+#' The automation performed by \code{MakeObj} can be controlled by optional
+#' arguments and their corresponding global options which are accessible
+#' via the \link{LittleThumb} function (see detail and example sections).
+#'
+#' \link{MkObj} is a short alias of function \code{MakeObj}.
 #'
 #' @details
 #' The \code{MakeObj} function requires at least two arguments: an R symbol
@@ -43,6 +56,7 @@
 #' at least an expression defining the R object, which can be preceded by
 #' optional arguments (see detail and example sections).
 # -----------------------------------------------------------------------------.
+#' @keywords visible
 #' @export
 MakeObj <- function(obj, ...) {
 
@@ -62,7 +76,7 @@ MakeObj <- function(obj, ...) {
   if(n < 2 | is.null(a$name)) stop("insufficient arguments")
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(AvailableObj, cfg, ignore = "path", env = a)
+  DefaultArgs(cfg, ignore = "path", env = a)
   a <- as.list(a)
 
   if(! is.environment(a$envir)) a$envir <- parent.frame()

@@ -2,6 +2,7 @@
 #' Delete the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
+#'   \link{LittleThumb},
 #'   \link{MakeObj},
 #'   \link{LoadObj},
 #'   \link{SaveObj},
@@ -26,7 +27,7 @@ DeleteObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(DeleteObj, cfg, ignore = c("obj", "path", "name", "..."))
+  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = DeleteObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 
@@ -38,8 +39,8 @@ DeleteObj <- function(
   if(f.e) r <- file.remove(f)
 
   if(remove) {
-    r <- rm(list = obj.name, pos = envir, ...)
     if(messages) message("[removing] ", obj.name)
+    r <- rm(list = obj.name, pos = envir, ...)
   }
 
 }

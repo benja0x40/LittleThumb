@@ -18,9 +18,11 @@ expression and saves the associated RDS file, or skips these two operations
 and loads the previously saved RDS file when it is available, or even avoids
 to do anything when the R object is already defined in the R environment.
 
-The automation performed by MakeObj can be controlled by optional arguments
-and their corresponding global options which are accessible via the
-\link{LittleThumb} function (see detail and example sections).
+The automation performed by \code{MakeObj} can be controlled by optional
+arguments and their corresponding global options which are accessible
+via the \link{LittleThumb} function (see detail and example sections).
+
+\link{MkObj} is a short alias of function \code{MakeObj}.
 }
 \details{
 The \code{MakeObj} function requires at least two arguments: an R symbol
@@ -62,7 +64,7 @@ LoadObj(a)
 print(a)
 
 # Delete the RDS file associated to object a and remove the object itself
-DeleteObj(a, remove = T)
+DeleteObj(a)
 
 # Now both lines below should return FALSE
 AvailableObj(a)
@@ -79,11 +81,16 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
+# MkObj is a short alias of function MakeObj
+MkObj(a, { a <- 1:10 })
+
 # Cleanup
-DeleteObj(a, remove = T)
+DeleteObj(a)
 }
 \seealso{
-\link{LoadObj},
+\link{LittleThumb},
+  \link{LoadObj},
   \link{SaveObj},
-  \link{LittleThumb}
+  \link{DeleteObj}
 }
+\keyword{visible}

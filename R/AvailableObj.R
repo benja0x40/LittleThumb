@@ -2,8 +2,9 @@
 #' Check if the RDS file associated to an R object is available
 # -----------------------------------------------------------------------------.
 #' @seealso
-#'   \link{LoadObj},
+#'   \link{LittleThumb},
 #'   \link{MakeObj},
+#'   \link{LoadObj},
 #'   \link{SaveObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
@@ -20,7 +21,7 @@ AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(AvailableObj, cfg, ignore = c("obj", "path", "name", "..."))
+  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = AvailableObj)
 
   f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
 

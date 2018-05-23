@@ -11,21 +11,24 @@ LoadObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
 \item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
 or saved using \link{SaveObj}.}
 
-\item{path}{directory where the RDS file should be located.
-When none is specified this location is defined by the \code{path} option
-accessible via the \link{LittleThumb} function.}
+\item{path}{directory where the RDS file should be located.}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
 
-\item{envir}{\link{environment} where the R object should be located.
-When none is specified this environment is defined by the \code{envir}
-option accessible via the \link{LittleThumb} function.}
+\item{relative}{logical value controlling whether the specified \code{path} should be
+absolute or relative to the global \code{path} option accessible via the
+\link{LittleThumb} function (default = T, yes).}
+
+\item{envir}{\link{environment} where the R object should be located.}
 
 \item{overload}{logical. When the R object to be loaded is already defined in the target
 environment LoadObj can avoid (overload = F) or force (overload = T) the
 reloading of this object.}
+
+\item{messages}{logical value enabling or disabling status messages from LittleThumb
+functions (default = T, yes).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}
 }
@@ -54,7 +57,7 @@ LoadObj(a)
 print(a)
 
 # Delete the RDS file associated to object a and remove the object itself
-DeleteObj(a, remove = T)
+DeleteObj(a)
 
 # Now both lines below should return FALSE
 AvailableObj(a)
@@ -71,11 +74,15 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
+# MkObj is a short alias of function MakeObj
+MkObj(a, { a <- 1:10 })
+
 # Cleanup
-DeleteObj(a, remove = T)
+DeleteObj(a)
 }
 \seealso{
-\link{MakeObj},
+\link{LittleThumb},
+  \link{MakeObj},
   \link{SaveObj},
-  \link{LittleThumb}
+  \link{DeleteObj}
 }

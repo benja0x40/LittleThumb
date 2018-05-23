@@ -12,12 +12,12 @@ test_that("Basic", {
   x <- 1:10
 
   expect_false(file.exists(f))
-  expect_message(SaveObj(x), regexp = "[saving]")
+  expect_message(SaveObj(x), regexp = "saving")
   expect_true(file.exists(f))
   expect_identical(readRDS(f), x)
 
   x <- 10:1
-  expect_message(SaveObj(x), regexp = "[overwriting]")
+  expect_message(SaveObj(x), regexp = "overwriting")
   expect_identical(readRDS(f), x)
 
   # Cleanup
@@ -26,9 +26,3 @@ test_that("Basic", {
   do.call(LittleThumb, cfg) # Restore default values
   expect_identical(cfg, LittleThumb())
 })
-
-# + Advanced -------------------------------------------------------------------
-test_that("Advanced", {
-
-})
-

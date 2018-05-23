@@ -19,7 +19,7 @@ LoadObj(a)
 print(a)
 
 # Delete the RDS file associated to object a and remove the object itself
-DeleteObj(a, remove = T)
+DeleteObj(a)
 
 # Now both lines below should return FALSE
 AvailableObj(a)
@@ -36,5 +36,8 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
+# MkObj is a short alias of function MakeObj
+MkObj(a, { a <- 1:10 })
+
 # Cleanup
-DeleteObj(a, remove = T)
+DeleteObj(a)

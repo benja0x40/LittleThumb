@@ -2,11 +2,11 @@
 % Please edit documentation in R/LittleThumb.R
 \name{ResetOptions}
 \alias{ResetOptions}
-\title{ResetOptions ** RESERVED FOR INTERNAL USE **}
+\title{** RESERVED FOR INTERNAL USE **}
 \usage{
 ResetOptions()
 }
 \description{
-ResetOptions ** RESERVED FOR INTERNAL USE **
+Reinitialize global options of the LittleThumb package
 }
 \keyword{internal}

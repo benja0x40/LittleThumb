@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------.
 .onAttach <- function(...) {
 
-  # Insert LittleThumb entries in global options
+  # Initialize global options of the LittleThumb package
   LittleThumb::ResetOptions()
 
 }
@@ -13,10 +13,7 @@
 # -----------------------------------------------------------------------------.
 .onDetach <- function(...) {
 
-  # Delete LittleThumb entries in global options
-  cfg <- options()
-  cfg <- cfg[grepl( "^LittleThumb\\.", names(cfg))]
-  cfg[] <- vector("list", length(cfg))
-  options(cfg)
+  # Remove global options of the LittleThumb package from the R environment
+  LittleThumb::RemoveOptions()
 
 }

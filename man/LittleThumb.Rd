@@ -9,37 +9,40 @@ LittleThumb(...)
 \arguments{
 \item{path}{default folder used to save R objects.}
 
-\item{relative}{logical value. When \code{TRUE} the default folder defines the root path for
-all read/write operations automated by LittleThumb, meaning that any path
-specified when calling \link{MakeObj}, \link{SaveObj} or \link{LoadObj}
-will represent a sub path of the default folder.}
-
 \item{extension}{RDS file extension (default = ".rds").}
 
-\item{envir}{environment containing R objects for \link{MakeObj}, \link{SaveObj} and
-\link{LoadObj}. With the default value (\code{NA}), this environment is
+\item{relative}{logical value. When \code{TRUE} the default folder defines the root path for
+all read/write operations automated by LittleThumb, meaning that any path
+specified when calling \code{MakeObj}, \code{SaveObj} or \code{LoadObj}
+will represent a sub path of the default folder.}
+
+\item{envir}{environment containing R objects for \code{MakeObj}, \code{SaveObj} and
+\code{LoadObj}. With the default value (\code{NA}), this environment is
 the parent.frame of called LittleThumb functions.}
 
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
 
-\item{rebuild}{logical value, if \code{TRUE} forces \link{MakeObj} to regenerate R objects
+\item{rebuild}{logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
 even if when the associated RDS files already exist.}
 
-\item{overload}{logical value, if \code{TRUE} forces \link{MakeObj} and \link{LoadObj} to
+\item{overload}{logical value, if \code{TRUE} forces \code{MakeObj} and \code{LoadObj} to
 load R objects from associated RDS files even when these objects already
 exist in the R environment.}
+
+\item{remove}{TODO: documentation}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
 functions (default = T, yes).}
 
-\item{history}{file name.}
+\item{history}{TODO: documentation}
 }
 \description{
 Global options for LittleThumb functions
 }
 \seealso{
 \link{MakeObj},
+  \link{LoadObj},
   \link{SaveObj},
-  \link{LoadObj}
+  \link{DeleteObj}
 }

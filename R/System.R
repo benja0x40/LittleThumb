@@ -8,14 +8,14 @@ clock <- function(x) {
 }
 
 # =============================================================================.
-#' Create a destination path
+#' Create a destination path (Linux/macOS only)
 # -----------------------------------------------------------------------------.
 #' @description
-#' mkdir creates a destination path including upper level folders if necessary.
+#' MkDir creates a destination path including upper level folders if necessary.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-mkdir <- function(x) {
+MkDir <- function(x) {
   system(paste0('mkdir -p "', x, '"'))
 }
 
