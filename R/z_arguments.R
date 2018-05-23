@@ -11,7 +11,7 @@ DefaultArgs <- function(cfg, ignore = NULL, fun = NULL, env = NULL) {
   if(is.null(env)) env <- parent.frame()
 
   lst <- names(cfg)
-  if(! is.null(fun)) lst <- formalArgs(fun)
+  if(! is.null(fun)) lst <- methods::formalArgs(fun)
 
   lst <- setdiff(lst, ignore)
 

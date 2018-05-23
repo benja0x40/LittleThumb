@@ -1,10 +1,11 @@
 Package: LittleThumb
 Type: Package
 Title: LittleThumb
-Version: 0.3.10
+Version: 0.3.11
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
-Imports: 
+Imports:
+    methods
 Depends:
     R (>= 3.4.0)
 Suggests:

@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/benja0x40/LittleThumb.svg?branch=master)](https://travis-ci.com/benja0x40/LittleThumb)
-[![Coverage Status](https://img.shields.io/codecov/c/github/benja0x40/LittleThumb/master.svg)](https://codecov.io/github/benja0x40/LittleThumb?branch=master)
+[![Build Status](https://travis-ci.com/benja0x40/LittleThumb.svg?branch=master)](https://travis-ci.com/benja0x40/LittleThumb)
+
+<!-- [![Coverage Status](https://img.shields.io/codecov/c/github/benja0x40/LittleThumb/master.svg)](https://codecov.io/github/benja0x40/LittleThumb?branch=master) -->
 
 <!-- [![Coverage Status](https://codecov.io/gh/jonclayden/shades/branch/master/graph/badge.svg)](https://codecov.io/gh/jonclayden/shades) -->
 

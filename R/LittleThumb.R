@@ -44,6 +44,9 @@ DefaultOptions <- function() {
 #'
 #' functions \code{MakeObj}, \code{LoadObj}, \code{SaveObj} or \code{LoadObj}
 #'
+#' @param ...
+#' Any of the following arguments.
+#'
 #' @param path
 #' default folder used to save R objects.
 #'

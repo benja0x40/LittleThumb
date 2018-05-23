@@ -23,8 +23,7 @@ MkDir <- function(x) {
 #' Make a symbolic link (Linux/macOS only)
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-#' @export
-mklnk <- function(x, dest) {
+MkLnk <- function(x, dest) {
   system(paste0('ln -fs "', dest, '" "', x, '"'))
 }
 
@@ -32,7 +31,6 @@ mklnk <- function(x, dest) {
 #' HostName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-#' @export
 HostName <- function() {
   as.character(Sys.info()["nodename"])
 }
@@ -41,7 +39,6 @@ HostName <- function() {
 #' SysName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-#' @export
 SysName <- function() {
   as.character(Sys.info()["sysname"])
 }
@@ -50,7 +47,6 @@ SysName <- function() {
 #' UserName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-#' @export
 UserName <- function() {
   as.character(Sys.info()["user"])
 }
@@ -59,7 +55,6 @@ UserName <- function() {
 #' HomePath
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-#' @export
 HomePath <- function() {
   as.character(Sys.getenv()["HOME"])
 }
