@@ -1,7 +1,7 @@
 ## ----message=FALSE, include=FALSE----------------------------------------
 library(LittleThumb)
 
-cfg <- lt_cfg()
+cfg <- LittleThumb()
 
 # DeleteObj(x)
 # DeleteObj(a, path = "text")
