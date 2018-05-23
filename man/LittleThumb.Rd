@@ -38,7 +38,11 @@ functions (default = T, yes).}
 \item{history}{TODO: documentation}
 }
 \description{
-Global options for LittleThumb functions
+This function sets the default value of arguments used by the main functions
+of the LittleThumb package, which allows to control automated saving/loading
+operations performed by these functions at the global level.
+
+functions \code{MakeObj}, \code{LoadObj}, \code{SaveObj} or \code{LoadObj}
 }
 \seealso{
 \link{MakeObj},

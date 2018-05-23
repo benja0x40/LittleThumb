@@ -1,4 +1,3 @@
 language: r
 cache: packages
 sudo: false
-r_packages: LittleThumb
