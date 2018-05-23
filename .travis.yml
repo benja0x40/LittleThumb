@@ -1,6 +1,28 @@
-language: r
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+language: R
 cache: packages
+
+# Use containers
 sudo: false
-os:
-  - linux
-  - osx
+
+# Run for pushes to the master branch only
+branches:
+  only:
+   - master
+
+# r_packages:
+
+r_github_packages:
+  - jimhester/covr
+
+# r_build_args: '--no-build-vignettes'
+r_check_args: '--ignore-vignettes' # --no-examples
+
+matrix:
+  include:
+    - os: linux
+      env: R_CODECOV=true
+    - os: osx
+
+after_success:
+  - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi

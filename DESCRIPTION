@@ -1,7 +1,7 @@
 Package: LittleThumb
 Type: Package
 Title: LittleThumb
-Version: 0.3.7
+Version: 0.3.8
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports: 
@@ -10,6 +10,7 @@ Depends:
 Suggests:
     devtools,
     roxygen2,
+    testthat,
     knitr,
     rmarkdown
 Description: Automation for saving and loading R objects.
