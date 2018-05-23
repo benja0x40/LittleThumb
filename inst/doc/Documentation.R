@@ -187,11 +187,11 @@ suppressWarnings(rm(x))   # Cleanup
 #  
 #    data <- new.env(parent = globalenv())
 #  
-#    MakeObj(k, path = "text", env = data, {
+#    MakeObj(k, path = "text", envir = data, {
 #      k <- LETTERS[1:5]
 #    })
 #  
-#    MakeObj(v, path = "values", env = data, {
+#    MakeObj(v, path = "values", envir = data, {
 #      v <- 1:5
 #    })
 #  
@@ -211,11 +211,11 @@ MakeObj(data, rebuild = T, {
   
   data <- new.env(parent = globalenv())
   
-  MakeObj(k, path = "text", env = data, {
+  MakeObj(k, path = "text", envir = data, {
     k <- LETTERS[1:5]
   })
   
-  MakeObj(v, path = "values", env = data, {
+  MakeObj(v, path = "values", envir = data, {
     v <- 1:5
   })
 
@@ -224,4 +224,9 @@ MakeObj(data, rebuild = T, {
 ## ------------------------------------------------------------------------
 print(data$k)
 print(data$v)
+
+## ----include=FALSE-------------------------------------------------------
+# Cleanup
+DeleteObj(x)
+unlink("./LT_Tests", recursive = T)
 

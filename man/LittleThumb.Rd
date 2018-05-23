@@ -7,7 +7,7 @@
 LittleThumb(...)
 }
 \arguments{
-\item{...}{Any of the following arguments.}
+\item{...}{Any of the following arguments:}
 
 \item{path}{default folder used to save R objects.}
 
@@ -41,10 +41,8 @@ functions (default = T, yes).}
 }
 \description{
 This function sets the default value of arguments used by the main functions
-of the LittleThumb package, which allows to control automated saving/loading
-operations performed by these functions at the global level.
-
-functions \code{MakeObj}, \code{LoadObj}, \code{SaveObj} or \code{LoadObj}
+of the LittleThumb package, which allows to control the automated
+saving/loading operations performed by these functions at the global level.
 }
 \seealso{
 \link{MakeObj},

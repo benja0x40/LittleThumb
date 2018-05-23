@@ -16,16 +16,16 @@ r_packages:
 # r_github_packages:
 #   - jimhester/covr
 
-# r_build_args: '--no-build-vignettes'
-r_check_args: '--ignore-vignettes' # --no-examples
-
 warnings_are_errors: false
 
 matrix:
   include:
     - os: linux
+      # r_check_args: '--ignore-vignettes'
       env: R_CODECOV=true
     - os: osx
+      # r_build_args: '--no-build-vignettes'
+      # r_check_args: '--ignore-vignettes'
 
 after_success:
   - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi

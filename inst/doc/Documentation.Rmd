@@ -1,14 +1,14 @@
 ---
-title: "LittleThumb"
+title: "LittleThumb documentation"
 author: '[Benjamin Leblanc](https://github.com/benja0x40)'
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 vignette: >
-  %\VignetteIndexEntry{LittleThumb}
+  %\VignetteIndexEntry{LittleThumb documentation}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 fontsize: 11pt
 output:
-  pdf_document:
+  rmarkdown::html_vignette:
     number_sections: false
     toc: true
     toc_depth: 2
@@ -207,11 +207,11 @@ MakeObj(data, rebuild = T, {
   
   data <- new.env(parent = globalenv())
   
-  MakeObj(k, path = "text", env = data, {
+  MakeObj(k, path = "text", envir = data, {
     k <- LETTERS[1:5]
   })
   
-  MakeObj(v, path = "values", env = data, {
+  MakeObj(v, path = "values", envir = data, {
     v <- 1:5
   })
 
@@ -228,3 +228,10 @@ source("LT_Test.R")
 print(data$k)
 print(data$v)
 ```
+
+```{r include=FALSE}
+# Cleanup
+DeleteObj(x)
+unlink("./LT_Tests", recursive = T)
+```
+
