@@ -15,7 +15,6 @@ library("devtools")
 install_github("benja0x40/LittleThumb", dependencies = T)
 ```
 
-### <a name="documentation"></a>Documentation
+### <a name="usage"></a>Usage
 
-See the [vignette](./inst/doc/LittleThumb.pdf) for documentation and examples.
-
+Work in progress...
