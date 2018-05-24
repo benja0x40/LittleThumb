@@ -68,11 +68,53 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">LittleThumb documentation</h1>
-<h3 class="subtitle"><em>Package version 0.4.0 - 23.05.2018</em></h3>
+<h3 class="subtitle"><em>Package version 0.4.1 - 24.05.2018</em></h3>
 <h4 class="author"><em><a href="https://github.com/benja0x40">Benjamin Leblanc</a></em></h4>
 
 
 
+<div id="easy-to-maintain-script-structure" class="section level3">
+<h3>Easy to maintain script structure</h3>
+<p>We want to compute two R objects. The first one (<code>dna</code>) will be an environment containing data for the sequence <code>s</code> and its alphabet <code>a</code>.</p>
+<p>The second one (<code>cgr</code>) will be a numeric matrix composed of two columns, corresponding to data <code>x</code> and <code>y</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
+
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+
+<span class="kw">LittleThumb</span>(
+  <span class="dt">rebuild =</span> <span class="kw">list</span>(
+    <span class="dt">dna =</span> T,
+    <span class="dt">cgr =</span> T
+  ),
+  <span class="dt">overload =</span> <span class="kw">c</span>(
+    <span class="st">&quot;a&quot;</span>, <span class="st">&quot;s&quot;</span>, <span class="co"># used in dna</span>
+    <span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>  <span class="co"># used in cgr</span>
+  )
+)
+
+subdir &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">dna =</span> <span class="st">&quot;data_dna&quot;</span>,
+  <span class="dt">cgr =</span> <span class="st">&quot;data_obj2&quot;</span>
+)
+
+seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) {
+  <span class="kw">replicate</span>(n, <span class="kw">sample</span>(a, <span class="dt">size =</span> l, <span class="dt">replace =</span> T), <span class="dt">simplify =</span> F)
+}
+
+<span class="kw">MakeObj</span>(dna, {
+  
+  dna &lt;-<span class="st"> </span><span class="kw">list</span>(
+    <span class="dt">alpha =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;T&quot;</span>)),
+    <span class="dt">s_len =</span> <span class="dv">100</span>, <span class="co"># Length of simulated sequences</span>
+    <span class="dt">s_nbr =</span> <span class="dv">10</span>,  <span class="co"># Number of simulated sequences</span>
+  )
+
+  <span class="kw">MakeObj</span>(sequences, <span class="dt">path =</span> subdir<span class="op">$</span>dna, {
+    s &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">seq_sim</span>(alpha, s_nbr, s_len))
+  })
+  
+})</code></pre></div>
+</div>
 <div id="repeated-script-execution-using-makeobj" class="section level3">
 <h3>Repeated script execution using MakeObj</h3>
 <div id="basics" class="section level4">

@@ -2,21 +2,31 @@
 % Please edit documentation in R/MakePath.R
 \name{MakePath}
 \alias{MakePath}
-\title{Concatenate several strings to form a filesystem path}
+\title{Construct a file path}
 \usage{
 MakePath(..., ext = NULL, relative = NULL)
 }
 \arguments{
-\item{...}{list of character strings forming a file path.}
+\item{...}{list of character vectors to be assembled into file paths.}
 
-\item{ext}{file name extension (default = "", none).}
+\item{ext}{file name extension(s) (default = "", none).}
 
-\item{relative}{TODO: documentation}
+\item{relative}{logical value (see \link{LittleThumb}).}
 }
 \value{
-\code{MakePath} returns a \code{character} string.
+\code{MakePath} returns a \code{character} vector.
 }
 \description{
-\link{MkPath} is a short alias of function \code{MakePath}.
+\code{MakePath} (short alias \link{MkPath}) concatenates its arguments to
+form corresponding filesystem paths, similarly to the base function
+\link{file.path}.
+The generated paths depend on LittleThumb's global options \code{path}
+and \code{relative}.
 }
-\keyword{internal}
+\seealso{
+\link{LittleThumb},
+  \link{MakeObj},
+  \link{LoadObj},
+  \link{SaveObj},
+  \link{DeleteObj}
+}

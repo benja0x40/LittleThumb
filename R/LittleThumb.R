@@ -99,7 +99,11 @@ LittleThumb <- function(...) {
     options(cfg)
   } else {
     cfg <- options()[paste0("LittleThumb.", opt)]
-    names(cfg) <- gsub( "^LittleThumb\\.", "", names(cfg))
+    if(any(is.na(names(cfg)))) {
+      stop("missing global options")
+    } else {
+      names(cfg) <- gsub("^LittleThumb\\.", "", names(cfg))
+    }
     cfg
   }
 }

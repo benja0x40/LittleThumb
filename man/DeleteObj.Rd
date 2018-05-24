@@ -82,6 +82,5 @@ DeleteObj(a)
 \link{LittleThumb},
   \link{MakeObj},
   \link{LoadObj},
-  \link{SaveObj},
-  \link{AvailableObj}
+  \link{SaveObj}
 }

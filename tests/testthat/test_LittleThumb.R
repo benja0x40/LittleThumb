@@ -1,8 +1,8 @@
 # > LittleThumb ================================================================
 context("LittleThumb")
 
-# + Default options ------------------------------------------------------------
-test_that("Default options", {
+# + DefaultOptions -------------------------------------------------------------
+test_that("DefaultOptions", {
 
   expect_identical(LittleThumb::DefaultOptions(), LittleThumb())
 
@@ -25,5 +25,15 @@ test_that("Arbitrary options", {
 
   do.call(LittleThumb, cfg) # Restore default values
   expect_identical(cfg, LittleThumb())
+
+})
+
+# + Remove & Reset -------------------------------------------------------------
+test_that("Remove & Reset", {
+
+  LittleThumb::RemoveOptions()
+  expect_error(LittleThumb())
+  LittleThumb::ResetOptions()
+  expect_identical(LittleThumb::DefaultOptions(), LittleThumb())
 
 })

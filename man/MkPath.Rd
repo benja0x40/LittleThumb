@@ -7,6 +7,6 @@
 MkPath(...)
 }
 \description{
-\code{MkPath} is a short alias of function \link{MakePath}.
+\code{MkPath} is a short alias of the \link{MakePath} function.
 }
 \keyword{internal}

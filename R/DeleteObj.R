@@ -5,8 +5,7 @@
 #'   \link{LittleThumb},
 #'   \link{MakeObj},
 #'   \link{LoadObj},
-#'   \link{SaveObj},
-#'   \link{AvailableObj}
+#'   \link{SaveObj}
 # -----------------------------------------------------------------------------.
 #' @example examples/Basics.R
 #' @inheritParams LoadObj

@@ -26,6 +26,73 @@ cfg <- LittleThumb()
 unlink("./LT_Tests", recursive = T)
 ```
 
+### Easy to maintain script structure
+
+We want to compute two R objects.
+The first one (`dna`) will be an environment containing data for the sequence
+`s` and its alphabet `a`.
+
+The second one (`cgr`) will be a numeric matrix composed of two columns,
+corresponding to data `x` and `y`.
+
+
+```{r eval=FALSE}
+library(LittleThumb)
+
+LittleThumb(path = "./LT_Tests")
+
+LittleThumb(
+  rebuild = list(
+    dna = T,
+    cgr = T
+  ),
+  overload = c(
+    "a", "s", # used in dna
+    "x", "y"  # used in cgr
+  )
+)
+
+subdir <- list(
+  dna = "data_dna",
+  cgr = "data_obj2"
+)
+
+seq_sim <- function(a, n, l) {
+  s <- replicate(n, sample(a, size = l, replace = T), simplify = F)
+  names(s) <- paste0("sequence_", 1:n)
+}
+
+MakeObj(dna, {
+  
+  dna <- list(
+    alpha = factor(c("A", "C", "G", "T")),
+    s_len = 100, # Length of simulated sequences
+    s_nbr = 9    # Number of simulated sequences
+  )
+
+  MakeObj(sequences, path = subdir$dna, {
+    s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+  })
+  
+})
+
+MakeObj(cgr, {
+  
+  cgr <- list()
+
+  for(i in 1:dna$s_nbr) {
+    obj <- names(s)[i]
+    MakeObj(name = obj, path = subdir$cgr, {
+      s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+    })
+  }
+  
+  
+})
+
+```
+
+
 ### Repeated script execution using MakeObj
 
 #### Basics

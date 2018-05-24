@@ -5,8 +5,7 @@
 #'   \link{LittleThumb},
 #'   \link{MakeObj},
 #'   \link{LoadObj},
-#'   \link{SaveObj},
-#'   \link{DeleteObj}
+#'   \link{SaveObj}
 # -----------------------------------------------------------------------------.
 #' @example examples/Basics.R
 #' @inheritParams LoadObj
@@ -14,6 +13,7 @@
 #' @return
 #' \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
 # -----------------------------------------------------------------------------.
+#' @keywords internal
 #' @export
 AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
 

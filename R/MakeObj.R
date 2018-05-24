@@ -83,9 +83,10 @@ MakeObj <- function(obj, ...) {
 
   a$rebuild <- LogicalArg(a$name, a$rebuild)
 
-  AO <- names(a) %in% formalArgs(AvailableObj) # Arguments for AvailableObj
-  LO <- names(a) %in% formalArgs(LoadObj)      # Arguments for LoadObj
-  SO <- names(a) %in% formalArgs(SaveObj)      # Arguments for SaveObj
+  # Arguments to be forwarded
+  AO <- names(a) %in% methods::formalArgs(AvailableObj)
+  LO <- names(a) %in% methods::formalArgs(LoadObj)
+  SO <- names(a) %in% methods::formalArgs(SaveObj)
 
   if(do.call(AvailableObj, a[AO]) & ! a$rebuild) {
     # Load the R object from existing RDS file

@@ -75,6 +75,6 @@ DeleteObj(a)
 \link{LittleThumb},
   \link{MakeObj},
   \link{LoadObj},
-  \link{SaveObj},
-  \link{DeleteObj}
+  \link{SaveObj}
 }
+\keyword{internal}

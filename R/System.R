@@ -3,58 +3,46 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-clock <- function(x) {
-  format(Sys.time(), '%H:%M:%S')
-}
-
-# =============================================================================.
-#' Create a destination path (Linux/macOS only)
-# -----------------------------------------------------------------------------.
-#' @description
-#' MkDir creates a destination path including upper level folders if necessary.
-# -----------------------------------------------------------------------------.
-#' @keywords internal
-#' @export
-MkDir <- function(x) {
-  system(paste0('mkdir -p "', x, '"'))
-}
+# clock <- function(x) {
+#   format(Sys.time(), '%H:%M:%S')
+# }
 
 # =============================================================================.
 #' Make a symbolic link (Linux/macOS only)
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-MkLnk <- function(x, dest) {
-  system(paste0('ln -fs "', dest, '" "', x, '"'))
-}
+# MkLnk <- function(x, dest) {
+#   system(paste0('ln -fs "', dest, '" "', x, '"'))
+# }
 
 # =============================================================================.
 #' HostName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-HostName <- function() {
-  as.character(Sys.info()["nodename"])
-}
+# HostName <- function() {
+#   as.character(Sys.info()["nodename"])
+# }
 
 # =============================================================================.
 #' SysName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-SysName <- function() {
-  as.character(Sys.info()["sysname"])
-}
+# SysName <- function() {
+#   as.character(Sys.info()["sysname"])
+# }
 
 # =============================================================================.
 #' UserName
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-UserName <- function() {
-  as.character(Sys.info()["user"])
-}
+# UserName <- function() {
+#   as.character(Sys.info()["user"])
+# }
 
 # =============================================================================.
 #' HomePath
 # -----------------------------------------------------------------------------.
 #' @keywords internal
-HomePath <- function() {
-  as.character(Sys.getenv()["HOME"])
-}
+# HomePath <- function() {
+#   as.character(Sys.getenv()["HOME"])
+# }
