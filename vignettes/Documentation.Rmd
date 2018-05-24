@@ -43,7 +43,7 @@ LittleThumb(path = "./LT_Tests")
 
 LittleThumb(
   rebuild = list(
-    dna = F,
+    dna = T,
     cgr = T
   ),
   overload = c(
@@ -53,8 +53,8 @@ LittleThumb(
 )
 
 subdir <- list(
-  dna = "contents/dna",
-  cgr = "contents/cgr"
+  dna = "cache/dna",
+  cgr = "cache/cgr"
 )
 
 seq_sim <- function(a, n, l) {
@@ -78,21 +78,19 @@ MakeObj(dna, {
   AssignObj(sequences, to = dna)
 })
 
-a <- quote(MakeObj(cgr, name = "test", rebuild = T, {
+MakeObj(cgr, {
 
   cgr <- new.env()
 
   for(i in 1:dna$s_nbr) {
     obj <- names(dna$sequences[i])
-    MakeObj(name = obj, path = subdir$cgr, {
+    MakeObj(name = obj, path = subdir$cgr, envir = cgr, {
       x <- y <- 1:dna$s_len
       m <- cbind(x, y)
       AssignObj(m, name = obj)
     })
   }
-
-
-}))
+})
 
 ```
 

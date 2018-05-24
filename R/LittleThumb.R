@@ -8,20 +8,20 @@
 #' @export
 DefaultOptions <- function() {
   list(
-    # Path generation
-    path      = "",     # SaveObj, LoadObj, DeleteObj, AvailableObj
-    extension = ".rds", # SaveObj, LoadObj, DeleteObj, AvailableObj
-    relative  = T,      # SaveObj, LoadObj, DeleteObj, AvailableObj, MakePath
+    # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
+    path      = "",            #
+    extension = ".rds",        #
+    relative  = T,             # + MakePath
 
-    # Evaluation
-    envir = NA,                # SaveObj, LoadObj, DeleteObj, MakeObj
+    # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
+    envir = NA,
 
     # Behavior
-    makedir  = T, # SaveObj
-    overload = F, # LoadObj
-    rebuild  = F, # MakeObj
-    cleanup  = F, # MakeObj
-    remove   = T, # DeleteObj
+    makedir  = T,              # SaveObj
+    overload = F,              # LoadObj
+    rebuild  = F,              # MakeObj
+    cleanup  = T,              # MakeObj
+    remove   = T,              # DeleteObj
 
     # Traceability
     messages = T,              # SaveObj, LoadObj, DeleteObj, MakeObj
