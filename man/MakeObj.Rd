@@ -4,13 +4,13 @@
 \alias{MakeObj}
 \title{Automatically make & save or load an R object}
 \usage{
-MakeObj(obj, ...)
+MakeObj(...)
 }
 \arguments{
-\item{obj}{an R symbol.}
-
 \item{...}{at least an expression defining the R object, which can be preceded by
 optional arguments (see detail and example sections).}
+
+\item{obj}{an R symbol.}
 }
 \description{
 \code{MakeObj} automatically generates an R object using the provided
@@ -80,9 +80,6 @@ if(AvailableObj(a)) {
 
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
-
-# MkObj is a short alias of function MakeObj
-MkObj(a, { a <- 1:10 })
 
 # Cleanup
 DeleteObj(a)

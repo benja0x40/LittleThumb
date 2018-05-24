@@ -49,3 +49,43 @@ LogicalArg <- function(x, a) {
 
   r
 }
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
+#' List of arguments involving a delayed expression evaluation
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
+
+  env <- parent.frame()
+  xpr <- deparse(substitute(xpr))
+
+  n   <- length(a)
+  lst <- names(a)
+  if(is.null(lst)) lst <- rep("", n)
+
+  e <- match(explicit, lst)
+  i <- 1 + match("", lst[-1])
+  x <- n - match("", rev(lst[-1])) + 1
+
+  if(is.na(x)) stop("missing expression")
+  if(x <= i) i <- NA
+
+  env[[xpr]] <- a[[x]]
+  a[[x]] <- NULL
+
+  if(! is.na(i)) {
+    implicit <- as.character(a[[i]])
+    a[[i]] <- NULL
+  }
+
+  a[1] <- call("list")
+  a <- as.environment(eval(a))
+
+  if(is.na(e)) a[[explicit]] <- implicit
+
+  a
+}

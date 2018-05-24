@@ -31,7 +31,8 @@ unlink("./LT_Tests", recursive = T)
 #  )
 #  
 #  seq_sim <- function(a, n, l) {
-#    replicate(n, sample(a, size = l, replace = T), simplify = F)
+#    s <- replicate(n, sample(a, size = l, replace = T), simplify = F)
+#    names(s) <- paste0("sequence_", 1:n)
 #  }
 #  
 #  MakeObj(dna, {
@@ -39,7 +40,7 @@ unlink("./LT_Tests", recursive = T)
 #    dna <- list(
 #      alpha = factor(c("A", "C", "G", "T")),
 #      s_len = 100, # Length of simulated sequences
-#      s_nbr = 10,  # Number of simulated sequences
+#      s_nbr = 9    # Number of simulated sequences
 #    )
 #  
 #    MakeObj(sequences, path = subdir$dna, {
@@ -47,6 +48,21 @@ unlink("./LT_Tests", recursive = T)
 #    })
 #  
 #  })
+#  
+#  MakeObj(cgr, {
+#  
+#    cgr <- list()
+#  
+#    for(i in 1:dna$s_nbr) {
+#      obj <- names(s)[i]
+#      MakeObj(name = obj, path = subdir$cgr, {
+#        s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+#      })
+#    }
+#  
+#  
+#  })
+#  
 
 ## ----script, eval=FALSE--------------------------------------------------
 #  library(LittleThumb)

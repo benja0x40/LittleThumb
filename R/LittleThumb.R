@@ -9,22 +9,23 @@
 DefaultOptions <- function() {
   list(
     # Path generation
-    path      = "",
-    extension = ".rds",
-    relative  = T,
+    path      = "",     # SaveObj, LoadObj, DeleteObj, AvailableObj
+    extension = ".rds", # SaveObj, LoadObj, DeleteObj, AvailableObj
+    relative  = T,      # SaveObj, LoadObj, DeleteObj, AvailableObj, MakePath
 
     # Evaluation
-    envir = NA,
+    envir = NA,                # SaveObj, LoadObj, DeleteObj, MakeObj
 
     # Behavior
-    makedir  = T,
-    rebuild  = F,
-    overload = F,
-    remove   = T,
+    makedir  = T, # SaveObj
+    overload = F, # LoadObj
+    rebuild  = F, # MakeObj
+    cleanup  = F, # MakeObj
+    remove   = T, # DeleteObj
 
     # Traceability
-    messages = T,
-    history  = "LittleThumb"
+    messages = T,              # SaveObj, LoadObj, DeleteObj, MakeObj
+    history  = "LittleThumb"   # TODO:
   )
 }
 
@@ -58,32 +59,36 @@ DefaultOptions <- function() {
 #' will represent a sub path of the default folder.
 #'
 #' @param envir
-#' environment containing R objects for \code{MakeObj}, \code{SaveObj} and
-#' \code{LoadObj}. With the default value (\code{NA}), this environment is
-#' the parent.frame of called LittleThumb functions.
+#' environment containing the R object.
+#' With the default value (\code{NA}), this environment is the
+#' \link{parent.frame} of called LittleThumb functions.
 #'
 #' @param makedir
 #' logical value, if \code{TRUE} non-existing folders are created automatically
 #' when necessary.
 #'
+#' @param overload
+#' logical value, if \code{TRUE} forces to load R objects from associated RDS
+#' files even when these objects already exist in the R environment.
+#'
 #' @param rebuild
 #' logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-#' even if when the associated RDS files already exist.
+#' even when the associated RDS files already exist.
 #'
-#' @param overload
-#' logical value, if \code{TRUE} forces \code{MakeObj} and \code{LoadObj} to
-#' load R objects from associated RDS files even when these objects already
-#' exist in the R environment.
+#' @param cleanup
+#' logical value controlling wheter \code{MakeObj} should remove additional
+#' objects created while evaluating the provided expression (default = F, no).
 #'
 #' @param remove
-#' TODO: documentation
+#' logical value controlling wheter \code{DeleteObj} should remove the R object
+#' after deleting the RDS file (default = T, yes).
 #'
 #' @param messages
 #' logical value enabling or disabling status messages from LittleThumb
-#' functions (default = T, yes).
+#' functions (default = T, enabled).
 #'
 #' @param history
-#' TODO: documentation
+#' TODO: implementation & documentation
 # -----------------------------------------------------------------------------.
 #' @export
 LittleThumb <- function(...) {

@@ -1,7 +1,7 @@
 Package: LittleThumb
 Type: Package
 Title: LittleThumb
-Version: 0.4.1
+Version: 0.4.2
 Author: Benjamin Leblanc
 Maintainer: Benjamin Leblanc <benjaminolivierleblanc@gmail.com>
 Imports:

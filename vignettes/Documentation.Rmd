@@ -43,23 +43,24 @@ LittleThumb(path = "./LT_Tests")
 
 LittleThumb(
   rebuild = list(
-    dna = T,
+    dna = F,
     cgr = T
   ),
   overload = c(
-    "a", "s", # used in dna
-    "x", "y"  # used in cgr
+    "sequences", # used in dna
+    "x", "y"     # used in cgr
   )
 )
 
 subdir <- list(
-  dna = "data_dna",
-  cgr = "data_obj2"
+  dna = "contents/dna",
+  cgr = "contents/cgr"
 )
 
 seq_sim <- function(a, n, l) {
   s <- replicate(n, sample(a, size = l, replace = T), simplify = F)
-  names(s) <- paste0("sequence_", 1:n)
+  names(s) <- paste0("S", 1:n)
+  s
 }
 
 MakeObj(dna, {
@@ -71,24 +72,27 @@ MakeObj(dna, {
   )
 
   MakeObj(sequences, path = subdir$dna, {
-    s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+    sequences <- with(dna, seq_sim(alpha, s_nbr, s_len))
   })
   
+  AssignObj(sequences, to = dna)
 })
 
-MakeObj(cgr, {
-  
-  cgr <- list()
+a <- quote(MakeObj(cgr, name = "test", rebuild = T, {
+
+  cgr <- new.env()
 
   for(i in 1:dna$s_nbr) {
-    obj <- names(s)[i]
+    obj <- names(dna$sequences[i])
     MakeObj(name = obj, path = subdir$cgr, {
-      s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+      x <- y <- 1:dna$s_len
+      m <- cbind(x, y)
+      AssignObj(m, name = obj)
     })
   }
-  
-  
-})
+
+
+}))
 
 ```
 

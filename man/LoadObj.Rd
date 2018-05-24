@@ -28,7 +28,7 @@ environment LoadObj can avoid (overload = F) or force (overload = T) the
 reloading of this object.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = T, yes).}
+functions (default = T, enabled).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}
 }
@@ -73,9 +73,6 @@ if(AvailableObj(a)) {
 
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
-
-# MkObj is a short alias of function MakeObj
-MkObj(a, { a <- 1:10 })
 
 # Cleanup
 DeleteObj(a)

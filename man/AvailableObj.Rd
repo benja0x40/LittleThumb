@@ -65,9 +65,6 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
-# MkObj is a short alias of function MakeObj
-MkObj(a, { a <- 1:10 })
-
 # Cleanup
 DeleteObj(a)
 }

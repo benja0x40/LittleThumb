@@ -98,7 +98,8 @@ subdir &lt;-<span class="st"> </span><span class="kw">list</span>(
 )
 
 seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) {
-  <span class="kw">replicate</span>(n, <span class="kw">sample</span>(a, <span class="dt">size =</span> l, <span class="dt">replace =</span> T), <span class="dt">simplify =</span> F)
+  s &lt;-<span class="st"> </span><span class="kw">replicate</span>(n, <span class="kw">sample</span>(a, <span class="dt">size =</span> l, <span class="dt">replace =</span> T), <span class="dt">simplify =</span> F)
+  <span class="kw">names</span>(s) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;sequence_&quot;</span>, <span class="dv">1</span><span class="op">:</span>n)
 }
 
 <span class="kw">MakeObj</span>(dna, {
@@ -106,12 +107,26 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
   dna &lt;-<span class="st"> </span><span class="kw">list</span>(
     <span class="dt">alpha =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;T&quot;</span>)),
     <span class="dt">s_len =</span> <span class="dv">100</span>, <span class="co"># Length of simulated sequences</span>
-    <span class="dt">s_nbr =</span> <span class="dv">10</span>,  <span class="co"># Number of simulated sequences</span>
+    <span class="dt">s_nbr =</span> <span class="dv">9</span>    <span class="co"># Number of simulated sequences</span>
   )
 
   <span class="kw">MakeObj</span>(sequences, <span class="dt">path =</span> subdir<span class="op">$</span>dna, {
     s &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">seq_sim</span>(alpha, s_nbr, s_len))
   })
+  
+})
+
+<span class="kw">MakeObj</span>(cgr, {
+  
+  cgr &lt;-<span class="st"> </span><span class="kw">list</span>()
+
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>dna<span class="op">$</span>s_nbr) {
+    obj &lt;-<span class="st"> </span><span class="kw">names</span>(s)[i]
+    <span class="kw">MakeObj</span>(<span class="dt">name =</span> obj, <span class="dt">path =</span> subdir<span class="op">$</span>cgr, {
+      s &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">seq_sim</span>(alpha, s_nbr, s_len))
+    })
+  }
+  
   
 })</code></pre></div>
 </div>

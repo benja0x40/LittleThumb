@@ -23,14 +23,25 @@ test_that("Basic", {
   expect_message(MakeObj(x, { x <- 1:10 }), regexp = "passing")
 
   rm(x)
-  expect_false(exists("x"))
-
   expect_message(MakeObj(x, { x <- 1:10 }), regexp = "loading")
   expect_identical(x, y)
 
+  rm(x, y)
+  expect_message(
+    MakeObj(x, rebuild = T, cleanup = F, { x <- y <- 0 }),
+    regexp = "overwriting"
+  )
+  expect_true(exists("x"))
+  expect_true(exists("y"))
+
+  rm(x, y)
+  expect_message(
+    MakeObj(x, rebuild = T, cleanup = T, { x <- y <- 0 }),
+    regexp = "overwriting"
+  )
+  expect_true(exists("x"))
+  expect_false(exists("y"))
+
   # Cleanup
   expect_true(file.remove(f))
-  rm(x)
-  expect_false(exists("x"))
-
 })

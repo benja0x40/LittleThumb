@@ -51,3 +51,50 @@ test_that("LogicalArg", {
   expect_true(LogicalArg("x", list(y = T, z = T)) == F)
 
 })
+
+# + ObjWithExpressionArgs ------------------------------------------------------
+test_that("ObjWithExpressionArgs", {
+
+  x <- NULL
+  a <- quote(MakeObj(obj, { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(name = "obj"))
+
+  x <- NULL
+  a <- quote(MakeObj(obj, rebuild = T, { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(name = "obj", rebuild = T))
+
+  x <- NULL
+  a <- quote(MakeObj(name = "obj", { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(as.list(a), list(name = "obj"))
+
+  x <- NULL
+  a <- quote(MakeObj(name = "obj", rebuild = T, { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(rebuild = T, name = "obj"))
+
+  x <- NULL
+  a <- quote(MakeObj(rebuild = T, name = "obj", { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(name = "obj", rebuild = T))
+
+  x <- NULL
+  a <- quote(MakeObj(zzz, name = "obj", { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(name = "obj"))
+
+  x <- NULL
+  a <- quote(MakeObj(zzz, rebuild = T, name = "obj", { obj <- F }))
+  a <- as.list(ObjWithExpressionArgs(a, x))
+  expect_true(is.language(x))
+  expect_identical(a, list(name = "obj", rebuild = T))
+
+})

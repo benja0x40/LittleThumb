@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-MkObj <- function(...) { MakeObj(...) }
+MkObj <- function(...) { stop("not implemented") }
 
 # =============================================================================.
 #' Automatically make & save or load an R object
@@ -58,32 +58,24 @@ MkObj <- function(...) { MakeObj(...) }
 # -----------------------------------------------------------------------------.
 #' @keywords visible
 #' @export
-MakeObj <- function(obj, ...) {
+MakeObj <- function(...) {
 
+  x <- NULL
   a <- match.call()
-  n <- nargs()
-
-  # Last argument must be an expression generating the R object
-  x <- a[[n + 1]]
-  a[n + 1] <- NULL
-  a[2] <- NULL
-  a[1] <- call("list")
-  a <- as.environment(eval(a))
-
-  if(is.null(a$name) & ! missing(obj)) {
-    a$name <- deparse(substitute(obj))
-  }
-  if(n < 2 | is.null(a$name)) stop("insufficient arguments")
+  a <- ObjWithExpressionArgs(a, xpr = x)
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = "path", env = a)
+
   a <- as.list(a)
 
   if(! is.environment(a$envir)) a$envir <- parent.frame()
 
   a$rebuild <- LogicalArg(a$name, a$rebuild)
 
-  # Arguments to be forwarded
+  protect <- c(a$name, objects(pos = a$envir))
+
+  # Arguments forwarded to lower level functions
   AO <- names(a) %in% methods::formalArgs(AvailableObj)
   LO <- names(a) %in% methods::formalArgs(LoadObj)
   SO <- names(a) %in% methods::formalArgs(SaveObj)
@@ -94,7 +86,14 @@ MakeObj <- function(obj, ...) {
   } else {
     # Make the R object by evaluating expression x
     eval(x, envir = a$envir)
+    # TODO: Make sure that obj has been generated
+
     # Save RDS file associated to the R object
     do.call(SaveObj, c(list(obj = a$envir[[a$name]]), a[SO]))
+  }
+
+  if(a$cleanup) {
+    lst <- setdiff(objects(pos = a$envir), protect)
+    rm(list = lst, pos = a$envir)
   }
 }

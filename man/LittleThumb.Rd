@@ -18,26 +18,29 @@ all read/write operations automated by LittleThumb, meaning that any path
 specified when calling \code{MakeObj}, \code{SaveObj} or \code{LoadObj}
 will represent a sub path of the default folder.}
 
-\item{envir}{environment containing R objects for \code{MakeObj}, \code{SaveObj} and
-\code{LoadObj}. With the default value (\code{NA}), this environment is
-the parent.frame of called LittleThumb functions.}
+\item{envir}{environment containing the R object.
+With the default value (\code{NA}), this environment is the
+\link{parent.frame} of called LittleThumb functions.}
 
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
 
+\item{overload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
+files even when these objects already exist in the R environment.}
+
 \item{rebuild}{logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-even if when the associated RDS files already exist.}
+even when the associated RDS files already exist.}
 
-\item{overload}{logical value, if \code{TRUE} forces \code{MakeObj} and \code{LoadObj} to
-load R objects from associated RDS files even when these objects already
-exist in the R environment.}
+\item{cleanup}{logical value controlling wheter \code{MakeObj} should remove additional
+objects created while evaluating the provided expression (default = F, no).}
 
-\item{remove}{TODO: documentation}
+\item{remove}{logical value controlling wheter \code{DeleteObj} should remove the R object
+after deleting the RDS file (default = T, yes).}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = T, yes).}
+functions (default = T, enabled).}
 
-\item{history}{TODO: documentation}
+\item{history}{TODO: implementation & documentation}
 }
 \description{
 This function sets the default value of arguments used by the main functions
