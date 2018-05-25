@@ -1,73 +1,220 @@
 ## ----message=FALSE, include=FALSE----------------------------------------
 library(LittleThumb)
 
+# Reset
+rm(list = objects())
+unlink("./_LT_RDATA_", recursive = T)
+unlink("./AutoSaved", recursive = T)
+
 cfg <- LittleThumb()
 
-# DeleteObj(x)
-# DeleteObj(a, path = "text")
-# DeleteObj(v, path = "values")
-
-unlink("./LT_Tests", recursive = T)
-
-## ----eval=FALSE----------------------------------------------------------
+## ----mini_script, eval=FALSE---------------------------------------------
+#  # MiniScript.R
+#  
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  # 1. Configure global options --------------------------------------------------
 #  
-#  LittleThumb(
-#    rebuild = list(
-#      dna = T,
-#      cgr = T
-#    ),
-#    overload = c(
-#      "a", "s", # used in dna
-#      "x", "y"  # used in cgr
-#    )
-#  )
+#  # Here we choose the default location for automatically saved RDS files
+#  LittleThumb(path = "AutoSaved")
 #  
-#  subdir <- list(
-#    dna = "data_dna",
-#    cgr = "data_obj2"
-#  )
+#  # 2. Define persistent R objects -----------------------------------------------
 #  
-#  seq_sim <- function(a, n, l) {
-#    s <- replicate(n, sample(a, size = l, replace = T), simplify = F)
-#    names(s) <- paste0("sequence_", 1:n)
-#  }
+#  MakeObj(xyz, {
 #  
+#    # Here we compute the value of this R object
+#    xyz <- 0
+#  
+#  })
+#  
+#  # 3. Do anything with defined R objects ----------------------------------------
+#  
+#  print(xyz)
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("MiniScript.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
+# MiniScript.R
+
+library(LittleThumb)
+
+# 1. Configure global options --------------------------------------------------
+
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
+
+# 2. Define persistent R objects -----------------------------------------------
+
+MakeObj(xyz, {
+
+  # Here we compute the value of this R object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("MiniScript.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
+# MiniScript.R
+
+library(LittleThumb)
+
+# 1. Configure global options --------------------------------------------------
+
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
+
+# 2. Define persistent R objects -----------------------------------------------
+
+MakeObj(xyz, {
+
+  # Here we compute the value of this R object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+
+## ------------------------------------------------------------------------
+rm(xyz)
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("MiniScript.R")
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
+# MiniScript.R
+
+library(LittleThumb)
+
+# 1. Configure global options --------------------------------------------------
+
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
+
+# 2. Define persistent R objects -----------------------------------------------
+
+MakeObj(xyz, {
+
+  # Here we compute the value of this R object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+
+## ------------------------------------------------------------------------
+# Naive DNA sequence simulation
+SimSeq <- function(n, l, gc = 0.4) {
+
+  a <- factor(c("A", "C", "G", "T"))
+  p <- c(1 - gc, gc, gc, 1 - gc) / 2
+  
+  s <- replicate(n, sample(a, size = l, replace = T, prob = p), simplify = F)
+  names(s) <- paste0("S", 1:n)
+  
+  s
+}
+
+## ------------------------------------------------------------------------
+# Chaos Game Representation of DNA
+CGR <- function(s) {
+
+  s <- as.numeric(s)
+
+  x <- c(-1, -1,  1,  1)[s]
+  y <- c(-1,  1,  1, -1)[s]
+  
+  for(i in 2:length(s)) {
+    x[i] <- (x[i - 1] + x[i]) / 2
+    y[i] <- (y[i - 1] + y[i]) / 2
+  }
+  
+  cbind(x, y)
+}
+
+## ------------------------------------------------------------------------
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
+
+cache <- list(
+  dna    = "contents/dna",
+  graphs = "contents/graphs"
+)
+
+## ----make_dna, eval=FALSE------------------------------------------------
 #  MakeObj(dna, {
 #  
-#    dna <- list(
-#      alpha = factor(c("A", "C", "G", "T")),
-#      s_len = 100, # Length of simulated sequences
-#      s_nbr = 9    # Number of simulated sequences
-#    )
+#    # Initialize dna as a list specifying the length and number of DNA sequences
+#    dna <- list(s_len = 10000, s_nbr = 4)
 #  
-#    MakeObj(sequences, path = subdir$dna, {
-#      s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+#    MakeObj(sequences, path = cache$dna, {
+#      sequences <- with(dna, SimSeq(s_nbr, s_len))
 #    })
 #  
+#    AssignObj(sequences, to = dna)
 #  })
+
+## ----make_graphs, eval=FALSE---------------------------------------------
+#  MakeObj(graphs, {
 #  
-#  MakeObj(cgr, {
-#  
-#    cgr <- list()
+#    # Initialize graphs as an empty environment
+#    graphs <- new.env()
 #  
 #    for(i in 1:dna$s_nbr) {
-#      obj <- names(s)[i]
-#      MakeObj(name = obj, path = subdir$cgr, {
-#        s <- with(dna, seq_sim(alpha, s_nbr, s_len))
+#  
+#      obj <- names(dna$sequences[i])
+#  
+#      MakeObj(name = obj, path = cache$graphs, envir = graphs, rebuild = T, {
+#        m <- CGR(dna$sequences[[i]])
+#        AssignObj(m, name = obj)
 #      })
 #    }
-#  
-#  
 #  })
-#  
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='make_dna'----
+MakeObj(dna, {
+  
+  # Initialize dna as a list specifying the length and number of DNA sequences
+  dna <- list(s_len = 10000, s_nbr = 4) 
+
+  MakeObj(sequences, path = cache$dna, {
+    sequences <- with(dna, SimSeq(s_nbr, s_len))
+  })
+  
+  AssignObj(sequences, to = dna)
+})
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='make_graphs'----
+MakeObj(graphs, {
+
+  # Initialize graphs as an empty environment
+  graphs <- new.env()
+
+  for(i in 1:dna$s_nbr) {
+    
+    obj <- names(dna$sequences[i])
+    
+    MakeObj(name = obj, path = cache$graphs, envir = graphs, rebuild = T, {
+      m <- CGR(dna$sequences[[i]])
+      AssignObj(m, name = obj)
+    })
+  }
+})
 
 ## ----script, eval=FALSE--------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(path = "./_LT_RDATA_")
 #  
 #  MakeObj(x, {
 #    message("building object x...")
@@ -80,7 +227,7 @@ unlink("./LT_Tests", recursive = T)
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, {
   message("building object x...")
@@ -93,7 +240,7 @@ MakeObj(x, {
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, {
   message("building object x...")
@@ -111,7 +258,7 @@ suppressWarnings(rm(x))   # Cleanup
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, {
   message("building object x...")
@@ -128,7 +275,7 @@ x <- 0
 ## ----eval=TRUE, message=FALSE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, {
   message("building object x...")
@@ -141,7 +288,7 @@ print(x)
 ## ----script_reload, eval=FALSE-------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(path = "./_LT_RDATA_")
 #  LittleThumb(overload = T)
 #  
 #  MakeObj(x, {
@@ -152,7 +299,7 @@ print(x)
 ## ----eval=FALSE----------------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(path = "./_LT_RDATA_")
 #  
 #  MakeObj(x, overload = T, {
 #    message("building object x...")
@@ -165,7 +312,7 @@ print(x)
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_reload'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 LittleThumb(overload = T)
 
 MakeObj(x, {
@@ -188,7 +335,7 @@ print(x)
 ## ----script_rebuild, eval=FALSE------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(path = "./_LT_RDATA_")
 #  LittleThumb(rebuild = T)
 #  
 #  MakeObj(x, {
@@ -199,7 +346,7 @@ print(x)
 ## ----eval=FALSE----------------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests")
+#  LittleThumb(path = "./_LT_RDATA_")
 #  
 #  MakeObj(x, rebuild = T, {
 #    message("building object x...")
@@ -212,7 +359,7 @@ print(x)
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_rebuild'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 LittleThumb(rebuild = T)
 
 MakeObj(x, {
@@ -234,7 +381,7 @@ suppressWarnings(rm(x))   # Cleanup
 ## ----script_multi, eval=FALSE--------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./LT_Tests", overload = T)
+#  LittleThumb(path = "./_LT_RDATA_", overload = T)
 #  
 #  MakeObj(x, { x <- 2 * pi })
 #  
@@ -258,7 +405,7 @@ suppressWarnings(rm(x))   # Cleanup
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_multi'----
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests", overload = T)
+LittleThumb(path = "./_LT_RDATA_", overload = T)
 
 MakeObj(x, { x <- 2 * pi })
 
@@ -283,5 +430,5 @@ print(data$v)
 ## ----include=FALSE-------------------------------------------------------
 # Cleanup
 DeleteObj(x)
-unlink("./LT_Tests", recursive = T)
+unlink("./_LT_RDATA_", recursive = T)
 

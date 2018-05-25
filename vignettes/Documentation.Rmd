@@ -17,83 +17,221 @@ output:
 ```{r message=FALSE, include=FALSE}
 library(LittleThumb)
 
+# Reset
+rm(list = objects())
+unlink("./_LT_RDATA_", recursive = T)
+unlink("./AutoSaved", recursive = T)
+
 cfg <- LittleThumb()
-
-# DeleteObj(x)
-# DeleteObj(a, path = "text")
-# DeleteObj(v, path = "values")
-
-unlink("./LT_Tests", recursive = T)
 ```
 
-### Easy to maintain script structure
+### Installation
 
-We want to compute two R objects.
-The first one (`dna`) will be an environment containing data for the sequence
-`s` and its alphabet `a`.
+Run the `R` code below to install `LittleThumb`.
 
-The second one (`cgr`) will be a numeric matrix composed of two columns,
-corresponding to data `x` and `y`.
+```R
+library("devtools") # (devtools can be installed from CRAN repositories)
+install_github("benja0x40/LittleThumb", dependencies = T)
+```
 
+### Basic principles
 
-```{r eval=FALSE}
+An R script based on `LittleThumb` is structured by series of 3 consecutive
+sections.
+
+  1. Configuration of options using the `LittleThumb` function
+  2. Definition of R objects using the `MakeObj` function
+  3. Anything else depending on the defined R objects
+
+However, a good practice is to use the configuration section only once,
+at the begining of the script, such that any change in this section can
+control all R objects subsequently defined with the `MakeObj` function.
+
+Each time a script based on `LittleThumb` will be executed, objects being
+defined by the `MakeObj` function will be automatically computed and saved
+or loaded, depending on their availability in the R environment and at the
+automatically saved locations, as well as the choosen global options.
+
+And during each script execution, `LittleThumb` will show the status of
+operations performed automatically for the defined objects.
+
+Here is a minimalistic example of R script with a single object named `xyz`.
+
+```{r mini_script, eval=FALSE}
+# MiniScript.R
+
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+# 1. Configure global options --------------------------------------------------
 
-LittleThumb(
-  rebuild = list(
-    dna = T,
-    cgr = T
-  ),
-  overload = c(
-    "sequences", # used in dna
-    "x", "y"     # used in cgr
-  )
-)
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
 
-subdir <- list(
-  dna = "cache/dna",
-  cgr = "cache/cgr"
-)
+# 2. Define persistent R objects -----------------------------------------------
 
-seq_sim <- function(a, n, l) {
-  s <- replicate(n, sample(a, size = l, replace = T), simplify = F)
+MakeObj(xyz, {
+
+  # Here we compute the value of this R object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+```
+
+Let's run `MiniScript.R` for the very first time and see the resulting messages.
+
+```{r eval=FALSE}
+source("MiniScript.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
+```
+
+These messages indicate that during this first execution of `MiniScript.R`,
+the `AutoSaved` folder has been created in the current directory and 
+the `xyz` object has been saved as `AutoSaved/xyz.rds`.
+
+From now on, as long as the `xyz` object remains available in the R environment
+and the global options are not changed, the `MakeObj(xyz, ...)` function call
+will not do anything during repeated executions of `MiniScript.R`.
+
+Let's run `MiniScript.R` a second time and see the resulting messages.
+
+```{r eval=FALSE}
+source("MiniScript.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
+```
+
+If we execute the script once again but when `xyz` is no longer available,
+for instance after restarting the R environment, the `MakeObj(xyz, ...)`
+function call will automatically load `xyz` from the `AutoSaved/xyz.rds` file
+instead of recomputing this object from scratch.
+
+Let's simulate a loss of the object `xyz` due to restarting the R environment.
+
+```{r}
+rm(xyz)
+```
+
+And then let's run `MiniScript.R` once again to see the resulting messages.
+
+```{r eval=FALSE}
+source("MiniScript.R")
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
+```
+
+### Automation options
+
+### Advance usage
+
+We want to compute two R objects.
+The first one (`dna`) will be a list containing DNA sequences.
+The second one (`graphs`) will be an environment containing a graphic
+representation of each DNA sequence, in the form of numeric matrixes composed
+of two columns corresponding to `x` and `y` coordinates.
+
+First we implement the function `SimSeq` which naively simulates random DNA
+sequences with a specified GC-content.
+
+```{r}
+# Naive DNA sequence simulation
+SimSeq <- function(n, l, gc = 0.4) {
+
+  a <- factor(c("A", "C", "G", "T"))
+  p <- c(1 - gc, gc, gc, 1 - gc) / 2
+  
+  s <- replicate(n, sample(a, size = l, replace = T, prob = p), simplify = F)
   names(s) <- paste0("S", 1:n)
+  
   s
 }
+```
 
+Then we implement the function `CGR` which calculates the
+[Chaos Game Representation](https://www.ncbi.nlm.nih.gov/pubmed/2336393)
+of a given DNA sequence.
+
+```{r}
+# Chaos Game Representation of DNA
+CGR <- function(s) {
+
+  s <- as.numeric(s)
+
+  x <- c(-1, -1,  1,  1)[s]
+  y <- c(-1,  1,  1, -1)[s]
+  
+  for(i in 2:length(s)) {
+    x[i] <- (x[i - 1] + x[i]) / 2
+    y[i] <- (y[i - 1] + y[i]) / 2
+  }
+  
+  cbind(x, y)
+}
+```
+
+Now we configure the global options of our script.
+
+```{r}
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(path = "AutoSaved")
+
+cache <- list(
+  dna    = "contents/dna",
+  graphs = "contents/graphs"
+)
+```
+
+We define the `dna` object.
+
+```{r make_dna, eval=FALSE}
 MakeObj(dna, {
   
-  dna <- list(
-    alpha = factor(c("A", "C", "G", "T")),
-    s_len = 100, # Length of simulated sequences
-    s_nbr = 9    # Number of simulated sequences
-  )
+  # Initialize dna as a list specifying the length and number of DNA sequences
+  dna <- list(s_len = 10000, s_nbr = 4) 
 
-  MakeObj(sequences, path = subdir$dna, {
-    sequences <- with(dna, seq_sim(alpha, s_nbr, s_len))
+  MakeObj(sequences, path = cache$dna, {
+    sequences <- with(dna, SimSeq(s_nbr, s_len))
   })
   
   AssignObj(sequences, to = dna)
 })
+```
 
-MakeObj(cgr, {
+We define the `graphs` object.
 
-  cgr <- new.env()
+```{r make_graphs, eval=FALSE}
+MakeObj(graphs, {
+
+  # Initialize graphs as an empty environment
+  graphs <- new.env()
 
   for(i in 1:dna$s_nbr) {
+    
     obj <- names(dna$sequences[i])
-    MakeObj(name = obj, path = subdir$cgr, envir = cgr, {
-      x <- y <- 1:dna$s_len
-      m <- cbind(x, y)
+    
+    MakeObj(name = obj, path = cache$graphs, envir = graphs, rebuild = T, {
+      m <- CGR(dna$sequences[[i]])
       AssignObj(m, name = obj)
     })
   }
 })
-
 ```
 
+Whe run for the first time, the section defining the `dna` object will produce
+the following messages.
+
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='make_dna'}
+```
+
+Whe run for the first time, the section defining the `dna` object will produce
+the following messages.
+
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='make_graphs'}
+```
 
 ### Repeated script execution using MakeObj
 
@@ -104,7 +242,7 @@ A very simple script named `LT_Test.R`.
 ```{r script, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, {
   message("building object x...")
@@ -166,7 +304,7 @@ Can be done by changing the `overload` global option.
 ```{r script_reload, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 LittleThumb(overload = T)
 
 MakeObj(x, {
@@ -180,7 +318,7 @@ Can be done by specifying the `overload` argument when calling `MakeObj`.
 ```{r eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, overload = T, {
   message("building object x...")
@@ -219,7 +357,7 @@ Can be done by changing the `rebuild` global option.
 ```{r script_rebuild, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 LittleThumb(rebuild = T)
 
 MakeObj(x, {
@@ -233,7 +371,7 @@ Can be done by specifying the `rebuild` argument when calling `MakeObj`.
 ```{r eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests")
+LittleThumb(path = "./_LT_RDATA_")
 
 MakeObj(x, rebuild = T, {
   message("building object x...")
@@ -268,7 +406,7 @@ suppressWarnings(rm(x))   # Cleanup
 ```{r script_multi, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./LT_Tests", overload = T)
+LittleThumb(path = "./_LT_RDATA_", overload = T)
 
 MakeObj(x, { x <- 2 * pi })
 
@@ -301,6 +439,6 @@ print(data$v)
 ```{r include=FALSE}
 # Cleanup
 DeleteObj(x)
-unlink("./LT_Tests", recursive = T)
+unlink("./_LT_RDATA_", recursive = T)
 ```
 

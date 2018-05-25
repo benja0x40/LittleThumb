@@ -17,8 +17,8 @@ DefaultOptions <- function() {
     envir = NA,
 
     # Behavior
-    makedir  = T,              # SaveObj
-    overload = F,              # LoadObj
+    makedir  = T,              # SaveObj <= MakeObj
+    overload = F,              # LoadObj <= MakeObj
     rebuild  = F,              # MakeObj
     cleanup  = T,              # MakeObj
     remove   = T,              # DeleteObj
@@ -69,15 +69,16 @@ DefaultOptions <- function() {
 #'
 #' @param overload
 #' logical value, if \code{TRUE} forces to load R objects from associated RDS
-#' files even when these objects already exist in the R environment.
+#' files even when these objects already exist in the R environment
+#' (default = F, no).
 #'
 #' @param rebuild
 #' logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-#' even when the associated RDS files already exist.
+#' even when the associated RDS files already exist (default = F, no).
 #'
 #' @param cleanup
 #' logical value controlling wheter \code{MakeObj} should remove additional
-#' objects created while evaluating the provided expression (default = F, no).
+#' objects created while evaluating the provided expression (default = T, yes).
 #'
 #' @param remove
 #' logical value controlling wheter \code{DeleteObj} should remove the R object

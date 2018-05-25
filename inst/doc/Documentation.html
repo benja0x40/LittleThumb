@@ -68,67 +68,147 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">LittleThumb documentation</h1>
-<h3 class="subtitle"><em>Package version 0.4.1 - 24.05.2018</em></h3>
+<h3 class="subtitle"><em>Package version 0.4.3 - 25.05.2018</em></h3>
 <h4 class="author"><em><a href="https://github.com/benja0x40">Benjamin Leblanc</a></em></h4>
 
 
 
-<div id="easy-to-maintain-script-structure" class="section level3">
-<h3>Easy to maintain script structure</h3>
-<p>We want to compute two R objects. The first one (<code>dna</code>) will be an environment containing data for the sequence <code>s</code> and its alphabet <code>a</code>.</p>
-<p>The second one (<code>cgr</code>) will be a numeric matrix composed of two columns, corresponding to data <code>x</code> and <code>y</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
+<div id="installation" class="section level3">
+<h3>Installation</h3>
+<p>Run the <code>R</code> code below to install <code>LittleThumb</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;devtools&quot;</span>) <span class="co"># (devtools can be installed from CRAN repositories)</span>
+<span class="kw">install_github</span>(<span class="st">&quot;benja0x40/LittleThumb&quot;</span>, <span class="dt">dependencies =</span> T)</code></pre></div>
+</div>
+<div id="basic-principles" class="section level3">
+<h3>Basic principles</h3>
+<p>An R script based on <code>LittleThumb</code> is structured by series of 3 consecutive sections.</p>
+<ol style="list-style-type: decimal">
+<li>Configuration of options using the <code>LittleThumb</code> function</li>
+<li>Definition of R objects using the <code>MakeObj</code> function</li>
+<li>Anything else depending on the defined R objects</li>
+</ol>
+<p>However, a good practice is to use the configuration section only once, at the begining of the script, such that any change in this section can control all R objects subsequently defined with the <code>MakeObj</code> function.</p>
+<p>Each time a script based on <code>LittleThumb</code> will be executed, objects being defined by the <code>MakeObj</code> function will be automatically computed and saved or loaded, depending on their availability in the R environment and at the automatically saved locations, as well as the choosen global options.</p>
+<p>And during each script execution, <code>LittleThumb</code> will show the status of operations performed automatically for the defined objects.</p>
+<p>Here is a minimalistic example of R script with a single object named <code>xyz</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># MiniScript.R</span>
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(
-  <span class="dt">rebuild =</span> <span class="kw">list</span>(
-    <span class="dt">dna =</span> T,
-    <span class="dt">cgr =</span> T
-  ),
-  <span class="dt">overload =</span> <span class="kw">c</span>(
-    <span class="st">&quot;a&quot;</span>, <span class="st">&quot;s&quot;</span>, <span class="co"># used in dna</span>
-    <span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>  <span class="co"># used in cgr</span>
-  )
-)
+<span class="co"># 1. Configure global options --------------------------------------------------</span>
 
-subdir &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">dna =</span> <span class="st">&quot;data_dna&quot;</span>,
-  <span class="dt">cgr =</span> <span class="st">&quot;data_obj2&quot;</span>
-)
+<span class="co"># Here we choose the default location for automatically saved RDS files</span>
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
-seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) {
-  s &lt;-<span class="st"> </span><span class="kw">replicate</span>(n, <span class="kw">sample</span>(a, <span class="dt">size =</span> l, <span class="dt">replace =</span> T), <span class="dt">simplify =</span> F)
-  <span class="kw">names</span>(s) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;sequence_&quot;</span>, <span class="dv">1</span><span class="op">:</span>n)
-}
+<span class="co"># 2. Define persistent R objects -----------------------------------------------</span>
 
-<span class="kw">MakeObj</span>(dna, {
-  
-  dna &lt;-<span class="st"> </span><span class="kw">list</span>(
-    <span class="dt">alpha =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;T&quot;</span>)),
-    <span class="dt">s_len =</span> <span class="dv">100</span>, <span class="co"># Length of simulated sequences</span>
-    <span class="dt">s_nbr =</span> <span class="dv">9</span>    <span class="co"># Number of simulated sequences</span>
-  )
+<span class="kw">MakeObj</span>(xyz, {
 
-  <span class="kw">MakeObj</span>(sequences, <span class="dt">path =</span> subdir<span class="op">$</span>dna, {
-    s &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">seq_sim</span>(alpha, s_nbr, s_len))
-  })
-  
+  <span class="co"># Here we compute the value of this R object</span>
+  xyz &lt;-<span class="st"> </span><span class="dv">0</span>
+
 })
 
-<span class="kw">MakeObj</span>(cgr, {
-  
-  cgr &lt;-<span class="st"> </span><span class="kw">list</span>()
+<span class="co"># 3. Do anything with defined R objects ----------------------------------------</span>
 
-  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>dna<span class="op">$</span>s_nbr) {
-    obj &lt;-<span class="st"> </span><span class="kw">names</span>(s)[i]
-    <span class="kw">MakeObj</span>(<span class="dt">name =</span> obj, <span class="dt">path =</span> subdir<span class="op">$</span>cgr, {
-      s &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">seq_sim</span>(alpha, s_nbr, s_len))
-    })
+<span class="kw">print</span>(xyz)</code></pre></div>
+<p>Let’s run <code>MiniScript.R</code> for the very first time and see the resulting messages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<pre><code>## [creating] AutoSaved</code></pre>
+<pre><code>## [saving] AutoSaved/xyz.rds</code></pre>
+<p>These messages indicate that during this first execution of <code>MiniScript.R</code>, the <code>AutoSaved</code> folder has been created in the current directory and the <code>xyz</code> object has been saved as <code>AutoSaved/xyz.rds</code>.</p>
+<p>From now on, as long as the <code>xyz</code> object remains available in the R environment and the global options are not changed, the <code>MakeObj(xyz, ...)</code> function call will not do anything during repeated executions of <code>MiniScript.R</code>.</p>
+<p>Let’s run <code>MiniScript.R</code> a second time and see the resulting messages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<pre><code>## [passing] AutoSaved/xyz.rds</code></pre>
+<p>If we execute the script once again but when <code>xyz</code> is no longer available, for instance after restarting the R environment, the <code>MakeObj(xyz, ...)</code> function call will automatically load <code>xyz</code> from the <code>AutoSaved/xyz.rds</code> file instead of recomputing this object from scratch.</p>
+<p>Let’s simulate a loss of the object <code>xyz</code> due to restarting the R environment.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(xyz)</code></pre></div>
+<p>And then let’s run <code>MiniScript.R</code> once again to see the resulting messages.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<pre><code>## [loading] AutoSaved/xyz.rds</code></pre>
+</div>
+<div id="automation-options" class="section level3">
+<h3>Automation options</h3>
+</div>
+<div id="advance-usage" class="section level3">
+<h3>Advance usage</h3>
+<p>We want to compute two R objects. The first one (<code>dna</code>) will be a list containing DNA sequences. The second one (<code>graphs</code>) will be an environment containing a graphic representation of each DNA sequence, in the form of numeric matrixes composed of two columns corresponding to <code>x</code> and <code>y</code> coordinates.</p>
+<p>First we implement the function <code>SimSeq</code> which naively simulates random DNA sequences with a specified GC-content.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Naive DNA sequence simulation</span>
+SimSeq &lt;-<span class="st"> </span><span class="cf">function</span>(n, l, <span class="dt">gc =</span> <span class="fl">0.4</span>) {
+
+  a &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;G&quot;</span>, <span class="st">&quot;T&quot;</span>))
+  p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>gc, gc, gc, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>gc) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
+  
+  s &lt;-<span class="st"> </span><span class="kw">replicate</span>(n, <span class="kw">sample</span>(a, <span class="dt">size =</span> l, <span class="dt">replace =</span> T, <span class="dt">prob =</span> p), <span class="dt">simplify =</span> F)
+  <span class="kw">names</span>(s) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="dv">1</span><span class="op">:</span>n)
+  
+  s
+}</code></pre></div>
+<p>Then we implement the function <code>CGR</code> which calculates the <a href="https://www.ncbi.nlm.nih.gov/pubmed/2336393">Chaos Game Representation</a> of a given DNA sequence.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Chaos Game Representation of DNA</span>
+CGR &lt;-<span class="st"> </span><span class="cf">function</span>(s) {
+
+  s &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(s)
+
+  x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>)[s]
+  y &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>)[s]
+  
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(s)) {
+    x[i] &lt;-<span class="st"> </span>(x[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>x[i]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
+    y[i] &lt;-<span class="st"> </span>(y[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>y[i]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
   }
   
+  <span class="kw">cbind</span>(x, y)
+}</code></pre></div>
+<p>Now we configure the global options of our script.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we choose the default location for automatically saved RDS files</span>
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;AutoSaved&quot;</span>)
+
+cache &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">dna    =</span> <span class="st">&quot;contents/dna&quot;</span>,
+  <span class="dt">graphs =</span> <span class="st">&quot;contents/graphs&quot;</span>
+)</code></pre></div>
+<p>We define the <code>dna</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">MakeObj</span>(dna, {
   
+  <span class="co"># Initialize dna as a list specifying the length and number of DNA sequences</span>
+  dna &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">s_len =</span> <span class="dv">10000</span>, <span class="dt">s_nbr =</span> <span class="dv">4</span>) 
+
+  <span class="kw">MakeObj</span>(sequences, <span class="dt">path =</span> cache<span class="op">$</span>dna, {
+    sequences &lt;-<span class="st"> </span><span class="kw">with</span>(dna, <span class="kw">SimSeq</span>(s_nbr, s_len))
+  })
+  
+  <span class="kw">AssignObj</span>(sequences, <span class="dt">to =</span> dna)
 })</code></pre></div>
+<p>We define the <code>graphs</code> object.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">MakeObj</span>(graphs, {
+
+  <span class="co"># Initialize graphs as an empty environment</span>
+  graphs &lt;-<span class="st"> </span><span class="kw">new.env</span>()
+
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>dna<span class="op">$</span>s_nbr) {
+    
+    obj &lt;-<span class="st"> </span><span class="kw">names</span>(dna<span class="op">$</span>sequences[i])
+    
+    <span class="kw">MakeObj</span>(<span class="dt">name =</span> obj, <span class="dt">path =</span> cache<span class="op">$</span>graphs, <span class="dt">envir =</span> graphs, <span class="dt">rebuild =</span> T, {
+      m &lt;-<span class="st"> </span><span class="kw">CGR</span>(dna<span class="op">$</span>sequences[[i]])
+      <span class="kw">AssignObj</span>(m, <span class="dt">name =</span> obj)
+    })
+  }
+})</code></pre></div>
+<p>Whe run for the first time, the section defining the <code>dna</code> object will produce the following messages.</p>
+<pre><code>## [creating] AutoSaved/contents/dna</code></pre>
+<pre><code>## [saving] AutoSaved/contents/dna/sequences.rds</code></pre>
+<pre><code>## [saving] AutoSaved/dna.rds</code></pre>
+<p>Whe run for the first time, the section defining the <code>dna</code> object will produce the following messages.</p>
+<pre><code>## [creating] AutoSaved/contents/graphs</code></pre>
+<pre><code>## [saving] AutoSaved/contents/graphs/S1.rds</code></pre>
+<pre><code>## [saving] AutoSaved/contents/graphs/S2.rds</code></pre>
+<pre><code>## [saving] AutoSaved/contents/graphs/S3.rds</code></pre>
+<pre><code>## [saving] AutoSaved/contents/graphs/S4.rds</code></pre>
+<pre><code>## [saving] AutoSaved/graphs.rds</code></pre>
 </div>
 <div id="repeated-script-execution-using-makeobj" class="section level3">
 <h3>Repeated script execution using MakeObj</h3>
@@ -137,7 +217,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>A very simple script named <code>LT_Test.R</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -146,14 +226,14 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>First time execution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
 <pre><code>## building object x...</code></pre>
-<pre><code>## [creating] ./LT_Tests</code></pre>
-<pre><code>## [saving] ./LT_Tests/x.rds</code></pre>
+<pre><code>## [creating] ./_LT_RDATA_</code></pre>
+<pre><code>## [saving] ./_LT_RDATA_/x.rds</code></pre>
 <p>Second time execution without restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [passing] ./LT_Tests/x.rds</code></pre>
+<pre><code>## [passing] ./_LT_RDATA_/x.rds</code></pre>
 <p>Second time execution after restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [loading] ./LT_Tests/x.rds</code></pre>
+<pre><code>## [loading] ./_LT_RDATA_/x.rds</code></pre>
 </div>
 <div id="forcing-to-reload-r-objects" class="section level4">
 <h4>Forcing to reload R objects</h4>
@@ -165,7 +245,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>Can be done by changing the <code>overload</code> global option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
 <span class="kw">LittleThumb</span>(<span class="dt">overload =</span> T)
 
 <span class="kw">MakeObj</span>(x, {
@@ -175,7 +255,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>Can be done by specifying the <code>overload</code> argument when calling <code>MakeObj</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, <span class="dt">overload =</span> T, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -183,7 +263,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 })</code></pre></div>
 <p>Second time execution when forcing to reload the R object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [overloading] ./LT_Tests/x.rds</code></pre>
+<pre><code>## [overloading] ./_LT_RDATA_/x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 3.141593</code></pre>
 </div>
@@ -191,13 +271,12 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <h4>Forcing to rebuild R objects</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">MakeObj</span>(x, { x &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi })</code></pre></div>
 <pre><code>## [saving] x.rds</code></pre>
-<pre><code>## [1] &quot;x.rds&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 6.283185</code></pre>
 <p>Can be done by changing the <code>rebuild</code> global option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
 <span class="kw">LittleThumb</span>(<span class="dt">rebuild =</span> T)
 
 <span class="kw">MakeObj</span>(x, {
@@ -207,7 +286,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>Can be done by specifying the <code>rebuild</code> argument when calling <code>MakeObj</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, <span class="dt">rebuild =</span> T, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -216,7 +295,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <p>Second time execution forcing to rebuild the R object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
 <pre><code>## building object x...</code></pre>
-<pre><code>## [overwriting] ./LT_Tests/x.rds</code></pre>
+<pre><code>## [overwriting] ./_LT_RDATA_/x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 6.283185</code></pre>
 </div>
@@ -224,7 +303,7 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 <h4>Multiple objects, paths and environments</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./LT_Tests&quot;</span>, <span class="dt">overload =</span> T)
+<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>, <span class="dt">overload =</span> T)
 
 <span class="kw">MakeObj</span>(x, { x &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi })
 
@@ -242,12 +321,12 @@ seq_sim &lt;-<span class="st"> </span><span class="cf">function</span>(a, n, l) 
 
 })</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [loading] ./LT_Tests/x.rds</code></pre>
-<pre><code>## [creating] ./LT_Tests/text</code></pre>
-<pre><code>## [saving] ./LT_Tests/text/k.rds</code></pre>
-<pre><code>## [creating] ./LT_Tests/values</code></pre>
-<pre><code>## [saving] ./LT_Tests/values/v.rds</code></pre>
-<pre><code>## [saving] ./LT_Tests/data.rds</code></pre>
+<pre><code>## [loading] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [creating] ./_LT_RDATA_/text</code></pre>
+<pre><code>## [saving] ./_LT_RDATA_/text/k.rds</code></pre>
+<pre><code>## [creating] ./_LT_RDATA_/values</code></pre>
+<pre><code>## [saving] ./_LT_RDATA_/values/v.rds</code></pre>
+<pre><code>## [saving] ./_LT_RDATA_/data.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(data<span class="op">$</span>k)</code></pre></div>
 <pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(data<span class="op">$</span>v)</code></pre></div>

@@ -26,13 +26,14 @@ With the default value (\code{NA}), this environment is the
 when necessary.}
 
 \item{overload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
-files even when these objects already exist in the R environment.}
+files even when these objects already exist in the R environment
+(default = F, no).}
 
 \item{rebuild}{logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-even when the associated RDS files already exist.}
+even when the associated RDS files already exist (default = F, no).}
 
 \item{cleanup}{logical value controlling wheter \code{MakeObj} should remove additional
-objects created while evaluating the provided expression (default = F, no).}
+objects created while evaluating the provided expression (default = T, yes).}
 
 \item{remove}{logical value controlling wheter \code{DeleteObj} should remove the R object
 after deleting the RDS file (default = T, yes).}

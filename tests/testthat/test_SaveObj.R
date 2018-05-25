@@ -22,7 +22,7 @@ test_that("Basic", {
   expect_message(SaveObj(x), regexp = "overwriting")
   expect_identical(readRDS(f), x)
 
-  LittleThumb(path = "./LT_Tests")
+  LittleThumb(path = "./_LT_RDATA_")
 
   expect_message(SaveObj(x, relative = F), regexp = "overwriting")
   expect_true(file.remove(f))
@@ -35,7 +35,7 @@ test_that("Basic", {
   expect_true(file.remove(f))
 
   # Cleanup
-  unlink("./LT_Tests", recursive = T)
+  unlink("./_LT_RDATA_", recursive = T)
 
   do.call(LittleThumb, cfg) # Restore default values
   expect_identical(cfg, LittleThumb())
