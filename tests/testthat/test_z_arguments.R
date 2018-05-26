@@ -52,6 +52,22 @@ test_that("LogicalArg", {
 
 })
 
+# + NamedArg -------------------------------------------------------------------
+test_that("NamedArg", {
+
+  x <- "X3"
+  a <- LETTERS[1:5]
+
+  expect_identical(NamedArg(x, a), a)
+
+  names(a) <- paste0("X", 1:5)
+  expect_identical(NamedArg(x, a), a[x])
+
+  a <- as.list(a)
+  expect_identical(NamedArg(x, a), a[[x]])
+
+})
+
 # + ObjWithExpressionArgs ------------------------------------------------------
 test_that("ObjWithExpressionArgs", {
 

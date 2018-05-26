@@ -34,21 +34,21 @@ LoadObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = LoadObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = LoadObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 
-  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
+  f <- PathToRDS(obj.name, path, cfg$extension, relative)
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
   overload <- LogicalArg(obj.name, overload)
 
   o.e <- exists(x = obj.name, where = envir)
-  if(o.e) msg <- "[overloading]" else msg <- "[loading]"
-  if(o.e & ! overload) msg <- "[passing]"
+  if(o.e) msg <- "overload" else msg <- "load"
+  if(o.e & ! overload) msg <- "bypass"
 
-  if(messages) message(msg, " ", f)
+  if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   if(f.e & (overload | ! o.e)) {
     res <- assign(obj.name, readRDS(f, ...), pos = envir)
   }

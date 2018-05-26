@@ -21,9 +21,9 @@ AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = AvailableObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = AvailableObj)
 
-  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
+  f <- PathToRDS(obj.name, path, cfg$extension, relative)
 
   file.exists(f)
 

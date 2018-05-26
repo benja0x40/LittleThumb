@@ -54,6 +54,23 @@ LogicalArg <- function(x, a) {
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
+#' Resolve the value of a character argument
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+NamedArg <- function(x, a) {
+  if(is.null(names(a))) {
+    x <- a
+  } else {
+    if(is.list(a)) x <- a[[x]] else x <- a[x]
+  }
+  x
+}
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
 #' List of arguments involving a delayed expression evaluation
 # -----------------------------------------------------------------------------.
 #' @keywords internal

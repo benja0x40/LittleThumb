@@ -65,7 +65,7 @@ MakeObj <- function(...) {
   a <- ObjWithExpressionArgs(a, xpr = x)
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = "path", env = a)
+  DefaultArgs(cfg, env = a)
 
   a <- as.list(a)
 

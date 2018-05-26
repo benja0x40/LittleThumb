@@ -61,24 +61,43 @@ MkPath <- function(...) { MakePath(...) }
 #' \code{MakePath} returns a \code{character} vector.
 # -----------------------------------------------------------------------------.
 #' @export
-MakePath <- function(..., ext = NULL, relative = NULL) {
+MakePath <- function(..., ext = NULL, rootpath = NULL, relative = NULL) {
 
   path <- list(...)
   path <- path[! sapply(path, is.null)]
+  path <- path[! sapply(path, is.na)]
+  path <- path[! path == ""]
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("ext", "..."), fun = MakePath)
 
-  if(relative & ! cfg$path == "") path <- c(cfg$path, path)
+  if(length(path) < 1) stop("empty path")
 
-  if(length(path) > 0) {
-    path <- do.call(file.path, path)
-    path <- gsub("[/]+", "/", path)
-  } else {
-    path <- cfg$path
-  }
+  if(relative & rootpath != "") path <- c(rootpath, path)
 
-  if(! is.null(ext)) path = paste0(path, ext)
+  path <- do.call(file.path, path)
+  path <- gsub("[/]+", "/", path)
+
+  if(! is.null(ext)) path <- paste0(path, ext)
 
   path
 }
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
+#' Resolve path to the RDS file of an R object
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+PathToRDS <- function(name, path, extension, relative) {
+
+  path <- NamedArg(name, path)
+
+  f <- c(path, name, list(ext = extension, relative = relative))
+  f <- do.call(MakePath, f)
+
+  f
+}
+

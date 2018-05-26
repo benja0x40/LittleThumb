@@ -37,3 +37,13 @@ test_that("Remove & Reset", {
   expect_identical(LittleThumb::DefaultOptions(), LittleThumb())
 
 })
+
+# + StatusMessage --------------------------------------------------------------
+test_that("StatusMessage", {
+
+  expect_message(LittleThumb::StatusMessage(""), "LittleThumb")
+
+})
+
+
+

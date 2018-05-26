@@ -4,7 +4,7 @@
 \alias{MakePath}
 \title{Construct a file path}
 \usage{
-MakePath(..., ext = NULL, relative = NULL)
+MakePath(..., ext = NULL, rootpath = NULL, relative = NULL)
 }
 \arguments{
 \item{...}{list of character vectors to be assembled into file paths.}

@@ -50,23 +50,23 @@ SaveObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "path", "name", "..."), fun = SaveObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = SaveObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 
-  f <- MakePath(path, obj.name, ext = cfg$extension, relative = relative)
-  if(! file.exists(f)) msg <- "[saving]" else msg = "[overwriting]"
+  f <- PathToRDS(obj.name, path, cfg$extension, relative)
+  if(! file.exists(f)) msg <- "save" else msg = "overwrite"
 
   o.e <- exists(x = obj.name, where = envir)
   if(! o.e) stop("object does not exist ", obj.name)
 
   d <- dirname(f)
   if(makedir & d != "" & ! file.exists(d)) {
-    if(messages) message("[creating] ", d)
+    if(messages) LittleThumb::StatusMessage("create", d)
     LittleThumb::MkDir(d)
   }
 
-  if(messages) message(msg, " ", f)
+  if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   saveRDS(envir[[obj.name]], f, ...)
 
   f

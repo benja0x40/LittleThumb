@@ -68,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">LittleThumb documentation</h1>
-<h3 class="subtitle"><em>Package version 0.4.3 - 25.05.2018</em></h3>
+<h3 class="subtitle"><em>Package version 0.5.0 - 26.05.2018</em></h3>
 <h4 class="author"><em><a href="https://github.com/benja0x40">Benjamin Leblanc</a></em></h4>
 
 
@@ -77,20 +77,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>Installation</h3>
 <p>Run the <code>R</code> code below to install <code>LittleThumb</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;devtools&quot;</span>) <span class="co"># (devtools can be installed from CRAN repositories)</span>
-<span class="kw">install_github</span>(<span class="st">&quot;benja0x40/LittleThumb&quot;</span>, <span class="dt">dependencies =</span> T)</code></pre></div>
+<span class="kw">install_github</span>(<span class="st">&quot;benja0x40/LittleThumb&quot;</span>)</code></pre></div>
 </div>
 <div id="basic-principles" class="section level3">
 <h3>Basic principles</h3>
-<p>An R script based on <code>LittleThumb</code> is structured by series of 3 consecutive sections.</p>
+<p>An R script or notebook based on LittleThumb is structured by series of 3 consecutive sections.</p>
 <ol style="list-style-type: decimal">
-<li>Configuration of options using the <code>LittleThumb</code> function</li>
+<li>Configuration of global options using the <code>LittleThumb</code> function</li>
 <li>Definition of R objects using the <code>MakeObj</code> function</li>
 <li>Anything else depending on the defined R objects</li>
 </ol>
-<p>However, a good practice is to use the configuration section only once, at the begining of the script, such that any change in this section can control all R objects subsequently defined with the <code>MakeObj</code> function.</p>
-<p>Each time a script based on <code>LittleThumb</code> will be executed, objects being defined by the <code>MakeObj</code> function will be automatically computed and saved or loaded, depending on their availability in the R environment and at the automatically saved locations, as well as the choosen global options.</p>
-<p>And during each script execution, <code>LittleThumb</code> will show the status of operations performed automatically for the defined objects.</p>
-<p>Here is a minimalistic example of R script with a single object named <code>xyz</code>.</p>
+<p>A recommended practice is to use the configuration section only once, at the begining of the script or notebook, such that any change in this section can affect all R objects subsequently defined with the <code>MakeObj</code> function.</p>
+<p>Each time any R code including the <code>MakeObj</code> function is executed, the objects defined using this function are automatically generated and saved, or loaded, according to current options and depending on objects availability in the R environment and at their storage location.</p>
+<p>During these executions, LittleThumb produces messages indicating the status of operations performed automatically for the corresponding objects.</p>
+<p>Here is a minimalistic example of R script defining a single persistent object named <code>xyz</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># MiniScript.R</span>
 
 <span class="kw">library</span>(LittleThumb)
@@ -98,13 +98,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co"># 1. Configure global options --------------------------------------------------</span>
 
 <span class="co"># Here we choose the default location for automatically saved RDS files</span>
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;AutoSaved&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
 <span class="co"># 2. Define persistent R objects -----------------------------------------------</span>
 
 <span class="kw">MakeObj</span>(xyz, {
 
-  <span class="co"># Here we compute the value of this R object</span>
+  <span class="co"># Here we compute the value of the object</span>
   xyz &lt;-<span class="st"> </span><span class="dv">0</span>
 
 })
@@ -114,19 +114,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">print</span>(xyz)</code></pre></div>
 <p>Let’s run <code>MiniScript.R</code> for the very first time and see the resulting messages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
-<pre><code>## [creating] AutoSaved</code></pre>
-<pre><code>## [saving] AutoSaved/xyz.rds</code></pre>
+<pre><code>## [LittleThumb] create | AutoSaved</code></pre>
+<pre><code>## [LittleThumb] save | xyz = AutoSaved/xyz.rds</code></pre>
 <p>These messages indicate that during this first execution of <code>MiniScript.R</code>, the <code>AutoSaved</code> folder has been created in the current directory and the <code>xyz</code> object has been saved as <code>AutoSaved/xyz.rds</code>.</p>
-<p>From now on, as long as the <code>xyz</code> object remains available in the R environment and the global options are not changed, the <code>MakeObj(xyz, ...)</code> function call will not do anything during repeated executions of <code>MiniScript.R</code>.</p>
+<p>From now on, as long as the <code>xyz</code> object remains available in the R environment and the global options are not changed, the <code>MakeObj(xyz, ...)</code> function call in <code>MiniScript.R</code> will bypass operations related to <code>xyz</code>.</p>
 <p>Let’s run <code>MiniScript.R</code> a second time and see the resulting messages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
-<pre><code>## [passing] AutoSaved/xyz.rds</code></pre>
+<pre><code>## [LittleThumb] bypass | xyz = AutoSaved/xyz.rds</code></pre>
 <p>If we execute the script once again but when <code>xyz</code> is no longer available, for instance after restarting the R environment, the <code>MakeObj(xyz, ...)</code> function call will automatically load <code>xyz</code> from the <code>AutoSaved/xyz.rds</code> file instead of recomputing this object from scratch.</p>
 <p>Let’s simulate a loss of the object <code>xyz</code> due to restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(xyz)</code></pre></div>
 <p>And then let’s run <code>MiniScript.R</code> once again to see the resulting messages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
-<pre><code>## [loading] AutoSaved/xyz.rds</code></pre>
+<pre><code>## [LittleThumb] load | xyz = AutoSaved/xyz.rds</code></pre>
 </div>
 <div id="automation-options" class="section level3">
 <h3>Automation options</h3>
@@ -164,8 +164,9 @@ CGR &lt;-<span class="st"> </span><span class="cf">function</span>(s) {
 }</code></pre></div>
 <p>Now we configure the global options of our script.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here we choose the default location for automatically saved RDS files</span>
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;AutoSaved&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
+<span class="co"># We use specific paths for contained objects</span>
 cache &lt;-<span class="st"> </span><span class="kw">list</span>(
   <span class="dt">dna    =</span> <span class="st">&quot;contents/dna&quot;</span>,
   <span class="dt">graphs =</span> <span class="st">&quot;contents/graphs&quot;</span>
@@ -199,16 +200,16 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
   }
 })</code></pre></div>
 <p>Whe run for the first time, the section defining the <code>dna</code> object will produce the following messages.</p>
-<pre><code>## [creating] AutoSaved/contents/dna</code></pre>
-<pre><code>## [saving] AutoSaved/contents/dna/sequences.rds</code></pre>
-<pre><code>## [saving] AutoSaved/dna.rds</code></pre>
+<pre><code>## [LittleThumb] create | AutoSaved/contents/dna</code></pre>
+<pre><code>## [LittleThumb] save | sequences = AutoSaved/contents/dna/sequences.rds</code></pre>
+<pre><code>## [LittleThumb] save | dna = AutoSaved/dna.rds</code></pre>
 <p>Whe run for the first time, the section defining the <code>dna</code> object will produce the following messages.</p>
-<pre><code>## [creating] AutoSaved/contents/graphs</code></pre>
-<pre><code>## [saving] AutoSaved/contents/graphs/S1.rds</code></pre>
-<pre><code>## [saving] AutoSaved/contents/graphs/S2.rds</code></pre>
-<pre><code>## [saving] AutoSaved/contents/graphs/S3.rds</code></pre>
-<pre><code>## [saving] AutoSaved/contents/graphs/S4.rds</code></pre>
-<pre><code>## [saving] AutoSaved/graphs.rds</code></pre>
+<pre><code>## [LittleThumb] create | AutoSaved/contents/graphs</code></pre>
+<pre><code>## [LittleThumb] save | S1 = AutoSaved/contents/graphs/S1.rds</code></pre>
+<pre><code>## [LittleThumb] save | S2 = AutoSaved/contents/graphs/S2.rds</code></pre>
+<pre><code>## [LittleThumb] save | S3 = AutoSaved/contents/graphs/S3.rds</code></pre>
+<pre><code>## [LittleThumb] save | S4 = AutoSaved/contents/graphs/S4.rds</code></pre>
+<pre><code>## [LittleThumb] save | graphs = AutoSaved/graphs.rds</code></pre>
 </div>
 <div id="repeated-script-execution-using-makeobj" class="section level3">
 <h3>Repeated script execution using MakeObj</h3>
@@ -217,7 +218,7 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>A very simple script named <code>LT_Test.R</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -226,14 +227,13 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>First time execution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
 <pre><code>## building object x...</code></pre>
-<pre><code>## [creating] ./_LT_RDATA_</code></pre>
-<pre><code>## [saving] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [LittleThumb] save | x = AutoSaved/x.rds</code></pre>
 <p>Second time execution without restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [passing] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [LittleThumb] bypass | x = AutoSaved/x.rds</code></pre>
 <p>Second time execution after restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [loading] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [LittleThumb] load | x = AutoSaved/x.rds</code></pre>
 </div>
 <div id="forcing-to-reload-r-objects" class="section level4">
 <h4>Forcing to reload R objects</h4>
@@ -245,7 +245,7 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>Can be done by changing the <code>overload</code> global option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 <span class="kw">LittleThumb</span>(<span class="dt">overload =</span> T)
 
 <span class="kw">MakeObj</span>(x, {
@@ -255,7 +255,7 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>Can be done by specifying the <code>overload</code> argument when calling <code>MakeObj</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, <span class="dt">overload =</span> T, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -263,20 +263,20 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 })</code></pre></div>
 <p>Second time execution when forcing to reload the R object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [overloading] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [LittleThumb] overload | x = AutoSaved/x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 3.141593</code></pre>
 </div>
 <div id="forcing-to-rebuild-r-objects" class="section level4">
 <h4>Forcing to rebuild R objects</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">MakeObj</span>(x, { x &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi })</code></pre></div>
-<pre><code>## [saving] x.rds</code></pre>
+<pre><code>## [LittleThumb] save | x = x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 6.283185</code></pre>
 <p>Can be done by changing the <code>rebuild</code> global option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 <span class="kw">LittleThumb</span>(<span class="dt">rebuild =</span> T)
 
 <span class="kw">MakeObj</span>(x, {
@@ -286,7 +286,7 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>Can be done by specifying the <code>rebuild</code> argument when calling <code>MakeObj</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>)
+<span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
 <span class="kw">MakeObj</span>(x, <span class="dt">rebuild =</span> T, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
@@ -295,42 +295,9 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <p>Second time execution forcing to rebuild the R object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
 <pre><code>## building object x...</code></pre>
-<pre><code>## [overwriting] ./_LT_RDATA_/x.rds</code></pre>
+<pre><code>## [LittleThumb] overwrite | x = AutoSaved/x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 6.283185</code></pre>
-</div>
-<div id="multiple-objects-paths-and-environments" class="section level4">
-<h4>Multiple objects, paths and environments</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
-
-<span class="kw">LittleThumb</span>(<span class="dt">path =</span> <span class="st">&quot;./_LT_RDATA_&quot;</span>, <span class="dt">overload =</span> T)
-
-<span class="kw">MakeObj</span>(x, { x &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi })
-
-<span class="kw">MakeObj</span>(data, <span class="dt">rebuild =</span> T, {
-  
-  data &lt;-<span class="st"> </span><span class="kw">new.env</span>(<span class="dt">parent =</span> <span class="kw">globalenv</span>())
-  
-  <span class="kw">MakeObj</span>(k, <span class="dt">path =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">envir =</span> data, {
-    k &lt;-<span class="st"> </span>LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]
-  })
-  
-  <span class="kw">MakeObj</span>(v, <span class="dt">path =</span> <span class="st">&quot;values&quot;</span>, <span class="dt">envir =</span> data, {
-    v &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>
-  })
-
-})</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [loading] ./_LT_RDATA_/x.rds</code></pre>
-<pre><code>## [creating] ./_LT_RDATA_/text</code></pre>
-<pre><code>## [saving] ./_LT_RDATA_/text/k.rds</code></pre>
-<pre><code>## [creating] ./_LT_RDATA_/values</code></pre>
-<pre><code>## [saving] ./_LT_RDATA_/values/v.rds</code></pre>
-<pre><code>## [saving] ./_LT_RDATA_/data.rds</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(data<span class="op">$</span>k)</code></pre></div>
-<pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(data<span class="op">$</span>v)</code></pre></div>
-<pre><code>## [1] 1 2 3 4 5</code></pre>
 </div>
 </div>
 

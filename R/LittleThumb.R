@@ -8,6 +8,7 @@
 #' @export
 DefaultOptions <- function() {
   list(
+    rootpath  = "",            # MakePath
     # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
     path      = "",            #
     extension = ".rds",        #
@@ -140,3 +141,16 @@ RemoveOptions <- function() {
 ResetOptions <- function() {
   do.call(LittleThumb, LittleThumb::DefaultOptions())
 }
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+StatusMessage <- function(status, name = NULL, file = NULL) {
+  msg <- paste0("[LittleThumb] ", status)
+  if(! is.null(name)) msg <- paste0(msg, " | ", name)
+  if(! is.null(file)) msg <- paste0(msg, " = ", file)
+  message(msg)
+}
+

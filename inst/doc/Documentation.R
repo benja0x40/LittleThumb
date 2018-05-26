@@ -3,8 +3,7 @@ library(LittleThumb)
 
 # Reset
 rm(list = objects())
-unlink("./_LT_RDATA_", recursive = T)
-unlink("./AutoSaved", recursive = T)
+unlink("AutoSaved", recursive = T)
 
 cfg <- LittleThumb()
 
@@ -16,13 +15,13 @@ cfg <- LittleThumb()
 #  # 1. Configure global options --------------------------------------------------
 #  
 #  # Here we choose the default location for automatically saved RDS files
-#  LittleThumb(path = "AutoSaved")
+#  LittleThumb(rootpath = "AutoSaved")
 #  
 #  # 2. Define persistent R objects -----------------------------------------------
 #  
 #  MakeObj(xyz, {
 #  
-#    # Here we compute the value of this R object
+#    # Here we compute the value of the object
 #    xyz <- 0
 #  
 #  })
@@ -42,13 +41,13 @@ library(LittleThumb)
 # 1. Configure global options --------------------------------------------------
 
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
 # 2. Define persistent R objects -----------------------------------------------
 
 MakeObj(xyz, {
 
-  # Here we compute the value of this R object
+  # Here we compute the value of the object
   xyz <- 0
 
 })
@@ -68,13 +67,13 @@ library(LittleThumb)
 # 1. Configure global options --------------------------------------------------
 
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
 # 2. Define persistent R objects -----------------------------------------------
 
 MakeObj(xyz, {
 
-  # Here we compute the value of this R object
+  # Here we compute the value of the object
   xyz <- 0
 
 })
@@ -97,13 +96,13 @@ library(LittleThumb)
 # 1. Configure global options --------------------------------------------------
 
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
 # 2. Define persistent R objects -----------------------------------------------
 
 MakeObj(xyz, {
 
-  # Here we compute the value of this R object
+  # Here we compute the value of the object
   xyz <- 0
 
 })
@@ -144,8 +143,9 @@ CGR <- function(s) {
 
 ## ------------------------------------------------------------------------
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
+# We use specific paths for contained objects
 cache <- list(
   dna    = "contents/dna",
   graphs = "contents/graphs"
@@ -214,7 +214,7 @@ MakeObj(graphs, {
 ## ----script, eval=FALSE--------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./_LT_RDATA_")
+#  LittleThumb(rootpath = "AutoSaved")
 #  
 #  MakeObj(x, {
 #    message("building object x...")
@@ -227,7 +227,7 @@ MakeObj(graphs, {
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, {
   message("building object x...")
@@ -240,7 +240,7 @@ MakeObj(x, {
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, {
   message("building object x...")
@@ -258,7 +258,7 @@ suppressWarnings(rm(x))   # Cleanup
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, {
   message("building object x...")
@@ -275,7 +275,7 @@ x <- 0
 ## ----eval=TRUE, message=FALSE, echo=FALSE, results='hide', ref.label='script'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, {
   message("building object x...")
@@ -288,7 +288,7 @@ print(x)
 ## ----script_reload, eval=FALSE-------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./_LT_RDATA_")
+#  LittleThumb(rootpath = "AutoSaved")
 #  LittleThumb(overload = T)
 #  
 #  MakeObj(x, {
@@ -299,7 +299,7 @@ print(x)
 ## ----eval=FALSE----------------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./_LT_RDATA_")
+#  LittleThumb(rootpath = "AutoSaved")
 #  
 #  MakeObj(x, overload = T, {
 #    message("building object x...")
@@ -312,7 +312,7 @@ print(x)
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_reload'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 LittleThumb(overload = T)
 
 MakeObj(x, {
@@ -335,7 +335,7 @@ print(x)
 ## ----script_rebuild, eval=FALSE------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./_LT_RDATA_")
+#  LittleThumb(rootpath = "AutoSaved")
 #  LittleThumb(rebuild = T)
 #  
 #  MakeObj(x, {
@@ -346,7 +346,7 @@ print(x)
 ## ----eval=FALSE----------------------------------------------------------
 #  library(LittleThumb)
 #  
-#  LittleThumb(path = "./_LT_RDATA_")
+#  LittleThumb(rootpath = "AutoSaved")
 #  
 #  MakeObj(x, rebuild = T, {
 #    message("building object x...")
@@ -359,7 +359,7 @@ print(x)
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_rebuild'----
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 LittleThumb(rebuild = T)
 
 MakeObj(x, {
@@ -374,61 +374,8 @@ print(x)
 do.call(LittleThumb, cfg) # Restore default options
 
 ## ----include=FALSE-------------------------------------------------------
-# Simulate restarting the R environment
-do.call(LittleThumb, cfg) # Restore default options
-suppressWarnings(rm(x))   # Cleanup
-
-## ----script_multi, eval=FALSE--------------------------------------------
-#  library(LittleThumb)
-#  
-#  LittleThumb(path = "./_LT_RDATA_", overload = T)
-#  
-#  MakeObj(x, { x <- 2 * pi })
-#  
-#  MakeObj(data, rebuild = T, {
-#  
-#    data <- new.env(parent = globalenv())
-#  
-#    MakeObj(k, path = "text", envir = data, {
-#      k <- LETTERS[1:5]
-#    })
-#  
-#    MakeObj(v, path = "values", envir = data, {
-#      v <- 1:5
-#    })
-#  
-#  })
-
-## ----eval=FALSE----------------------------------------------------------
-#  source("LT_Test.R")
-
-## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_multi'----
-library(LittleThumb)
-
-LittleThumb(path = "./_LT_RDATA_", overload = T)
-
-MakeObj(x, { x <- 2 * pi })
-
-MakeObj(data, rebuild = T, {
-  
-  data <- new.env(parent = globalenv())
-  
-  MakeObj(k, path = "text", envir = data, {
-    k <- LETTERS[1:5]
-  })
-  
-  MakeObj(v, path = "values", envir = data, {
-    v <- 1:5
-  })
-
-})
-
-## ------------------------------------------------------------------------
-print(data$k)
-print(data$v)
-
-## ----include=FALSE-------------------------------------------------------
 # Cleanup
+unlink("AutoSaved", recursive = T)
+LittleThumb::ResetOptions()
 DeleteObj(x)
-unlink("./_LT_RDATA_", recursive = T)
 

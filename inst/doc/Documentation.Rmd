@@ -19,8 +19,7 @@ library(LittleThumb)
 
 # Reset
 rm(list = objects())
-unlink("./_LT_RDATA_", recursive = T)
-unlink("./AutoSaved", recursive = T)
+unlink("AutoSaved", recursive = T)
 
 cfg <- LittleThumb()
 ```
@@ -31,31 +30,32 @@ Run the `R` code below to install `LittleThumb`.
 
 ```R
 library("devtools") # (devtools can be installed from CRAN repositories)
-install_github("benja0x40/LittleThumb", dependencies = T)
+install_github("benja0x40/LittleThumb")
 ```
 
 ### Basic principles
 
-An R script based on `LittleThumb` is structured by series of 3 consecutive
-sections.
+An R script or notebook based on LittleThumb is structured by series of 3
+consecutive sections.
 
-  1. Configuration of options using the `LittleThumb` function
+  1. Configuration of global options using the `LittleThumb` function
   2. Definition of R objects using the `MakeObj` function
   3. Anything else depending on the defined R objects
 
-However, a good practice is to use the configuration section only once,
-at the begining of the script, such that any change in this section can
-control all R objects subsequently defined with the `MakeObj` function.
+A recommended practice is to use the configuration section only once, 
+at the begining of the script or notebook, such that any change in this section
+can affect all R objects subsequently defined with the `MakeObj` function.
 
-Each time a script based on `LittleThumb` will be executed, objects being
-defined by the `MakeObj` function will be automatically computed and saved
-or loaded, depending on their availability in the R environment and at the
-automatically saved locations, as well as the choosen global options.
+Each time any R code including the `MakeObj` function is executed, the objects
+defined using this function are automatically generated and saved, or loaded,
+according to current options and depending on objects availability in the R
+environment and at their storage location.
 
-And during each script execution, `LittleThumb` will show the status of
-operations performed automatically for the defined objects.
+During these executions, LittleThumb produces messages indicating the status
+of operations performed automatically for the corresponding objects.
 
-Here is a minimalistic example of R script with a single object named `xyz`.
+Here is a minimalistic example of R script defining a single persistent object
+named `xyz`.
 
 ```{r mini_script, eval=FALSE}
 # MiniScript.R
@@ -65,13 +65,13 @@ library(LittleThumb)
 # 1. Configure global options --------------------------------------------------
 
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
 # 2. Define persistent R objects -----------------------------------------------
 
 MakeObj(xyz, {
 
-  # Here we compute the value of this R object
+  # Here we compute the value of the object
   xyz <- 0
 
 })
@@ -95,7 +95,7 @@ the `xyz` object has been saved as `AutoSaved/xyz.rds`.
 
 From now on, as long as the `xyz` object remains available in the R environment
 and the global options are not changed, the `MakeObj(xyz, ...)` function call
-will not do anything during repeated executions of `MiniScript.R`.
+in `MiniScript.R` will bypass operations related to `xyz`.
 
 Let's run `MiniScript.R` a second time and see the resulting messages.
 
@@ -177,8 +177,9 @@ Now we configure the global options of our script.
 
 ```{r}
 # Here we choose the default location for automatically saved RDS files
-LittleThumb(path = "AutoSaved")
+LittleThumb(rootpath = "AutoSaved")
 
+# We use specific paths for contained objects
 cache <- list(
   dna    = "contents/dna",
   graphs = "contents/graphs"
@@ -242,7 +243,7 @@ A very simple script named `LT_Test.R`.
 ```{r script, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, {
   message("building object x...")
@@ -304,7 +305,7 @@ Can be done by changing the `overload` global option.
 ```{r script_reload, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 LittleThumb(overload = T)
 
 MakeObj(x, {
@@ -318,7 +319,7 @@ Can be done by specifying the `overload` argument when calling `MakeObj`.
 ```{r eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, overload = T, {
   message("building object x...")
@@ -357,7 +358,7 @@ Can be done by changing the `rebuild` global option.
 ```{r script_rebuild, eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 LittleThumb(rebuild = T)
 
 MakeObj(x, {
@@ -371,7 +372,7 @@ Can be done by specifying the `rebuild` argument when calling `MakeObj`.
 ```{r eval=FALSE}
 library(LittleThumb)
 
-LittleThumb(path = "./_LT_RDATA_")
+LittleThumb(rootpath = "AutoSaved")
 
 MakeObj(x, rebuild = T, {
   message("building object x...")
@@ -395,50 +396,10 @@ print(x)
 do.call(LittleThumb, cfg) # Restore default options
 ```
 
-#### Multiple objects, paths and environments
-
-```{r include=FALSE}
-# Simulate restarting the R environment
-do.call(LittleThumb, cfg) # Restore default options
-suppressWarnings(rm(x))   # Cleanup
-```
-
-```{r script_multi, eval=FALSE}
-library(LittleThumb)
-
-LittleThumb(path = "./_LT_RDATA_", overload = T)
-
-MakeObj(x, { x <- 2 * pi })
-
-MakeObj(data, rebuild = T, {
-  
-  data <- new.env(parent = globalenv())
-  
-  MakeObj(k, path = "text", envir = data, {
-    k <- LETTERS[1:5]
-  })
-  
-  MakeObj(v, path = "values", envir = data, {
-    v <- 1:5
-  })
-
-})
-```
-
-```{r eval=FALSE}
-source("LT_Test.R")
-```
-```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='script_multi'}
-```
-
-```{r}
-print(data$k)
-print(data$v)
-```
-
 ```{r include=FALSE}
 # Cleanup
+unlink("AutoSaved", recursive = T)
+LittleThumb::ResetOptions()
 DeleteObj(x)
-unlink("./_LT_RDATA_", recursive = T)
 ```
 
