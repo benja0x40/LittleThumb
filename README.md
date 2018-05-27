@@ -7,11 +7,10 @@ LittleThumb
 LittleThumb is an R package whose main purpose is to simplify the storage and
 organization of intermediate results during the development of scripts
 or notebooks involving heterogeneous and time consuming data importation
-and processing tasks.
-
+or processing tasks.
 To achieve this, LittleThumb provides a lightweight persistence mechanism for
 R objects which automates save/load operations to/from RDS files and allows
-global or individual control of object locations and update requirements.
+global or individual control of locations and update requirements.
 
 ### <a name="install"></a>Installation
 
@@ -107,7 +106,15 @@ source("MiniScript.R")
 
 ### Automation options
 
-Work in progress.
+All automation options are available as argument of the `MakeObj` function to
+control each object individually and can also be modified globally using
+the `LittleThumb` function.
+
+For instance, two basic options are `overload` and `rebuild`.
+The `overload` option allows to force loading objects from their associated 
+RDS file even when these objects are already available in the R environment.
+The `rebuild` option controls whether objects should be regenerated and saved
+when their associated RDS file already exists at its expected location.
 
 ### Advanced usage
 
@@ -116,3 +123,6 @@ See the built-in vignette and manual for further documentation.
 ```R
 vignette("Documentation", package = "LittleThumb")
 ```
+
+### Alternatives
+

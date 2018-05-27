@@ -26,7 +26,7 @@ DeleteObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = DeleteObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = DeleteObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 

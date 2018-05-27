@@ -34,7 +34,7 @@ LoadObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = LoadObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = LoadObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 

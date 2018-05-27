@@ -44,6 +44,3 @@ test_that("StatusMessage", {
   expect_message(LittleThumb::StatusMessage(""), "LittleThumb")
 
 })
-
-
-

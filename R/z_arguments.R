@@ -6,18 +6,18 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-DefaultArgs <- function(cfg, ignore = NULL, fun = NULL, env = NULL) {
+DefaultArgs <- function(default, ignore = NULL, from = NULL, to = NULL) {
 
-  if(is.null(env)) env <- parent.frame()
+  if(is.null(to)) to <- parent.frame()
 
-  lst <- names(cfg)
-  if(! is.null(fun)) lst <- methods::formalArgs(fun)
+  lst <- names(default)
+  if(is.function(from)) lst <- methods::formalArgs(from)
 
   lst <- setdiff(lst, ignore)
 
   for(a in lst) {
-    if(is.null(env[[a]]) & ! is.null(cfg[[a]])) {
-      env[[a]] <- cfg[[a]]
+    if(is.null(to[[a]]) & ! is.null(default[[a]])) {
+      to[[a]] <- default[[a]]
     }
   }
 }

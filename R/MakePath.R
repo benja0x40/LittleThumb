@@ -69,7 +69,7 @@ MakePath <- function(..., ext = NULL, rootpath = NULL, relative = NULL) {
   path <- path[! path == ""]
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("ext", "..."), fun = MakePath)
+  DefaultArgs(cfg, ignore = c("ext", "..."), from = MakePath)
 
   if(length(path) < 1) stop("empty path")
 

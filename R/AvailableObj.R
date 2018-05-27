@@ -21,7 +21,7 @@ AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = AvailableObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = AvailableObj)
 
   f <- PathToRDS(obj.name, path, cfg$extension, relative)
 

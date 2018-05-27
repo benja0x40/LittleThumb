@@ -126,6 +126,13 @@ source("MiniScript.R")
 
 ### Automation options
 
+Automation options can be modified using the `LittleThumb` function. Two
+important options are `overload` and `rebuild`.
+The `overload` option controls whether objects should be reloaded when
+they are already available in the R environment.
+The `rebuild` option controls whether objects should be regenerated and saved
+when their associated RDS file is already available at its expected location.
+
 ### Advance usage
 
 We want to compute two R objects.

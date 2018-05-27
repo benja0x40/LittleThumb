@@ -50,7 +50,7 @@ SaveObj <- function(
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), fun = SaveObj)
+  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = SaveObj)
 
   if(! is.environment(envir)) envir <- parent.frame()
 
