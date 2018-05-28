@@ -160,16 +160,10 @@ source("MiniScript.R")
 
 ### Advanced usage
 
-See the built-in vignette and manual for further documentation.
-
-```R
-vignette("Documentation", package = "LittleThumb")
-```
-
-### Alternatives
+Advanced functionalities are not yet available.
 
 ### Credit and feedback
 
 Benjamin Leblanc, 2018
-([GitHub](https://github.com/benja0x40) |
+([GitHub](https://github.com/benja0x40/LittleThumb) |
 [ResearchGate](https://www.researchgate.net/profile/Benjamin_Leblanc))
