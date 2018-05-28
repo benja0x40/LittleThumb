@@ -14,9 +14,9 @@
 #' symbol corresponding to an R object previously made by \link{MakeObj}
 #' or saved using \link{SaveObj}.
 #'
-#' @param overload
+#' @param reload
 #' logical. When the R object to be loaded is already defined in the target
-#' environment LoadObj can avoid (overload = F) or force (overload = T) the
+#' environment LoadObj can avoid (reload = F) or force (reload = T) the
 #' reloading of this object.
 #'
 #' @param ...
@@ -27,7 +27,7 @@
 #' @export
 LoadObj <- function(
   obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  overload = NULL, messages = NULL, ...
+  reload = NULL, messages = NULL, ...
 ) {
 
   obj.name <- name
@@ -42,14 +42,14 @@ LoadObj <- function(
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
-  overload <- LogicalArg(obj.name, overload)
+  reload <- LogicalArg(obj.name, reload)
 
   o.e <- exists(x = obj.name, where = envir)
-  if(o.e) msg <- "overload" else msg <- "load"
-  if(o.e & ! overload) msg <- "bypass"
+  if(o.e) msg <- "reload" else msg <- "load"
+  if(o.e & ! reload) msg <- "bypass"
 
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
-  if(f.e & (overload | ! o.e)) {
+  if(f.e & (reload | ! o.e)) {
     res <- assign(obj.name, readRDS(f, ...), pos = envir)
   }
 }

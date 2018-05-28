@@ -31,7 +31,7 @@ cfg <- LittleThumb()
 #  print(xyz)
 
 ## ----eval=FALSE----------------------------------------------------------
-#  source("MiniScript.R")
+#  source("MiniScript.R") # First execution
 
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
 # MiniScript.R
@@ -57,7 +57,7 @@ MakeObj(xyz, {
 print(xyz)
 
 ## ----eval=FALSE----------------------------------------------------------
-#  source("MiniScript.R")
+#  source("MiniScript.R") # Second execution
 
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
 # MiniScript.R
@@ -86,7 +86,65 @@ print(xyz)
 rm(xyz)
 
 ## ----eval=FALSE----------------------------------------------------------
-#  source("MiniScript.R")
+#  source("MiniScript.R") # Another execution after loss of 'xyz'
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
+# MiniScript.R
+
+library(LittleThumb)
+
+# 1. Configure global options --------------------------------------------------
+
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(rootpath = "AutoSaved")
+
+# 2. Define persistent R objects -----------------------------------------------
+
+MakeObj(xyz, {
+
+  # Here we compute the value of the object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+
+## ------------------------------------------------------------------------
+LittleThumb(reload = "xyz")
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("MiniScript.R") # Another execution after loss of 'xyz'
+
+## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
+# MiniScript.R
+
+library(LittleThumb)
+
+# 1. Configure global options --------------------------------------------------
+
+# Here we choose the default location for automatically saved RDS files
+LittleThumb(rootpath = "AutoSaved")
+
+# 2. Define persistent R objects -----------------------------------------------
+
+MakeObj(xyz, {
+
+  # Here we compute the value of the object
+  xyz <- 0
+
+})
+
+# 3. Do anything with defined R objects ----------------------------------------
+
+print(xyz)
+
+## ------------------------------------------------------------------------
+LittleThumb(rebuild = "xyz")
+
+## ----eval=FALSE----------------------------------------------------------
+#  source("MiniScript.R") # Another execution after loss of 'xyz'
 
 ## ----eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'----
 # MiniScript.R
@@ -289,7 +347,7 @@ print(x)
 #  library(LittleThumb)
 #  
 #  LittleThumb(rootpath = "AutoSaved")
-#  LittleThumb(overload = T)
+#  LittleThumb(reload = T)
 #  
 #  MakeObj(x, {
 #    message("building object x...")
@@ -301,7 +359,7 @@ print(x)
 #  
 #  LittleThumb(rootpath = "AutoSaved")
 #  
-#  MakeObj(x, overload = T, {
+#  MakeObj(x, reload = T, {
 #    message("building object x...")
 #    x <- pi
 #  })
@@ -313,7 +371,7 @@ print(x)
 library(LittleThumb)
 
 LittleThumb(rootpath = "AutoSaved")
-LittleThumb(overload = T)
+LittleThumb(reload = T)
 
 MakeObj(x, {
   message("building object x...")

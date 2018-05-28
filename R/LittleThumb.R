@@ -19,7 +19,7 @@ DefaultOptions <- function() {
 
     # Behavior
     makedir  = T,              # SaveObj <= MakeObj
-    overload = F,              # LoadObj <= MakeObj
+    reload   = F,              # LoadObj <= MakeObj
     rebuild  = F,              # MakeObj
     cleanup  = T,              # MakeObj
     remove   = T,              # DeleteObj
@@ -68,7 +68,7 @@ DefaultOptions <- function() {
 #' logical value, if \code{TRUE} non-existing folders are created automatically
 #' when necessary.
 #'
-#' @param overload
+#' @param reload
 #' logical value, if \code{TRUE} forces to load R objects from associated RDS
 #' files even when these objects already exist in the R environment
 #' (default = F, no).

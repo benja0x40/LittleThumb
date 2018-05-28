@@ -68,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">LittleThumb documentation</h1>
-<h3 class="subtitle"><em>Package version 0.5.1 - 27.05.2018</em></h3>
+<h3 class="subtitle"><em>Package version 0.5.2 - 28.05.2018</em></h3>
 <h4 class="author"><em><a href="https://github.com/benja0x40">Benjamin Leblanc</a></em></h4>
 
 
@@ -78,6 +78,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Run the <code>R</code> code below to install <code>LittleThumb</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;devtools&quot;</span>) <span class="co"># (devtools can be installed from CRAN repositories)</span>
 <span class="kw">install_github</span>(<span class="st">&quot;benja0x40/LittleThumb&quot;</span>)</code></pre></div>
+</div>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>Using LittleThumb should be helpful during the development of scripts or notebooks involving heterogeneous and time consuming data importation or processing tasks.</p>
 </div>
 <div id="basic-principles" class="section level3">
 <h3>Basic principles</h3>
@@ -113,24 +117,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <span class="kw">print</span>(xyz)</code></pre></div>
 <p>Let’s run <code>MiniScript.R</code> for the very first time and see the resulting messages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>) <span class="co"># First execution</span></code></pre></div>
 <pre><code>## [LittleThumb] create | AutoSaved</code></pre>
 <pre><code>## [LittleThumb] save | xyz = AutoSaved/xyz.rds</code></pre>
 <p>These messages indicate that during this first execution of <code>MiniScript.R</code>, the <code>AutoSaved</code> folder has been created in the current directory and the <code>xyz</code> object has been saved as <code>AutoSaved/xyz.rds</code>.</p>
 <p>From now on, as long as the <code>xyz</code> object remains available in the R environment and the global options are not changed, the <code>MakeObj(xyz, ...)</code> function call in <code>MiniScript.R</code> will bypass operations related to <code>xyz</code>.</p>
 <p>Let’s run <code>MiniScript.R</code> a second time and see the resulting messages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>) <span class="co"># Second execution</span></code></pre></div>
 <pre><code>## [LittleThumb] bypass | xyz = AutoSaved/xyz.rds</code></pre>
 <p>If we execute the script once again but when <code>xyz</code> is no longer available, for instance after restarting the R environment, the <code>MakeObj(xyz, ...)</code> function call will automatically load <code>xyz</code> from the <code>AutoSaved/xyz.rds</code> file instead of recomputing this object from scratch.</p>
 <p>Let’s simulate a loss of the object <code>xyz</code> due to restarting the R environment.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(xyz)</code></pre></div>
 <p>And then let’s run <code>MiniScript.R</code> once again to see the resulting messages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>) <span class="co"># Another execution after loss of 'xyz'</span></code></pre></div>
 <pre><code>## [LittleThumb] load | xyz = AutoSaved/xyz.rds</code></pre>
 </div>
 <div id="automation-options" class="section level3">
 <h3>Automation options</h3>
-<p>Automation options can be modified using the <code>LittleThumb</code> function. Two important options are <code>overload</code> and <code>rebuild</code>. The <code>overload</code> option controls whether objects should be reloaded when they are already available in the R environment. The <code>rebuild</code> option controls whether objects should be regenerated and saved when their associated RDS file is already available at its expected location.</p>
+<p>Automation options can be modified using the <code>LittleThumb</code> function. Two important options are <code>reload</code> and <code>rebuild</code>. The <code>reload</code> option controls whether objects should be reloaded when they are already available in the R environment. The <code>rebuild</code> option controls whether objects should be regenerated and saved when their associated RDS file is already available at its expected location.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">LittleThumb</span>(<span class="dt">reload =</span> <span class="st">&quot;xyz&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>) <span class="co"># Another execution after loss of 'xyz'</span></code></pre></div>
+<pre><code>## [LittleThumb] reload | xyz = AutoSaved/xyz.rds</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">LittleThumb</span>(<span class="dt">rebuild =</span> <span class="st">&quot;xyz&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;MiniScript.R&quot;</span>) <span class="co"># Another execution after loss of 'xyz'</span></code></pre></div>
+<pre><code>## [LittleThumb] overwrite | xyz = AutoSaved/xyz.rds</code></pre>
 </div>
 <div id="advance-usage" class="section level3">
 <h3>Advance usage</h3>
@@ -243,28 +253,28 @@ cache &lt;-<span class="st"> </span><span class="kw">list</span>(
 <span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<p>Can be done by changing the <code>overload</code> global option.</p>
+<p>Can be done by changing the <code>reload</code> global option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
 <span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
-<span class="kw">LittleThumb</span>(<span class="dt">overload =</span> T)
+<span class="kw">LittleThumb</span>(<span class="dt">reload =</span> T)
 
 <span class="kw">MakeObj</span>(x, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
   x &lt;-<span class="st"> </span>pi
 })</code></pre></div>
-<p>Can be done by specifying the <code>overload</code> argument when calling <code>MakeObj</code>.</p>
+<p>Can be done by specifying the <code>reload</code> argument when calling <code>MakeObj</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(LittleThumb)
 
 <span class="kw">LittleThumb</span>(<span class="dt">rootpath =</span> <span class="st">&quot;AutoSaved&quot;</span>)
 
-<span class="kw">MakeObj</span>(x, <span class="dt">overload =</span> T, {
+<span class="kw">MakeObj</span>(x, <span class="dt">reload =</span> T, {
   <span class="kw">message</span>(<span class="st">&quot;building object x...&quot;</span>)
   x &lt;-<span class="st"> </span>pi
 })</code></pre></div>
 <p>Second time execution when forcing to reload the R object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;LT_Test.R&quot;</span>)</code></pre></div>
-<pre><code>## [LittleThumb] overload | x = AutoSaved/x.rds</code></pre>
+<pre><code>## [LittleThumb] reload | x = AutoSaved/x.rds</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(x)</code></pre></div>
 <pre><code>## [1] 3.141593</code></pre>
 </div>

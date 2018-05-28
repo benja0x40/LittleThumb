@@ -33,6 +33,12 @@ library("devtools") # (devtools can be installed from CRAN repositories)
 install_github("benja0x40/LittleThumb")
 ```
 
+### Introduction
+
+Using LittleThumb should be helpful during the development of scripts
+or notebooks involving heterogeneous and time consuming data importation or
+processing tasks.
+
 ### Basic principles
 
 An R script or notebook based on LittleThumb is structured by series of 3
@@ -84,7 +90,7 @@ print(xyz)
 Let's run `MiniScript.R` for the very first time and see the resulting messages.
 
 ```{r eval=FALSE}
-source("MiniScript.R")
+source("MiniScript.R") # First execution
 ```
 ```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
 ```
@@ -100,7 +106,7 @@ in `MiniScript.R` will bypass operations related to `xyz`.
 Let's run `MiniScript.R` a second time and see the resulting messages.
 
 ```{r eval=FALSE}
-source("MiniScript.R")
+source("MiniScript.R") # Second execution
 ```
 ```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
 ```
@@ -119,7 +125,7 @@ rm(xyz)
 And then let's run `MiniScript.R` once again to see the resulting messages.
 
 ```{r eval=FALSE}
-source("MiniScript.R")
+source("MiniScript.R") # Another execution after loss of 'xyz'
 ```
 ```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
 ```
@@ -127,11 +133,29 @@ source("MiniScript.R")
 ### Automation options
 
 Automation options can be modified using the `LittleThumb` function. Two
-important options are `overload` and `rebuild`.
-The `overload` option controls whether objects should be reloaded when
+important options are `reload` and `rebuild`.
+The `reload` option controls whether objects should be reloaded when
 they are already available in the R environment.
 The `rebuild` option controls whether objects should be regenerated and saved
 when their associated RDS file is already available at its expected location.
+
+```{r}
+LittleThumb(reload = "xyz")
+```
+```{r eval=FALSE}
+source("MiniScript.R") # Another execution after loss of 'xyz'
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
+```
+
+```{r}
+LittleThumb(rebuild = "xyz")
+```
+```{r eval=FALSE}
+source("MiniScript.R") # Another execution after loss of 'xyz'
+```
+```{r eval=TRUE, message=TRUE, echo=FALSE, results='hide', ref.label='mini_script'}
+```
 
 ### Advance usage
 
@@ -307,13 +331,13 @@ source("LT_Test.R")
 print(x)
 ```
 
-Can be done by changing the `overload` global option.
+Can be done by changing the `reload` global option.
 
 ```{r script_reload, eval=FALSE}
 library(LittleThumb)
 
 LittleThumb(rootpath = "AutoSaved")
-LittleThumb(overload = T)
+LittleThumb(reload = T)
 
 MakeObj(x, {
   message("building object x...")
@@ -321,14 +345,14 @@ MakeObj(x, {
 })
 ```
 
-Can be done by specifying the `overload` argument when calling `MakeObj`.
+Can be done by specifying the `reload` argument when calling `MakeObj`.
 
 ```{r eval=FALSE}
 library(LittleThumb)
 
 LittleThumb(rootpath = "AutoSaved")
 
-MakeObj(x, overload = T, {
+MakeObj(x, reload = T, {
   message("building object x...")
   x <- pi
 })

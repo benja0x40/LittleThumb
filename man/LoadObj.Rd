@@ -5,7 +5,7 @@
 \title{Load an R object from its associated RDS file}
 \usage{
 LoadObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  overload = NULL, messages = NULL, ...)
+  reload = NULL, messages = NULL, ...)
 }
 \arguments{
 \item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
@@ -23,8 +23,8 @@ absolute or relative to the global \code{path} option accessible via the
 
 \item{envir}{\link{environment} where the R object should be located.}
 
-\item{overload}{logical. When the R object to be loaded is already defined in the target
-environment LoadObj can avoid (overload = F) or force (overload = T) the
+\item{reload}{logical. When the R object to be loaded is already defined in the target
+environment LoadObj can avoid (reload = F) or force (reload = T) the
 reloading of this object.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb

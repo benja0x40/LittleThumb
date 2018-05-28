@@ -25,7 +25,7 @@ With the default value (\code{NA}), this environment is the
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
 
-\item{overload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
+\item{reload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
 files even when these objects already exist in the R environment
 (default = F, no).}
 
