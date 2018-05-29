@@ -20,12 +20,12 @@
 #'
 #' @param remove
 #' logical indicating if the original object should be removed at its current
-#' location (default = T, yes).
+#' location (default = TRUE, yes).
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
 #' @export
-AssignObj <- function(obj, name = NULL, from = NULL, to = NULL, remove = T) {
+AssignObj <- function(obj, name = NULL, from = NULL, to = NULL, remove = TRUE) {
 
   src_name <- deparse(substitute(obj))
   dst_name <- name

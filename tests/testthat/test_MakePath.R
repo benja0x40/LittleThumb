@@ -25,21 +25,21 @@ test_that("Advanced", {
 
   cfg <- LittleThumb() # Global options
 
-  LittleThumb(rootpath = "Somewhere", relative = F)
+  LittleThumb(rootpath = "Somewhere", relative = FALSE)
 
   expect_error(MakePath(), regexp = "empty")
   expect_error(MakePath(ext = ".z"), regexp = "empty")
 
   expect_identical("x/y.z", MakePath("x/", "/y", ext = ".z"))
 
-  LittleThumb(rootpath = "Somewhere", relative = T)
+  LittleThumb(rootpath = "Somewhere", relative = TRUE)
 
   expect_error(MakePath(), regexp = "empty")
   expect_error(MakePath(ext = ".z"), regexp = "empty")
 
   expect_identical("Somewhere/x/y.z", MakePath("x/", "/y", ext = ".z"))
 
-  LittleThumb(rootpath = "", relative = T)
+  LittleThumb(rootpath = "", relative = TRUE)
 
   expect_identical("x/y.z", MakePath("x/", "/y", ext = ".z"))
 
@@ -53,7 +53,7 @@ test_that("PathToRDS", {
 
   name <- "obj"
   ext  <- ".z"
-  rel  <- F
+  rel  <- FALSE
 
   expect_identical(PathToRDS(name,        NULL, ext, rel), "obj.z")
   expect_identical(PathToRDS(name,          "", ext, rel), "obj.z")

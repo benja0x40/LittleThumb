@@ -17,7 +17,7 @@ MkObj <- function(...) { stop("not implemented") }
 #'   \link{SaveObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
-#' @example examples/Basics.R
+#' @example exec/examples/Basics.R
 #'
 #' @description
 #' \code{MakeObj} automatically generates an R object using the provided

@@ -19,16 +19,16 @@ as first argument.}
 
 \item{relative}{logical value controlling whether the specified \code{path} should be
 absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = T, yes).}
+\link{LittleThumb} function (default = TRUE, yes).}
 
 \item{envir}{\link{environment} where the R object should be located.}
 
 \item{reload}{logical. When the R object to be loaded is already defined in the target
-environment LoadObj can avoid (reload = F) or force (reload = T) the
+environment LoadObj can avoid (reload = FALSE) or force (reload = TRUE) the
 reloading of this object.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = T, enabled).}
+functions (default = TRUE, enabled).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}
 }

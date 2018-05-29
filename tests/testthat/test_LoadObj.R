@@ -28,7 +28,7 @@ test_that("Basic", {
   expect_message(LoadObj(x), regexp = "bypass")
   expect_identical(x, 0)
 
-  expect_message(LoadObj(x, reload = T), regexp = "reload")
+  expect_message(LoadObj(x, reload = TRUE), regexp = "reload")
   expect_identical(x, y)
 
   # Cleanup

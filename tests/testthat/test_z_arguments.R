@@ -41,25 +41,25 @@ test_that("DefaultArgs", {
 # + LogicalArg -----------------------------------------------------------------
 test_that("LogicalArg", {
 
-  expect_true(LogicalArg("x", T) == T)
-  expect_true(LogicalArg("x", F) == F)
+  expect_true(LogicalArg("x", TRUE) == TRUE)
+  expect_true(LogicalArg("x", FALSE) == FALSE)
 
-  expect_true(LogicalArg("x", "x") == T)
-  expect_true(LogicalArg("x", "y") == F)
-  expect_true(LogicalArg("x", c("x", "y")) == T)
-  expect_true(LogicalArg("x", c("y", "z")) == F)
+  expect_true(LogicalArg("x", "x") == TRUE)
+  expect_true(LogicalArg("x", "y") == FALSE)
+  expect_true(LogicalArg("x", c("x", "y")) == TRUE)
+  expect_true(LogicalArg("x", c("y", "z")) == FALSE)
 
-  expect_true(LogicalArg("x", c(x = T)) == T)
-  expect_true(LogicalArg("x", c(x = F)) == F)
-  expect_true(LogicalArg("x", c(x = T, y = F)) == T)
-  expect_true(LogicalArg("x", c(x = F, y = T)) == F)
-  expect_true(LogicalArg("x", c(y = T, z = T)) == F)
+  expect_true(LogicalArg("x", c(x = TRUE)) == TRUE)
+  expect_true(LogicalArg("x", c(x = FALSE)) == FALSE)
+  expect_true(LogicalArg("x", c(x = TRUE, y = FALSE)) == TRUE)
+  expect_true(LogicalArg("x", c(x = FALSE, y = TRUE)) == FALSE)
+  expect_true(LogicalArg("x", c(y = TRUE, z = TRUE)) == FALSE)
 
-  expect_true(LogicalArg("x", list(x = T)) == T)
-  expect_true(LogicalArg("x", list(x = F)) == F)
-  expect_true(LogicalArg("x", list(x = T, y = F)) == T)
-  expect_true(LogicalArg("x", list(x = F, y = T)) == F)
-  expect_true(LogicalArg("x", list(y = T, z = T)) == F)
+  expect_true(LogicalArg("x", list(x = TRUE)) == TRUE)
+  expect_true(LogicalArg("x", list(x = FALSE)) == FALSE)
+  expect_true(LogicalArg("x", list(x = TRUE, y = FALSE)) == TRUE)
+  expect_true(LogicalArg("x", list(x = FALSE, y = TRUE)) == FALSE)
+  expect_true(LogicalArg("x", list(y = TRUE, z = TRUE)) == FALSE)
 
 })
 
@@ -83,45 +83,45 @@ test_that("NamedArg", {
 test_that("ObjWithExpressionArgs", {
 
   x <- NULL
-  a <- quote(MakeObj(obj, { obj <- F }))
+  a <- quote(MakeObj(obj, { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
   expect_identical(a, list(name = "obj"))
 
   x <- NULL
-  a <- quote(MakeObj(obj, rebuild = T, { obj <- F }))
+  a <- quote(MakeObj(obj, rebuild = TRUE, { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = T))
+  expect_identical(a, list(name = "obj", rebuild = TRUE))
 
   x <- NULL
-  a <- quote(MakeObj(name = "obj", { obj <- F }))
+  a <- quote(MakeObj(name = "obj", { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
   expect_identical(as.list(a), list(name = "obj"))
 
   x <- NULL
-  a <- quote(MakeObj(name = "obj", rebuild = T, { obj <- F }))
+  a <- quote(MakeObj(name = "obj", rebuild = TRUE, { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
-  expect_identical(a, list(rebuild = T, name = "obj"))
+  expect_identical(a, list(rebuild = TRUE, name = "obj"))
 
   x <- NULL
-  a <- quote(MakeObj(rebuild = T, name = "obj", { obj <- F }))
+  a <- quote(MakeObj(rebuild = TRUE, name = "obj", { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = T))
+  expect_identical(a, list(name = "obj", rebuild = TRUE))
 
   x <- NULL
-  a <- quote(MakeObj(zzz, name = "obj", { obj <- F }))
+  a <- quote(MakeObj(zzz, name = "obj", { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
   expect_identical(a, list(name = "obj"))
 
   x <- NULL
-  a <- quote(MakeObj(zzz, rebuild = T, name = "obj", { obj <- F }))
+  a <- quote(MakeObj(zzz, rebuild = TRUE, name = "obj", { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = T))
+  expect_identical(a, list(name = "obj", rebuild = TRUE))
 
 })

@@ -7,9 +7,9 @@
 LittleThumb(...)
 }
 \arguments{
-\item{...}{Any of the following arguments:}
+\item{...}{Any of the following arguments.}
 
-\item{path}{default folder used to save R objects.}
+\item{path}{folder location for saving R objects as RDS files.}
 
 \item{extension}{RDS file extension (default = ".rds").}
 
@@ -27,30 +27,21 @@ when necessary.}
 
 \item{reload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
 files even when these objects already exist in the R environment
-(default = F, no).}
+(default = FALSE, no).}
 
 \item{rebuild}{logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-even when the associated RDS files already exist (default = F, no).}
+even when the associated RDS files already exist (default = FALSE, no).}
 
 \item{cleanup}{logical value controlling wheter \code{MakeObj} should remove additional
-objects created while evaluating the provided expression (default = T, yes).}
+objects created while evaluating the provided expression (default = TRUE, yes).}
 
 \item{remove}{logical value controlling wheter \code{DeleteObj} should remove the R object
-after deleting the RDS file (default = T, yes).}
+after deleting the RDS file (default = TRUE, yes).}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = T, enabled).}
-
-\item{history}{TODO: implementation & documentation}
+functions (default = TRUE, enabled).}
 }
 \description{
 This function sets the default value of arguments used by the main functions
-of the LittleThumb package, which allows to control the automated
-saving/loading operations performed by these functions at the global level.
-}
-\seealso{
-\link{MakeObj},
-  \link{LoadObj},
-  \link{SaveObj},
-  \link{DeleteObj}
+of the LittleThumb package.
 }

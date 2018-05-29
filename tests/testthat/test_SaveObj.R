@@ -24,18 +24,18 @@ test_that("Basic", {
 
   LittleThumb(rootpath = "./_LT_RDATA_")
 
-  expect_message(SaveObj(x, relative = F), regexp = "overwrite")
+  expect_message(SaveObj(x, relative = FALSE), regexp = "overwrite")
   expect_true(file.remove(f))
 
   f <- MakePath("x", ext = cfg$extension)
 
-  expect_message(SaveObj(x, relative = T), regexp = "create")
+  expect_message(SaveObj(x, relative = TRUE), regexp = "create")
   expect_true(file.exists(f))
   expect_identical(readRDS(f), x)
   expect_true(file.remove(f))
 
   # Cleanup
-  unlink("./_LT_RDATA_", recursive = T)
+  unlink("./_LT_RDATA_", recursive = TRUE)
 
   do.call(LittleThumb, cfg) # Restore default values
   expect_identical(cfg, LittleThumb())

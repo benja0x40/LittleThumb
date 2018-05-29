@@ -64,8 +64,8 @@ MkPath <- function(...) { MakePath(...) }
 MakePath <- function(..., ext = NULL, rootpath = NULL, relative = NULL) {
 
   path <- list(...)
-  path <- path[! sapply(path, is.null)]
-  path <- path[! sapply(path, is.na)]
+  path <- path[! vapply(path, is.null, logical(1))]
+  path <- path[! vapply(path, is.na, logical(1))]
   path <- path[! path == ""]
 
   cfg <- LittleThumb() # Global options

@@ -4,7 +4,7 @@
 \alias{AssignObj}
 \title{Reassign an R object from one environment to another}
 \usage{
-AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = T)
+AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = TRUE)
 }
 \arguments{
 \item{obj}{an R symbol.}
@@ -16,7 +16,7 @@ AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = T)
 \item{to}{destination environment.}
 
 \item{remove}{logical indicating if the original object should be removed at its current
-location (default = T, yes).}
+location (default = TRUE, yes).}
 }
 \description{
 Reassign an R object from one environment to another

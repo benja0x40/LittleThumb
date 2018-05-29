@@ -7,7 +7,7 @@
 #'   \link{SaveObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
-#' @example examples/Basics.R
+#' @example exec/examples/Basics.R
 #' @inheritParams SaveObj
 #'
 #' @param obj
@@ -16,7 +16,7 @@
 #'
 #' @param reload
 #' logical. When the R object to be loaded is already defined in the target
-#' environment LoadObj can avoid (reload = F) or force (reload = T) the
+#' environment LoadObj can avoid (reload = FALSE) or force (reload = TRUE) the
 #' reloading of this object.
 #'
 #' @param ...

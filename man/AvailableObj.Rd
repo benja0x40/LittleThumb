@@ -18,7 +18,7 @@ as first argument.}
 
 \item{relative}{logical value controlling whether the specified \code{path} should be
 absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = T, yes).}
+\link{LittleThumb} function (default = TRUE, yes).}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.

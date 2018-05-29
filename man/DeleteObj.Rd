@@ -19,14 +19,14 @@ as first argument.}
 
 \item{relative}{logical value controlling whether the specified \code{path} should be
 absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = T, yes).}
+\link{LittleThumb} function (default = TRUE, yes).}
 
 \item{envir}{\link{environment} where the R object should be located.}
 
 \item{remove}{logical.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = T, enabled).}
+functions (default = TRUE, enabled).}
 
 \item{...}{optional arguments passed to the \link{rm} function.}
 }

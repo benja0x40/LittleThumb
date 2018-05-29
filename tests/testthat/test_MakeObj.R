@@ -28,7 +28,7 @@ test_that("Basic", {
 
   rm(x, y)
   expect_message(
-    MakeObj(x, rebuild = T, cleanup = F, { x <- y <- 0 }),
+    MakeObj(x, rebuild = TRUE, cleanup = FALSE, { x <- y <- 0 }),
     regexp = "overwrite"
   )
   expect_true(exists("x"))
@@ -36,7 +36,7 @@ test_that("Basic", {
 
   rm(x, y)
   expect_message(
-    MakeObj(x, rebuild = T, cleanup = T, { x <- y <- 0 }),
+    MakeObj(x, rebuild = TRUE, cleanup = TRUE, { x <- y <- 0 }),
     regexp = "overwrite"
   )
   expect_true(exists("x"))

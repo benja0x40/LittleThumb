@@ -4,6 +4,8 @@
 #' @description
 #' List of global options for the LittleThumb package
 # -----------------------------------------------------------------------------.
+#' @import methods
+# -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
 DefaultOptions <- function() {
@@ -12,20 +14,20 @@ DefaultOptions <- function() {
     # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
     path      = "",            #
     extension = ".rds",        #
-    relative  = T,             # + MakePath
+    relative  = TRUE,             # + MakePath
 
     # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
     envir = NA,
 
     # Behavior
-    makedir  = T,              # SaveObj <= MakeObj
-    reload   = F,              # LoadObj <= MakeObj
-    rebuild  = F,              # MakeObj
-    cleanup  = T,              # MakeObj
-    remove   = T,              # DeleteObj
+    makedir  = TRUE,              # SaveObj <= MakeObj
+    reload   = FALSE,             # LoadObj <= MakeObj
+    rebuild  = FALSE,             # MakeObj
+    cleanup  = TRUE,              # MakeObj
+    remove   = TRUE,              # DeleteObj
 
     # Traceability
-    messages = T,              # SaveObj, LoadObj, DeleteObj, MakeObj
+    messages = TRUE,              # SaveObj, LoadObj, DeleteObj, MakeObj
     history  = "LittleThumb"   # TODO:
   )
 }
@@ -33,22 +35,15 @@ DefaultOptions <- function() {
 # =============================================================================.
 #' Global options for LittleThumb functions
 # -----------------------------------------------------------------------------.
-#' @seealso
-#'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{SaveObj},
-#'   \link{DeleteObj}
-# -----------------------------------------------------------------------------.
 #' @description
 #' This function sets the default value of arguments used by the main functions
-#' of the LittleThumb package, which allows to control the automated
-#' saving/loading operations performed by these functions at the global level.
+#' of the LittleThumb package.
 #'
 #' @param ...
-#' Any of the following arguments:
+#' Any of the following arguments.
 #'
 #' @param path
-#' default folder used to save R objects.
+#' folder location for saving R objects as RDS files.
 #'
 #' @param extension
 #' RDS file extension (default = ".rds").
@@ -71,26 +66,23 @@ DefaultOptions <- function() {
 #' @param reload
 #' logical value, if \code{TRUE} forces to load R objects from associated RDS
 #' files even when these objects already exist in the R environment
-#' (default = F, no).
+#' (default = FALSE, no).
 #'
 #' @param rebuild
 #' logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-#' even when the associated RDS files already exist (default = F, no).
+#' even when the associated RDS files already exist (default = FALSE, no).
 #'
 #' @param cleanup
 #' logical value controlling wheter \code{MakeObj} should remove additional
-#' objects created while evaluating the provided expression (default = T, yes).
+#' objects created while evaluating the provided expression (default = TRUE, yes).
 #'
 #' @param remove
 #' logical value controlling wheter \code{DeleteObj} should remove the R object
-#' after deleting the RDS file (default = T, yes).
+#' after deleting the RDS file (default = TRUE, yes).
 #'
 #' @param messages
 #' logical value enabling or disabling status messages from LittleThumb
-#' functions (default = T, enabled).
-#'
-#' @param history
-#' TODO: implementation & documentation
+#' functions (default = TRUE, enabled).
 # -----------------------------------------------------------------------------.
 #' @export
 LittleThumb <- function(...) {
@@ -99,7 +91,7 @@ LittleThumb <- function(...) {
 
   cfg <- list(...)
   cfg <- cfg[names(cfg) %in% opt]
-  cfg <- cfg[! sapply(cfg, is.null)]
+  cfg <- cfg[! vapply(cfg, is.null, logical(1))]
 
   if(length(cfg) > 0) {
     names(cfg) <- paste0("LittleThumb.", names(cfg))

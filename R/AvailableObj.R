@@ -7,7 +7,7 @@
 #'   \link{LoadObj},
 #'   \link{SaveObj}
 # -----------------------------------------------------------------------------.
-#' @example examples/Basics.R
+#' @example exec/examples/Basics.R
 #' @inheritParams LoadObj
 #'
 #' @return

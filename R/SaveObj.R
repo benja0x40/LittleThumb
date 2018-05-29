@@ -7,7 +7,7 @@
 #'   \link{LoadObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
-#' @example examples/Basics.R
+#' @example exec/examples/Basics.R
 #' @inheritParams LittleThumb
 #'
 #' @details
@@ -30,7 +30,7 @@
 #' @param relative
 #' logical value controlling whether the specified \code{path} should be
 #' absolute or relative to the global \code{path} option accessible via the
-#' \link{LittleThumb} function (default = T, yes).
+#' \link{LittleThumb} function (default = TRUE, yes).
 #'
 #' @param envir
 #' \link{environment} where the R object should be located.

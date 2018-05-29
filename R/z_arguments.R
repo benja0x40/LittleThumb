@@ -39,13 +39,13 @@ LogicalArg <- function(x, a) {
     r[] <- as.logical(a)
   } else if(is.character(a)) {
     names(r) <- a
-    r[] <- T
+    r[] <- TRUE
   } else {
     names(r) <- x
     r[] <- as.logical(a)
   }
 
-  r <- ifelse(is.null(r[[x]]), F, r[[x]])
+  r <- ifelse(is.null(r[[x]]), FALSE, r[[x]])
 
   r
 }
