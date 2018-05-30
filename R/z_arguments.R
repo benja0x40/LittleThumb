@@ -77,7 +77,7 @@ NamedArg <- function(x, a) {
 #' @export
 ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
 
-  env <- parent.frame()
+  env <- prf <- parent.frame()
   xpr <- deparse(substitute(xpr))
 
   n   <- length(a)
@@ -100,7 +100,7 @@ ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
   }
 
   a[1] <- call("list")
-  a <- as.environment(eval(a))
+  a <- as.environment(eval(a, envir = prf, ))
 
   if(is.na(e)) a[[explicit]] <- implicit
 

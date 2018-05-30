@@ -4,7 +4,7 @@
 \alias{PathToRDS}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-PathToRDS(name, path, extension, relative)
+PathToRDS(name, path = NULL, relative = NULL)
 }
 \description{
 Resolve path to the RDS file of an R object

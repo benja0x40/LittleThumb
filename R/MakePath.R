@@ -61,19 +61,19 @@ MkPath <- function(...) { MakePath(...) }
 #' \code{MakePath} returns a \code{character} vector.
 # -----------------------------------------------------------------------------.
 #' @export
-MakePath <- function(..., ext = NULL, rootpath = NULL, relative = NULL) {
+MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 
   path <- list(...)
   path <- path[! vapply(path, is.null, logical(1))]
   path <- path[! vapply(path, is.na, logical(1))]
   path <- path[! path == ""]
 
-  cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("ext", "..."), from = MakePath)
+  # cfg <- LittleThumb() # Global options
+  # DefaultArgs(cfg, ignore = c("ext", "..."), from = MakePath)
 
   if(length(path) < 1) stop("empty path")
 
-  if(relative & rootpath != "") path <- c(rootpath, path)
+  # if(relative & rootpath != "") path <- c(rootpath, path)
 
   path <- do.call(file.path, path)
   path <- gsub("[/]+", "/", path)
@@ -91,11 +91,17 @@ MakePath <- function(..., ext = NULL, rootpath = NULL, relative = NULL) {
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-PathToRDS <- function(name, path, extension, relative) {
+PathToRDS <- function(name, path = NULL, relative = NULL) {
 
-  path <- NamedArg(name, path)
+  cfg <- LittleThumb() # Global options
+  DefaultArgs(cfg, ignore = c("name", "path"), from = PathToRDS)
 
-  f <- c(path, name, list(ext = extension, relative = relative))
+  path     <- NamedArg(name, path)
+  relative <- NamedArg(name, relative)
+
+  if(relative & cfg$rootpath != "") path <- c(cfg$rootpath, path)
+
+  f <- c(path, name, list(ext = cfg$extension))
   f <- do.call(MakePath, f)
 
   f

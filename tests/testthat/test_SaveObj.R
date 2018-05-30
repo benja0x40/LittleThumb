@@ -6,9 +6,7 @@ test_that("Basic", {
 
   cfg <- LittleThumb() # Global options
 
-  # LittleThumb(envir = sys.frame(sys.nframe()))
-
-  f <- MakePath("x", ext = cfg$extension)
+  f <- PathToRDS("x")
   x <- 1:10
 
   expect_error(SaveObj(z))
@@ -27,7 +25,7 @@ test_that("Basic", {
   expect_message(SaveObj(x, relative = FALSE), regexp = "overwrite")
   expect_true(file.remove(f))
 
-  f <- MakePath("x", ext = cfg$extension)
+  f <- PathToRDS("x")
 
   expect_message(SaveObj(x, relative = TRUE), regexp = "create")
   expect_true(file.exists(f))

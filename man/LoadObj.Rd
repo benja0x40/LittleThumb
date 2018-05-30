@@ -4,8 +4,8 @@
 \alias{LoadObj}
 \title{Load an R object from its associated RDS file}
 \usage{
-LoadObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  reload = NULL, messages = NULL, ...)
+LoadObj(obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
+  parent = NULL, parent.name = NULL, reload = NULL, ...)
 }
 \arguments{
 \item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
@@ -21,14 +21,14 @@ as first argument.}
 absolute or relative to the global \code{path} option accessible via the
 \link{LittleThumb} function (default = TRUE, yes).}
 
-\item{envir}{\link{environment} where the R object should be located.}
+\item{messages}{logical value enabling or disabling status messages from LittleThumb
+functions (default = TRUE, enabled).}
+
+\item{parent}{\link{environment} where the R object should be located.}
 
 \item{reload}{logical. When the R object to be loaded is already defined in the target
 environment LoadObj can avoid (reload = FALSE) or force (reload = TRUE) the
 reloading of this object.}
-
-\item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = TRUE, enabled).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}
 }

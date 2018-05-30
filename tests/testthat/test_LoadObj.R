@@ -6,9 +6,7 @@ test_that("Basic", {
 
   cfg <- LittleThumb() # Global options
 
-  # LittleThumb(envir = sys.frame(sys.nframe()))
-
-  f <- MakePath("x", ext = cfg$extension)
+  f <- PathToRDS("x")
   x <- y <- 1:10
 
   expect_error(LoadObj(x))

@@ -11,13 +11,14 @@
 DefaultOptions <- function() {
   list(
     rootpath  = "",            # MakePath
+    cachepath = "_cache_",
     # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
-    path      = "",            #
+    path      = NA,            #
     extension = ".rds",        #
     relative  = TRUE,             # + MakePath
 
     # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
-    envir = NA,
+    parent = NA,
 
     # Behavior
     makedir  = TRUE,              # SaveObj <= MakeObj

@@ -4,8 +4,9 @@
 \alias{DeleteObj}
 \title{Delete the RDS file associated to an R object}
 \usage{
-DeleteObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  remove = NULL, messages = NULL, ...)
+DeleteObj(obj, path = NULL, name = NULL, relative = NULL,
+  messages = NULL, parent = NULL, parent.name = NULL, remove = NULL,
+  ...)
 }
 \arguments{
 \item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
@@ -21,12 +22,12 @@ as first argument.}
 absolute or relative to the global \code{path} option accessible via the
 \link{LittleThumb} function (default = TRUE, yes).}
 
-\item{envir}{\link{environment} where the R object should be located.}
-
-\item{remove}{logical.}
-
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
 functions (default = TRUE, enabled).}
+
+\item{parent}{\link{environment} where the R object should be located.}
+
+\item{remove}{logical.}
 
 \item{...}{optional arguments passed to the \link{rm} function.}
 }

@@ -26,30 +26,35 @@
 # -----------------------------------------------------------------------------.
 #' @export
 LoadObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  reload = NULL, messages = NULL, ...
+  obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
+  parent = NULL, parent.name = NULL, reload = NULL, ...
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
 
+  if(is.null(parent.name) & ! missing(parent)) {
+    parent.name <- deparse(substitute(parent))
+  }
+
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = LoadObj)
 
-  if(! is.environment(envir)) envir <- parent.frame()
+  if(! is.environment(parent)) parent <- parent.frame()
 
-  f <- PathToRDS(obj.name, path, cfg$extension, relative)
+  f <- PathToRDS(obj.name, path, relative)
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
   reload <- LogicalArg(obj.name, reload)
 
-  o.e <- exists(x = obj.name, where = envir)
+  o.e <- exists(x = obj.name, where = parent)
   if(o.e) msg <- "reload" else msg <- "load"
   if(o.e & ! reload) msg <- "bypass"
 
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   if(f.e & (reload | ! o.e)) {
-    res <- assign(obj.name, readRDS(f, ...), pos = envir)
+    r <- readRDS(f, ...)
+    AssignObj(r, name = obj.name, to = parent)
   }
 }

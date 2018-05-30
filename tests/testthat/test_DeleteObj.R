@@ -6,13 +6,11 @@ test_that("Basic", {
 
   cfg <- LittleThumb() # Global options
 
-  # LittleThumb(envir = sys.frame(sys.nframe()))
-
   expect_warning(DeleteObj(x))
   expect_message(suppressWarnings(DeleteObj(x)), regexp = "not found")
 
-  fx <- MakePath("x", ext = cfg$extension)
-  fy <- MakePath("y", ext = cfg$extension)
+  fx <- PathToRDS("x")
+  fy <- PathToRDS("y")
   x <- y <- 1:10
   saveRDS(x, fx)
   saveRDS(y, fy)

@@ -83,6 +83,26 @@ test_that("NamedArg", {
 test_that("ObjWithExpressionArgs", {
 
   x <- NULL
+  a <- quote(MakeObj())
+  expect_error(ObjWithExpressionArgs(a, x))
+
+  x <- NULL
+  a <- quote(MakeObj(u))
+  expect_error(ObjWithExpressionArgs(a, x))
+
+  x <- NULL
+  a <- quote(MakeObj({ u <- FALSE }))
+  expect_error(ObjWithExpressionArgs(a, x))
+
+  x <- NULL
+  a <- quote(MakeObj(u = v, { u <- FALSE }))
+  expect_error(ObjWithExpressionArgs(a, x))
+
+  x <- NULL
+  a <- quote(MakeObj(u, v = w))
+  expect_error(ObjWithExpressionArgs(a, x))
+
+  x <- NULL
   a <- quote(MakeObj(obj, { obj <- FALSE }))
   a <- as.list(ObjWithExpressionArgs(a, x))
   expect_true(is.language(x))

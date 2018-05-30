@@ -4,8 +4,8 @@
 \alias{SaveObj}
 \title{Save the RDS file associated to an R object}
 \usage{
-SaveObj(obj, path = NULL, name = NULL, relative = NULL, envir = NULL,
-  makedir = NULL, messages = NULL, ...)
+SaveObj(obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
+  parent = NULL, parent.name = NULL, makedir = NULL, ...)
 }
 \arguments{
 \item{obj}{an R object to be saved as RDS file by the \link{saveRDS} function.}
@@ -20,13 +20,13 @@ as first argument.}
 absolute or relative to the global \code{path} option accessible via the
 \link{LittleThumb} function (default = TRUE, yes).}
 
-\item{envir}{\link{environment} where the R object should be located.}
+\item{messages}{logical value enabling or disabling status messages from LittleThumb
+functions (default = TRUE, enabled).}
+
+\item{parent}{\link{environment} where the R object should be located.}
 
 \item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
 when necessary.}
-
-\item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = TRUE, enabled).}
 
 \item{...}{optional arguments passed to the \link{saveRDS} function.}
 }
@@ -37,7 +37,7 @@ Save the RDS file associated to an R object
 When unspecified, the value of the following arguments are determined by the
 corresponding global options (see \link{LittleThumb}):
 
-\code{relative}, \code{envir}, \code{makedir} and \code{messages}
+\code{relative}, \code{parent}, \code{makedir} and \code{messages}
 }
 \examples{
 # Create a simple R object named 'a'

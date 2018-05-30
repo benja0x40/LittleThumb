@@ -23,7 +23,7 @@ AvailableObj <- function(obj, path = NULL, name = NULL, relative = NULL) {
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = AvailableObj)
 
-  f <- PathToRDS(obj.name, path, cfg$extension, relative)
+  f <- PathToRDS(obj.name, path, relative)
 
   file.exists(f)
 

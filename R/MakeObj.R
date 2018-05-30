@@ -69,11 +69,13 @@ MakeObj <- function(...) {
 
   a <- as.list(a)
 
-  if(! is.environment(a$envir)) a$envir <- parent.frame()
+  if(! (is.list(a$parent) | is.environment(a$parent))) {
+    a$parent <- parent.frame()
+  }
 
   a$rebuild <- LogicalArg(a$name, a$rebuild)
 
-  protect <- c(a$name, objects(pos = a$envir))
+  protect <- c(a$name, objects(pos = a$parent))
 
   # Arguments forwarded to lower level functions
   AO <- names(a) %in% methods::formalArgs(AvailableObj)
@@ -85,15 +87,15 @@ MakeObj <- function(...) {
     do.call(LoadObj, a[LO])
   } else {
     # Make the R object by evaluating expression x
-    eval(x, envir = a$envir)
+    eval(x, envir = a$parent)
     # TODO: Make sure that obj has been generated
 
     # Save RDS file associated to the R object
-    do.call(SaveObj, c(list(obj = a$envir[[a$name]]), a[SO]))
+    do.call(SaveObj, c(list(obj = a$parent[[a$name]]), a[SO]))
   }
 
   if(a$cleanup) {
-    lst <- setdiff(objects(pos = a$envir), protect)
-    rm(list = lst, pos = a$envir)
+    lst <- setdiff(objects(pos = a$parent), protect)
+    rm(list = lst, pos = a$parent)
   }
 }
