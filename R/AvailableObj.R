@@ -2,13 +2,18 @@
 #' Check if the RDS file associated to an R object is available
 # -----------------------------------------------------------------------------.
 #' @seealso
-#'   \link{LittleThumb},
 #'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{SaveObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
 #' @example exec/examples/Basics.R
-#' @inheritParams LoadObj
+#' @inheritParams LittleThumb
+#' @inheritParams SaveObj
+#'
+#' @details
+#' When unspecified, the value of the following argument(s) are determined
+#' by the corresponding automation option(s) (see \link{LittleThumb}):
+#'
+#' \code{relative}
 #'
 #' @return
 #' \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.

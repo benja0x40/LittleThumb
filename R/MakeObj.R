@@ -6,15 +6,17 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-MkObj <- function(...) { stop("not implemented") }
+MkObj <- function(...) {
+  a <- match.call()
+  a[1] <- call("MakeObj")
+  eval(a, envir = parent.frame())
+}
 
 # =============================================================================.
 #' Automatically make & save or load an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
 #'   \link{LittleThumb},
-#'   \link{LoadObj},
-#'   \link{SaveObj},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
 #' @example exec/examples/Basics.R
@@ -49,12 +51,10 @@ MkObj <- function(...) { stop("not implemented") }
 #' \code{MakeObj}, as well as \code{path} and \code{env} to control the
 #' location of generated RDS files and R objects (see \link{LittleThumb}).
 #'
-#' @param obj
-#' an R symbol.
-#'
 #' @param ...
-#' at least an expression defining the R object, which can be preceded by
-#' optional arguments (see detail and example sections).
+#' at least an R symbol and an expression defining the R object.
+#' The expression can be preceded by optional arguments
+#' (see detail and example sections).
 # -----------------------------------------------------------------------------.
 #' @keywords visible
 #' @export

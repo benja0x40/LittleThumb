@@ -2,27 +2,28 @@
 % Please edit documentation in R/AssignObj.R
 \name{AssignObj}
 \alias{AssignObj}
-\title{Reassign an R object from one environment to another}
+\title{Reassign an R object from its environment to another one}
 \usage{
 AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = TRUE)
 }
 \arguments{
-\item{obj}{an R symbol.}
+\item{obj}{an R object.}
 
-\item{name}{optional new name of the R object whithin its destination environment.}
+\item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
+When omitted this name is automatically provided by the symbol being passed
+as first argument.}
 
-\item{from}{source environment where the object is currently located.}
+\item{from}{source environment, where the object is currently located.}
 
 \item{to}{destination environment.}
 
-\item{remove}{logical indicating if the original object should be removed at its current
-location (default = TRUE, yes).}
+\item{remove}{logical value controlling wheter the object should removed from its source
+environment (default = \code{TRUE}, yes).}
 }
 \description{
-Reassign an R object from one environment to another
+Reassign an R object from its environment to another one
 }
 \seealso{
 \link{MakeObj},
-  \link{LoadObj},
-  \link{DeleteObj}
+  \link{LittleThumb}
 }

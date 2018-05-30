@@ -7,10 +7,9 @@
 MakeObj(...)
 }
 \arguments{
-\item{...}{at least an expression defining the R object, which can be preceded by
-optional arguments (see detail and example sections).}
-
-\item{obj}{an R symbol.}
+\item{...}{at least an R symbol and an expression defining the R object.
+The expression can be preceded by optional arguments
+(see detail and example sections).}
 }
 \description{
 \code{MakeObj} automatically generates an R object using the provided
@@ -86,8 +85,6 @@ DeleteObj(a)
 }
 \seealso{
 \link{LittleThumb},
-  \link{LoadObj},
-  \link{SaveObj},
   \link{DeleteObj}
 }
 \keyword{visible}

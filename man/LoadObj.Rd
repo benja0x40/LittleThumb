@@ -4,36 +4,45 @@
 \alias{LoadObj}
 \title{Load an R object from its associated RDS file}
 \usage{
-LoadObj(obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
-  parent = NULL, parent.name = NULL, reload = NULL, ...)
+LoadObj(obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
+  messages = NULL, reload = NULL, ...)
 }
 \arguments{
-\item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
-or saved using \link{SaveObj}.}
+\item{obj}{an R object.}
 
-\item{path}{directory where the RDS file should be located.}
+\item{path}{folder location for RDS files. This can be interpreted either as
+a sub-directory of the \code{rootpath} location, or as an independent
+location (see \code{relative}). By default \code{path} is unspecified.}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
 
-\item{relative}{logical value controlling whether the specified \code{path} should be
-absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = TRUE, yes).}
+\item{relative}{logical value controlling if the \code{path} option is interpreted as a
+relative location, meaning as a sub-directory of the \code{rootpath}
+location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{parent}{\link{environment} where the R object should be located.
+By default \code{parent} is the \link{parent.frame} of the function
+being called.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = TRUE, enabled).}
+functions (default = \code{TRUE}, enabled).}
 
-\item{parent}{\link{environment} where the R object should be located.}
-
-\item{reload}{logical. When the R object to be loaded is already defined in the target
-environment LoadObj can avoid (reload = FALSE) or force (reload = TRUE) the
-reloading of this object.}
+\item{reload}{logical value forcing to load R objects from associated RDS files
+even when these objects already exist in the R environment
+(default = \code{FALSE}, no).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}
 }
 \description{
 Load an R object from its associated RDS file
+}
+\details{
+When unspecified, the value of the following argument(s) are determined
+by the corresponding automation option(s) (see \link{LittleThumb}):
+
+\code{relative}, \code{parent}, \code{reload} and \code{messages}
 }
 \examples{
 # Create a simple R object named 'a'
@@ -78,8 +87,6 @@ MakeObj(a, { a <- 1:10 })
 DeleteObj(a)
 }
 \seealso{
-\link{LittleThumb},
-  \link{MakeObj},
-  \link{SaveObj},
-  \link{DeleteObj}
+\link{MakeObj},
+  \link{LittleThumb}
 }

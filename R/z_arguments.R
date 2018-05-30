@@ -8,18 +8,51 @@
 #' @export
 DefaultArgs <- function(default, ignore = NULL, from = NULL, to = NULL) {
 
+  lst <- names(default)
+
+  if(is.null(from)) from <- parent.frame()
   if(is.null(to)) to <- parent.frame()
 
-  lst <- names(default)
-  if(is.function(from)) lst <- methods::formalArgs(from)
+  if(is.function(from)) {
+    lst <- methods::formalArgs(from)
+    from <- parent.frame()
+  }
 
   lst <- setdiff(lst, ignore)
 
   for(a in lst) {
+    if(! (is.null(from[[a]]) | identical(from, to))) {
+      to[[a]] <- from[[a]]
+    }
     if(is.null(to[[a]]) & ! is.null(default[[a]])) {
       to[[a]] <- default[[a]]
     }
   }
+}
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
+#' Standardize the value of clonal arguments
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+ClonalArg <- function(u, a, d) { # user value, arg names, default value
+
+  n <- length(a)
+  r <- rep(list(d), n)
+  names(r) <- a
+
+  if(is.null(names(u))) {
+    d[] <- rep(u, length.out = length(d))
+    r[] <- rep(list(d), n)
+  } else {
+    u <- lapply(u, rep, length.out = length(d))
+    for(k in names(u)) r[[k]][] <- u[[k]]
+  }
+
+  r
 }
 
 # =============================================================================.
@@ -100,7 +133,7 @@ ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
   }
 
   a[1] <- call("list")
-  a <- as.environment(eval(a, envir = prf, ))
+  a <- as.environment(eval(a, envir = prf))
 
   if(is.na(e)) a[[explicit]] <- implicit
 

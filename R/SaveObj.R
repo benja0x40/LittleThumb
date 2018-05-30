@@ -2,38 +2,25 @@
 #' Save the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
-#'   \link{LittleThumb},
 #'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{DeleteObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
 #' @example exec/examples/Basics.R
 #' @inheritParams LittleThumb
 #'
 #' @details
-#' When unspecified, the value of the following arguments are determined by the
-#' corresponding global options (see \link{LittleThumb}):
+#' When unspecified, the value of the following argument(s) are determined
+#' by the corresponding automation option(s) (see \link{LittleThumb}):
 #'
 #' \code{relative}, \code{parent}, \code{makedir} and \code{messages}
 #'
 #' @param obj
-#' an R object to be saved as RDS file by the \link{saveRDS} function.
-#'
-#' @param path
-#' directory where the RDS file should be located.
+#' an R object.
 #'
 #' @param name
 #' \strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 #' When omitted this name is automatically provided by the symbol being passed
 #' as first argument.
-#'
-#' @param relative
-#' logical value controlling whether the specified \code{path} should be
-#' absolute or relative to the global \code{path} option accessible via the
-#' \link{LittleThumb} function (default = TRUE, yes).
-#'
-#' @param parent
-#' \link{environment} where the R object should be located.
 #'
 #' @param ...
 #' optional arguments passed to the \link{saveRDS} function.
@@ -42,16 +29,12 @@
 # -----------------------------------------------------------------------------.
 #' @export
 SaveObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
-  parent = NULL, parent.name = NULL, makedir = NULL, ...
+  obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
+  messages = NULL, makedir = NULL, ...
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
-
-  if(is.null(parent.name) & ! missing(parent)) {
-    parent.name <- deparse(substitute(parent))
-  }
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = SaveObj)

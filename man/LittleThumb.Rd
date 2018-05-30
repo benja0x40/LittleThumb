@@ -2,44 +2,49 @@
 % Please edit documentation in R/LittleThumb.R
 \name{LittleThumb}
 \alias{LittleThumb}
-\title{Global options for LittleThumb functions}
+\title{Automation options}
 \usage{
 LittleThumb(...)
 }
 \arguments{
 \item{...}{Any of the following arguments.}
 
-\item{path}{folder location for saving R objects as RDS files.}
+\item{rootpath}{root location for RDS files. By default \code{rootpath} is the current
+working directory (see \link{getwd}).}
 
-\item{extension}{RDS file extension (default = ".rds").}
+\item{path}{folder location for RDS files. This can be interpreted either as
+a sub-directory of the \code{rootpath} location, or as an independent
+location (see \code{relative}). By default \code{path} is unspecified.}
 
-\item{relative}{logical value. When \code{TRUE} the default folder defines the root path for
-all read/write operations automated by LittleThumb, meaning that any path
-specified when calling \code{MakeObj}, \code{SaveObj} or \code{LoadObj}
-will represent a sub path of the default folder.}
+\item{extension}{\strong{DO NOT MODIFY}: RDS file extension (default = ".rds").}
 
-\item{envir}{environment containing the R object.
-With the default value (\code{NA}), this environment is the
-\link{parent.frame} of called LittleThumb functions.}
+\item{relative}{logical value controlling if the \code{path} option is interpreted as a
+relative location, meaning as a sub-directory of the \code{rootpath}
+location (default = \code{TRUE}, yes), or as an independent one.}
 
-\item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
-when necessary.}
+\item{parent}{\link{environment} where the R object should be located.
+By default \code{parent} is the \link{parent.frame} of the function
+being called.}
 
-\item{reload}{logical value, if \code{TRUE} forces to load R objects from associated RDS
-files even when these objects already exist in the R environment
-(default = FALSE, no).}
+\item{makedir}{logical value controlling if non-existing folders should be created
+automatically when necessary (default = \code{TRUE}, yes).}
 
-\item{rebuild}{logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-even when the associated RDS files already exist (default = FALSE, no).}
+\item{reload}{logical value forcing to load R objects from associated RDS files
+even when these objects already exist in the R environment
+(default = \code{FALSE}, no).}
+
+\item{rebuild}{logical value forcing \code{MakeObj} to regenerate R objects even when
+the associated RDS files already exist (default = \code{FALSE}, no).}
 
 \item{cleanup}{logical value controlling wheter \code{MakeObj} should remove additional
-objects created while evaluating the provided expression (default = TRUE, yes).}
+objects encapsulated in the provided expression after its evaluation
+(default = \code{TRUE}, yes).}
 
 \item{remove}{logical value controlling wheter \code{DeleteObj} should remove the R object
-after deleting the RDS file (default = TRUE, yes).}
+after deleting the RDS file (default = \code{TRUE}, yes).}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = TRUE, enabled).}
+functions (default = \code{TRUE}, enabled).}
 }
 \description{
 This function sets the default value of arguments used by the main functions

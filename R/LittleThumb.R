@@ -11,11 +11,11 @@
 DefaultOptions <- function() {
   list(
     rootpath  = "",            # MakePath
-    cachepath = "_cache_",
+
     # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
     path      = NA,            #
     extension = ".rds",        #
-    relative  = TRUE,             # + MakePath
+    relative  = TRUE,          # + MakePath
 
     # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
     parent = NA,
@@ -29,12 +29,12 @@ DefaultOptions <- function() {
 
     # Traceability
     messages = TRUE,              # SaveObj, LoadObj, DeleteObj, MakeObj
-    history  = "LittleThumb"   # TODO:
+    history  = "LittleThumb"      # TODO:
   )
 }
 
 # =============================================================================.
-#' Global options for LittleThumb functions
+#' Automation options
 # -----------------------------------------------------------------------------.
 #' @description
 #' This function sets the default value of arguments used by the main functions
@@ -43,47 +43,53 @@ DefaultOptions <- function() {
 #' @param ...
 #' Any of the following arguments.
 #'
+#' @param rootpath
+#' root location for RDS files. By default \code{rootpath} is the current
+#' working directory (see \link{getwd}).
+#'
 #' @param path
-#' folder location for saving R objects as RDS files.
+#' folder location for RDS files. This can be interpreted either as
+#' a sub-directory of the \code{rootpath} location, or as an independent
+#' location (see \code{relative}). By default \code{path} is unspecified.
 #'
 #' @param extension
-#' RDS file extension (default = ".rds").
+#' \strong{DO NOT MODIFY}: RDS file extension (default = ".rds").
 #'
 #' @param relative
-#' logical value. When \code{TRUE} the default folder defines the root path for
-#' all read/write operations automated by LittleThumb, meaning that any path
-#' specified when calling \code{MakeObj}, \code{SaveObj} or \code{LoadObj}
-#' will represent a sub path of the default folder.
+#' logical value controlling if the \code{path} option is interpreted as a
+#' relative location, meaning as a sub-directory of the \code{rootpath}
+#' location (default = \code{TRUE}, yes), or as an independent one.
 #'
-#' @param envir
-#' environment containing the R object.
-#' With the default value (\code{NA}), this environment is the
-#' \link{parent.frame} of called LittleThumb functions.
+#' @param parent
+#' \link{environment} where the R object should be located.
+#' By default \code{parent} is the \link{parent.frame} of the function
+#' being called.
 #'
 #' @param makedir
-#' logical value, if \code{TRUE} non-existing folders are created automatically
-#' when necessary.
+#' logical value controlling if non-existing folders should be created
+#' automatically when necessary (default = \code{TRUE}, yes).
 #'
 #' @param reload
-#' logical value, if \code{TRUE} forces to load R objects from associated RDS
-#' files even when these objects already exist in the R environment
-#' (default = FALSE, no).
+#' logical value forcing to load R objects from associated RDS files
+#' even when these objects already exist in the R environment
+#' (default = \code{FALSE}, no).
 #'
 #' @param rebuild
-#' logical value, if \code{TRUE} forces \code{MakeObj} to regenerate R objects
-#' even when the associated RDS files already exist (default = FALSE, no).
+#' logical value forcing \code{MakeObj} to regenerate R objects even when
+#' the associated RDS files already exist (default = \code{FALSE}, no).
 #'
 #' @param cleanup
 #' logical value controlling wheter \code{MakeObj} should remove additional
-#' objects created while evaluating the provided expression (default = TRUE, yes).
+#' objects encapsulated in the provided expression after its evaluation
+#' (default = \code{TRUE}, yes).
 #'
 #' @param remove
 #' logical value controlling wheter \code{DeleteObj} should remove the R object
-#' after deleting the RDS file (default = TRUE, yes).
+#' after deleting the RDS file (default = \code{TRUE}, yes).
 #'
 #' @param messages
 #' logical value enabling or disabling status messages from LittleThumb
-#' functions (default = TRUE, enabled).
+#' functions (default = \code{TRUE}, enabled).
 # -----------------------------------------------------------------------------.
 #' @export
 LittleThumb <- function(...) {

@@ -12,16 +12,16 @@ test_that("Basic", {
   expect_false(exists("x"))
   expect_false(file.exists(f))
 
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "save")
+  expect_message(MkObj(x, { x <- 1:10 }), regexp = "save")
 
   expect_true(file.exists(f))
   expect_true(exists("x"))
   expect_identical(x, y)
 
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "bypass")
+  expect_message(MkObj(x, { x <- 1:10 }), regexp = "bypass")
 
   rm(x)
-  expect_message(MakeObj(x, { x <- 1:10 }), regexp = "load")
+  expect_message(MkObj(x, { x <- 1:10 }), regexp = "load")
   expect_identical(x, y)
 
   rm(x, y)

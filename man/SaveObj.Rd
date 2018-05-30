@@ -4,29 +4,33 @@
 \alias{SaveObj}
 \title{Save the RDS file associated to an R object}
 \usage{
-SaveObj(obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
-  parent = NULL, parent.name = NULL, makedir = NULL, ...)
+SaveObj(obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
+  messages = NULL, makedir = NULL, ...)
 }
 \arguments{
-\item{obj}{an R object to be saved as RDS file by the \link{saveRDS} function.}
+\item{obj}{an R object.}
 
-\item{path}{directory where the RDS file should be located.}
+\item{path}{folder location for RDS files. This can be interpreted either as
+a sub-directory of the \code{rootpath} location, or as an independent
+location (see \code{relative}). By default \code{path} is unspecified.}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
 
-\item{relative}{logical value controlling whether the specified \code{path} should be
-absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = TRUE, yes).}
+\item{relative}{logical value controlling if the \code{path} option is interpreted as a
+relative location, meaning as a sub-directory of the \code{rootpath}
+location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{parent}{\link{environment} where the R object should be located.
+By default \code{parent} is the \link{parent.frame} of the function
+being called.}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
-functions (default = TRUE, enabled).}
+functions (default = \code{TRUE}, enabled).}
 
-\item{parent}{\link{environment} where the R object should be located.}
-
-\item{makedir}{logical value, if \code{TRUE} non-existing folders are created automatically
-when necessary.}
+\item{makedir}{logical value controlling if non-existing folders should be created
+automatically when necessary (default = \code{TRUE}, yes).}
 
 \item{...}{optional arguments passed to the \link{saveRDS} function.}
 }
@@ -34,8 +38,8 @@ when necessary.}
 Save the RDS file associated to an R object
 }
 \details{
-When unspecified, the value of the following arguments are determined by the
-corresponding global options (see \link{LittleThumb}):
+When unspecified, the value of the following argument(s) are determined
+by the corresponding automation option(s) (see \link{LittleThumb}):
 
 \code{relative}, \code{parent}, \code{makedir} and \code{messages}
 }
@@ -82,8 +86,6 @@ MakeObj(a, { a <- 1:10 })
 DeleteObj(a)
 }
 \seealso{
-\link{LittleThumb},
-  \link{MakeObj},
-  \link{LoadObj},
-  \link{DeleteObj}
+\link{MakeObj},
+  \link{LittleThumb}
 }

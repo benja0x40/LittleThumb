@@ -10,8 +10,6 @@ MakePath(..., ext = NULL)
 \item{...}{list of character vectors to be assembled into file paths.}
 
 \item{ext}{file name extension(s) (default = "", none).}
-
-\item{relative}{logical value (see \link{LittleThumb}).}
 }
 \value{
 \code{MakePath} returns a \code{character} vector.
@@ -20,13 +18,5 @@ MakePath(..., ext = NULL)
 \code{MakePath} (short alias \link{MkPath}) concatenates its arguments to
 form corresponding filesystem paths, similarly to the base function
 \link{file.path}.
-The generated paths depend on LittleThumb's global options \code{path}
-and \code{relative}.
 }
-\seealso{
-\link{LittleThumb},
-  \link{MakeObj},
-  \link{LoadObj},
-  \link{SaveObj},
-  \link{DeleteObj}
-}
+\keyword{internal}

@@ -1,26 +1,22 @@
 # =============================================================================.
-#' Reassign an R object from one environment to another
+#' Reassign an R object from its environment to another one
 # -----------------------------------------------------------------------------.
 #' @seealso
 #'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{DeleteObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
-#' @param obj
-#' an R symbol.
-#'
-#' @param name
-#' optional new name of the R object whithin its destination environment.
+#' @inheritParams LittleThumb
+#' @inheritParams SaveObj
 #'
 #' @param from
-#' source environment where the object is currently located.
+#' source environment, where the object is currently located.
 #'
 #' @param to
 #' destination environment.
 #'
 #' @param remove
-#' logical indicating if the original object should be removed at its current
-#' location (default = TRUE, yes).
+#' logical value controlling wheter the object should removed from its source
+#' environment (default = \code{TRUE}, yes).
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.

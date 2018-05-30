@@ -6,7 +6,29 @@
 \usage{
 PathToRDS(name, path = NULL, relative = NULL)
 }
+\arguments{
+\item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
+When omitted this name is automatically provided by the symbol being passed
+as first argument.}
+
+\item{path}{folder location for RDS files. This can be interpreted either as
+a sub-directory of the \code{rootpath} location, or as an independent
+location (see \code{relative}). By default \code{path} is unspecified.}
+
+\item{relative}{logical value controlling if the \code{path} option is interpreted as a
+relative location, meaning as a sub-directory of the \code{rootpath}
+location (default = \code{TRUE}, yes), or as an independent one.}
+}
+\value{
+RDS file path.
+}
 \description{
 Resolve path to the RDS file of an R object
+}
+\details{
+When unspecified, the value of the following argument(s) are determined by the
+corresponding automation option(s) (see \link{LittleThumb}):
+
+\code{relative}
 }
 \keyword{internal}

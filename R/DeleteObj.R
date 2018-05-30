@@ -2,32 +2,30 @@
 #' Delete the RDS file associated to an R object
 # -----------------------------------------------------------------------------.
 #' @seealso
-#'   \link{LittleThumb},
 #'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{SaveObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
 #' @example exec/examples/Basics.R
-#' @inheritParams LoadObj
+#' @inheritParams LittleThumb
+#' @inheritParams SaveObj
 #'
-#' @param remove
-#' logical.
+#' @details
+#' When unspecified, the value of the following argument(s) are determined
+#' by the corresponding automation option(s) (see \link{LittleThumb}):
+#'
+#' \code{relative}, \code{parent}, \code{remove} and \code{messages}
 #'
 #' @param ...
 #' optional arguments passed to the \link{rm} function.
 # -----------------------------------------------------------------------------.
 #' @export
 DeleteObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
-  parent = NULL, parent.name = NULL, remove = NULL, ...
+  obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
+  messages = NULL, remove = NULL, ...
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
-
-  if(is.null(parent.name) & ! missing(parent)) {
-    parent.name <- deparse(substitute(parent))
-  }
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = DeleteObj)
@@ -45,5 +43,4 @@ DeleteObj <- function(
     if(messages) LittleThumb::StatusMessage("remove", obj.name)
     r <- rm(list = obj.name, pos = parent, ...)
   }
-
 }

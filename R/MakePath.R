@@ -34,19 +34,10 @@ MkPath <- function(...) { MakePath(...) }
 # =============================================================================.
 #' Construct a file path
 # -----------------------------------------------------------------------------.
-#' @seealso
-#'   \link{LittleThumb},
-#'   \link{MakeObj},
-#'   \link{LoadObj},
-#'   \link{SaveObj},
-#'   \link{DeleteObj}
-# -----------------------------------------------------------------------------.
 #' @description
 #' \code{MakePath} (short alias \link{MkPath}) concatenates its arguments to
 #' form corresponding filesystem paths, similarly to the base function
 #' \link{file.path}.
-#' The generated paths depend on LittleThumb's global options \code{path}
-#' and \code{relative}.
 #'
 #' @param ...
 #' list of character vectors to be assembled into file paths.
@@ -54,12 +45,10 @@ MkPath <- function(...) { MakePath(...) }
 #' @param ext
 #' file name extension(s) (default = "", none).
 #'
-#' @param relative
-#' logical value (see \link{LittleThumb}).
-#'
 #' @return
 #' \code{MakePath} returns a \code{character} vector.
 # -----------------------------------------------------------------------------.
+#' @keywords internal
 #' @export
 MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 
@@ -68,12 +57,7 @@ MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
   path <- path[! vapply(path, is.na, logical(1))]
   path <- path[! path == ""]
 
-  # cfg <- LittleThumb() # Global options
-  # DefaultArgs(cfg, ignore = c("ext", "..."), from = MakePath)
-
   if(length(path) < 1) stop("empty path")
-
-  # if(relative & rootpath != "") path <- c(rootpath, path)
 
   path <- do.call(file.path, path)
   path <- gsub("[/]+", "/", path)
@@ -88,6 +72,18 @@ MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 # -----------------------------------------------------------------------------.
 #' @description
 #' Resolve path to the RDS file of an R object
+# -----------------------------------------------------------------------------.
+#' @inheritParams LittleThumb
+#' @inheritParams SaveObj
+#'
+#' @details
+#' When unspecified, the value of the following argument(s) are determined by the
+#' corresponding automation option(s) (see \link{LittleThumb}):
+#'
+#' \code{relative}
+#'
+#' @return
+#' RDS file path.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
@@ -106,4 +102,3 @@ PathToRDS <- function(name, path = NULL, relative = NULL) {
 
   f
 }
-

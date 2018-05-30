@@ -38,6 +38,87 @@ test_that("DefaultArgs", {
 
 })
 
+# + ClonalArg ------------------------------------------------------------------
+test_that("ClonalArg", {
+
+  a <- c("x", "y")
+
+  d <- "i"
+  v <- "j"
+  r <- ClonalArg(u = v, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  d <- LETTERS[1:5]
+  v <- LETTERS[5:1]
+  r <- ClonalArg(u = v, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  d <- matrix("I", 2, 2)
+  v <- matrix("J", 2, 2)
+  r <- ClonalArg(u = v, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  d <- 1
+  v <- 0
+  r <- ClonalArg(u = 0, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  r <- ClonalArg(u = c(x = 0), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = c(y = 0), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+  r <- ClonalArg(u = c(x = v, y = v), a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  r <- ClonalArg(u = list(x = v), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = list(y = v), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+  r <- ClonalArg(u = list(x = v, y = v), a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  d <- 1:2
+  v <- c(0, 0)
+
+  r <- ClonalArg(u = 0, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  r <- ClonalArg(u = c(x = 0), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = c(y = 0), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+  r <- ClonalArg(u = list(x = v), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = list(y = v), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+  d <- matrix(1, 2, 2)
+  v <- matrix(0, 2, 2)
+
+  r <- ClonalArg(u = 0, a, d)
+  expect_identical(r, list(x = v, y = v))
+
+  r <- ClonalArg(u = c(x = 0), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = c(y = 0), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+  r <- ClonalArg(u = list(x = v), a, d)
+  expect_identical(r, list(x = v, y = d))
+
+  r <- ClonalArg(u = list(y = v), a, d)
+  expect_identical(r, list(x = d, y = v))
+
+})
+
 # + LogicalArg -----------------------------------------------------------------
 test_that("LogicalArg", {
 

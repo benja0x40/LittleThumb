@@ -2,6 +2,7 @@
 
 export(AssignObj)
 export(AvailableObj)
+export(ClonalArg)
 export(DefaultArgs)
 export(DefaultOptions)
 export(DeleteObj)

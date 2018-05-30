@@ -7,24 +7,31 @@
 AvailableObj(obj, path = NULL, name = NULL, relative = NULL)
 }
 \arguments{
-\item{obj}{symbol corresponding to an R object previously made by \link{MakeObj}
-or saved using \link{SaveObj}.}
+\item{obj}{an R object.}
 
-\item{path}{directory where the RDS file should be located.}
+\item{path}{folder location for RDS files. This can be interpreted either as
+a sub-directory of the \code{rootpath} location, or as an independent
+location (see \code{relative}). By default \code{path} is unspecified.}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument.}
 
-\item{relative}{logical value controlling whether the specified \code{path} should be
-absolute or relative to the global \code{path} option accessible via the
-\link{LittleThumb} function (default = TRUE, yes).}
+\item{relative}{logical value controlling if the \code{path} option is interpreted as a
+relative location, meaning as a sub-directory of the \code{rootpath}
+location (default = \code{TRUE}, yes), or as an independent one.}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
 }
 \description{
 Check if the RDS file associated to an R object is available
+}
+\details{
+When unspecified, the value of the following argument(s) are determined
+by the corresponding automation option(s) (see \link{LittleThumb}):
+
+\code{relative}
 }
 \examples{
 # Create a simple R object named 'a'
@@ -69,9 +76,7 @@ MakeObj(a, { a <- 1:10 })
 DeleteObj(a)
 }
 \seealso{
-\link{LittleThumb},
-  \link{MakeObj},
-  \link{LoadObj},
-  \link{SaveObj}
+\link{MakeObj},
+  \link{LittleThumb}
 }
 \keyword{internal}

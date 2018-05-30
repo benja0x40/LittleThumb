@@ -2,22 +2,18 @@
 #' Load an R object from its associated RDS file
 # -----------------------------------------------------------------------------.
 #' @seealso
-#'   \link{LittleThumb},
 #'   \link{MakeObj},
-#'   \link{SaveObj},
-#'   \link{DeleteObj}
+#'   \link{LittleThumb}
 # -----------------------------------------------------------------------------.
 #' @example exec/examples/Basics.R
+#' @inheritParams LittleThumb
 #' @inheritParams SaveObj
 #'
-#' @param obj
-#' symbol corresponding to an R object previously made by \link{MakeObj}
-#' or saved using \link{SaveObj}.
+#' @details
+#' When unspecified, the value of the following argument(s) are determined
+#' by the corresponding automation option(s) (see \link{LittleThumb}):
 #'
-#' @param reload
-#' logical. When the R object to be loaded is already defined in the target
-#' environment LoadObj can avoid (reload = FALSE) or force (reload = TRUE) the
-#' reloading of this object.
+#' \code{relative}, \code{parent}, \code{reload} and \code{messages}
 #'
 #' @param ...
 #' optional arguments passed to the \link{readRDS} function.
@@ -26,16 +22,12 @@
 # -----------------------------------------------------------------------------.
 #' @export
 LoadObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, messages = NULL,
-  parent = NULL, parent.name = NULL, reload = NULL, ...
+  obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
+  messages = NULL, reload = NULL, ...
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
-
-  if(is.null(parent.name) & ! missing(parent)) {
-    parent.name <- deparse(substitute(parent))
-  }
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = LoadObj)
