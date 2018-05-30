@@ -4,18 +4,7 @@
 LittleThumb (alpha)
 ================================================================================
 
-LittleThumb is an R package providing a lightweight persistence mechanism for
-R objects in order to simplify the storage and organization of results produced
-by standalone data analysis scripts or notebooks.
-
-### <a name="install"></a>Installation
-
-Run the `R` code below to install `LittleThumb`.
-
-```R
-library("devtools") # (devtools can be installed from CRAN repositories)
-install_github("benja0x40/LittleThumb")
-```
+This R package is under development...
 
 ### Author
 
