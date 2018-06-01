@@ -7,6 +7,6 @@
 DefaultArgs(default, ignore = NULL, from = NULL, to = NULL)
 }
 \description{
-Provide default values to unspecified arguments
+Provide default values to unspecified arguments.
 }
 \keyword{internal}

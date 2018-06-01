@@ -1,8 +1,10 @@
+# COMMON #######################################################################
+
 # =============================================================================.
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
-#' Provide default values to unspecified arguments
+#' Provide default values to unspecified arguments.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
@@ -34,7 +36,28 @@ DefaultArgs <- function(default, ignore = NULL, from = NULL, to = NULL) {
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
-#' Standardize the value of clonal arguments
+#' Standardize the length of vector arguments.
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+VectorArgs <- function(lst, from = NULL, size = NULL) {
+
+  if(is.null(from)) from <- parent.frame()
+  if(is.null(size)) {
+    size <- 0
+    for(x in lst) size <- max(size, length(from[[x]]))
+  }
+
+  for(x in lst) from[[x]] <- rep(from[[x]], length.out = size)
+
+  if(! is.environment(from)) from
+}
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
+#' Standardize the value of clonal arguments.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
@@ -55,11 +78,13 @@ ClonalArg <- function(u, a, d) { # user value, arg names, default value
   r
 }
 
+# LittleThumb ##################################################################
+
 # =============================================================================.
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
-#' Standardize the value of a logical argument
+#' Standardize the value of a logical argument.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
@@ -87,7 +112,7 @@ LogicalArg <- function(x, a) {
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
-#' Resolve the value of a character argument
+#' Resolve the value of a character argument.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
@@ -104,7 +129,7 @@ NamedArg <- function(x, a) {
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
-#' List of arguments involving a delayed expression evaluation
+#' List of arguments involving a delayed expression evaluation.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export

@@ -7,6 +7,6 @@
 NamedArg(x, a)
 }
 \description{
-Resolve the value of a character argument
+Resolve the value of a character argument.
 }
 \keyword{internal}

@@ -7,6 +7,6 @@
 LogicalArg(x, a)
 }
 \description{
-Standardize the value of a logical argument
+Standardize the value of a logical argument.
 }
 \keyword{internal}
