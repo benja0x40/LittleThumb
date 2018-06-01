@@ -7,6 +7,6 @@
 MkObj(...)
 }
 \description{
-\code{MkObj} is a short alias of function \link{MakeObj}.
+\code{MkObj} can be used as a short alias of function \link{MakeObj}.
 }
 \keyword{internal}

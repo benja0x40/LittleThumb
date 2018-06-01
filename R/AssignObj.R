@@ -1,5 +1,5 @@
 # =============================================================================.
-#' Reassign an R object from its environment to another one
+#' Reassign an R object from its parent environment to another one
 # -----------------------------------------------------------------------------.
 #' @seealso
 #'   \link{MakeObj},
@@ -15,7 +15,7 @@
 #' destination environment.
 #'
 #' @param remove
-#' logical value controlling wheter the object should removed from its source
+#' logical value controlling wheter the object should removed from the source
 #' environment (default = \code{TRUE}, yes).
 #'
 #' @return NULL

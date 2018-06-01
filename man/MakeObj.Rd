@@ -7,39 +7,39 @@
 MakeObj(...)
 }
 \arguments{
-\item{...}{at least an R symbol and an expression defining the R object.
-The expression can be preceded by optional arguments
-(see detail and example sections).}
+\item{...}{at least an R symbol and an expression defining the corresponding R object.
+The symbol must be provided in first position and the expression in last
+position, both as unnamed arguments.}
 }
 \description{
 \code{MakeObj} automatically generates an R object using the provided
 expression and saves the associated RDS file, or skips these two operations
 and loads the previously saved RDS file when it is available, or even avoids
-to do anything when the R object is already defined in the R environment.
+to do anything when the object is already defined in its parent environment.
 
 The automation performed by \code{MakeObj} can be controlled by optional
 arguments and their corresponding global options which are accessible
-via the \link{LittleThumb} function (see detail and example sections).
-
-\link{MkObj} is a short alias of function \code{MakeObj}.
+via the \link{LittleThumb} function (see the details section).
 }
 \details{
 The \code{MakeObj} function requires at least two arguments: an R symbol
-in the first position (i.e. \code{obj} argument) and an R expression
-in the last position.
-More precisely, the last argument of \code{MakeObj} must be the expression
-generating the R object to be automatically saved or loaded and associated
-to the symbol \code{obj}.
+in the first position and an R expression in the last position,
+both being provided as unnamed arguments.
 
+When evaluated, the provided expression must define the value
+of the R object to be automatically saved or loaded.
 For instance, the following line would automatically make/save/load
 an integer vector named \code{x} and containing values from 1 to 10:
 
 \code{MakeObj(x, { x <- 1:10 })}
 
-The expression provided as last argument can be preceded by optional the
-arguments \code{rebuild} and \code{overlaod} to control the behavior of
-\code{MakeObj}, as well as \code{path} and \code{env} to control the
-location of generated RDS files and R objects (see \link{LittleThumb}).
+In addition, the following named arguments can be used in between
+the symbol and expression arguments (see \link{LittleThumb}):
+
+\code{rebuild}, \code{overload}, \code{path} and \code{parent}
+}
+\note{
+\link{MkObj} can be used as a short alias of function \code{MakeObj}.
 }
 \examples{
 # Create a simple R object named 'a'

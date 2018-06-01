@@ -6,13 +6,35 @@ test_that("DefaultArgs", {
 
   cfg <- list(x = 1, y = 2, z = 3)
 
-  env <- new.env()
-  DefaultArgs(cfg, to = env)
-  expect_identical(as.list(env), cfg)
+  src <- new.env()
+  dst <- new.env()
 
-  env$y <- 0
-  DefaultArgs(cfg, to = env)
-  expect_identical(env$y, 0)
+  DefaultArgs(cfg, from = src)
+  expect_identical(names(src), character(0))
+
+  DefaultArgs(cfg, to = dst)
+  expect_identical(as.list(dst), cfg)
+
+  dst <- new.env()
+  dst$y <- 0
+  DefaultArgs(cfg, to = dst)
+  expect_identical(as.list(dst), list(x = 1, y = 0, z = 3))
+
+  alt <- list(x = 3, y = 2, z = 1)
+  dst <- as.environment(alt)
+
+  DefaultArgs(cfg, to = dst)
+  expect_identical(as.list(dst, sorted = TRUE), alt)
+
+  src <- new.env()
+  src$y <- 0
+
+  DefaultArgs(cfg, from = src, to = dst)
+  expect_identical(as.list(dst, sorted = TRUE), alt)
+
+  dst <- new.env()
+  DefaultArgs(cfg, from = src, to = dst)
+  expect_identical(as.list(dst), list(x = 1, y = 0, z = 3))
 
   f <- function(x = NULL, y = NULL, z = NULL, ...) {
     DefaultArgs(cfg)

@@ -10,13 +10,14 @@ LoadObj(obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
 \arguments{
 \item{obj}{an R object.}
 
-\item{path}{folder location for RDS files. This can be interpreted either as
+\item{path}{folder location for RDS files. LittleThumb interprets this path either as
 a sub-directory of the \code{rootpath} location, or as an independent
-location (see \code{relative}). By default \code{path} is unspecified.}
+location (see \code{relative}). By default \code{path} is ignored
+(\code{path = NA}).}
 
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
-as first argument.}
+as first argument using \link{substitute} and \link{deparse}.}
 
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
@@ -30,7 +31,7 @@ being called.}
 functions (default = \code{TRUE}, enabled).}
 
 \item{reload}{logical value forcing to load R objects from associated RDS files
-even when these objects already exist in the R environment
+even when these objects already exist in their parent environment
 (default = \code{FALSE}, no).}
 
 \item{...}{optional arguments passed to the \link{readRDS} function.}

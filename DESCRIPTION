@@ -1,7 +1,7 @@
 Package: LittleThumb
 Type: Package
-Title: LittleThumb
-Version: 0.5.7
+Title: Lightweight persistence mechanism for R objects
+Version: 0.5.8
 Authors@R:
     person(
       "Benjamin", "Leblanc",
@@ -21,7 +21,7 @@ Suggests:
     knitr,
     rmarkdown,
     covr
-Description: Automation for saving and loading R objects.
+Description: Lightweight persistence mechanism for R objects.
 License: GPL-3
 Encoding: UTF-8
 LazyData: TRUE

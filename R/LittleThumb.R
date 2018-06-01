@@ -48,9 +48,10 @@ DefaultOptions <- function() {
 #' working directory (see \link{getwd}).
 #'
 #' @param path
-#' folder location for RDS files. This can be interpreted either as
+#' folder location for RDS files. LittleThumb interprets this path either as
 #' a sub-directory of the \code{rootpath} location, or as an independent
-#' location (see \code{relative}). By default \code{path} is unspecified.
+#' location (see \code{relative}). By default \code{path} is ignored
+#' (\code{path = NA}).
 #'
 #' @param extension
 #' \strong{DO NOT MODIFY}: RDS file extension (default = ".rds").
@@ -71,21 +72,23 @@ DefaultOptions <- function() {
 #'
 #' @param reload
 #' logical value forcing to load R objects from associated RDS files
-#' even when these objects already exist in the R environment
+#' even when these objects already exist in their parent environment
 #' (default = \code{FALSE}, no).
 #'
 #' @param rebuild
 #' logical value forcing \code{MakeObj} to regenerate R objects even when
-#' the associated RDS files already exist (default = \code{FALSE}, no).
+#' the associated RDS files already exist at the expected locations
+#' (default = \code{FALSE}, no).
 #'
 #' @param cleanup
-#' logical value controlling wheter \code{MakeObj} should remove additional
-#' objects encapsulated in the provided expression after its evaluation
-#' (default = \code{TRUE}, yes).
+#' logical value controlling wheter \code{MakeObj} should remove from the
+#' parent environment any additional object created by the provided
+#' expression during its evaluation (default = \code{TRUE}, yes).
 #'
 #' @param remove
 #' logical value controlling wheter \code{DeleteObj} should remove the R object
-#' after deleting the RDS file (default = \code{TRUE}, yes).
+#' from its parent environment after deleting the associated RDS file
+#' (default = \code{TRUE}, yes).
 #'
 #' @param messages
 #' logical value enabling or disabling status messages from LittleThumb

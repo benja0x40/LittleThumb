@@ -20,7 +20,7 @@
 #' @param name
 #' \strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 #' When omitted this name is automatically provided by the symbol being passed
-#' as first argument.
+#' as first argument using \link{substitute} and \link{deparse}.
 #'
 #' @param ...
 #' optional arguments passed to the \link{saveRDS} function.
