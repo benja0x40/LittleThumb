@@ -56,5 +56,5 @@ SaveObj <- function(
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   saveRDS(parent[[obj.name]], f, ...)
 
-  f
+  invisible(f)
 }

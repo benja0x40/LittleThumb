@@ -84,18 +84,20 @@ MakeObj <- function(...) {
 
   if(do.call(AvailableObj, a[AO]) & ! a$rebuild) {
     # Load the R object from existing RDS file
-    do.call(LoadObj, a[LO])
+    f <- do.call(LoadObj, a[LO])
   } else {
     # Make the R object by evaluating expression x
     eval(x, envir = a$parent)
     # TODO: Make sure that obj has been generated
 
     # Save RDS file associated to the R object
-    do.call(SaveObj, c(list(obj = a$parent[[a$name]]), a[SO]))
+    f <- do.call(SaveObj, c(list(obj = a$parent[[a$name]]), a[SO]))
   }
 
   if(a$cleanup) {
     lst <- setdiff(objects(pos = a$parent), protect)
     rm(list = lst, pos = a$parent)
   }
+
+  invisible(f)
 }

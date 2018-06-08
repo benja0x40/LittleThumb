@@ -29,7 +29,7 @@ DefaultOptions <- function() {
 
     # Traceability
     messages = TRUE,              # SaveObj, LoadObj, DeleteObj, MakeObj
-    history  = "LittleThumb"      # TODO:
+    session  = "LittleThumb"      # TODO: implementation
   )
 }
 
@@ -40,8 +40,8 @@ DefaultOptions <- function() {
 #' This function sets the default value of arguments used by the main functions
 #' of the LittleThumb package.
 #'
-#' @param ...
-#' Any of the following arguments.
+#' @param session
+#' TODO: implementation.
 #'
 #' @param rootpath
 #' root location for RDS files. By default \code{rootpath} is the current
@@ -95,11 +95,27 @@ DefaultOptions <- function() {
 #' functions (default = \code{TRUE}, enabled).
 # -----------------------------------------------------------------------------.
 #' @export
-LittleThumb <- function(...) {
+LittleThumb <- function(
+  session   = NULL,
+  rootpath  = NULL,
+  path      = NULL,
+  extension = NULL,
+  relative  = NULL,
+  parent    = NULL,
+  makedir   = NULL,
+  reload    = NULL,
+  rebuild   = NULL,
+  cleanup   = NULL,
+  remove    = NULL,
+  messages  = NULL
+) {
 
   opt <- names(LittleThumb::DefaultOptions())
 
-  cfg <- list(...)
+  cfg <- match.call()
+  cfg[1] <- call("list")
+  cfg <- eval(cfg)
+
   cfg <- cfg[names(cfg) %in% opt]
   cfg <- cfg[! vapply(cfg, is.null, logical(1))]
 
@@ -155,4 +171,3 @@ StatusMessage <- function(status, name = NULL, file = NULL) {
   if(! is.null(file)) msg <- paste0(msg, " = ", file)
   message(msg)
 }
-

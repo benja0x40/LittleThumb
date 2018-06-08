@@ -4,10 +4,13 @@
 \alias{LittleThumb}
 \title{Automation options}
 \usage{
-LittleThumb(...)
+LittleThumb(session = NULL, rootpath = NULL, path = NULL,
+  extension = NULL, relative = NULL, parent = NULL, makedir = NULL,
+  reload = NULL, rebuild = NULL, cleanup = NULL, remove = NULL,
+  messages = NULL)
 }
 \arguments{
-\item{...}{Any of the following arguments.}
+\item{session}{TODO: implementation.}
 
 \item{rootpath}{root location for RDS files. By default \code{rootpath} is the current
 working directory (see \link{getwd}).}

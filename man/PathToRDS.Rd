@@ -27,8 +27,8 @@ RDS file path.
 Resolve path to the RDS file of an R object
 }
 \details{
-When unspecified, the value of the following argument(s) are determined by the
-corresponding automation option(s) (see \link{LittleThumb}):
+When unspecified, the value of the following argument(s) are determined
+by the corresponding automation option(s) (see \link{LittleThumb}):
 
 \code{relative}
 }

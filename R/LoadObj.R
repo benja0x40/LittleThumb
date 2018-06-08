@@ -49,4 +49,6 @@ LoadObj <- function(
     r <- readRDS(f, ...)
     AssignObj(r, name = obj.name, to = parent)
   }
+
+  invisible(f)
 }

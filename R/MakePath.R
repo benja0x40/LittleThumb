@@ -77,8 +77,8 @@ MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 #' @inheritParams SaveObj
 #'
 #' @details
-#' When unspecified, the value of the following argument(s) are determined by the
-#' corresponding automation option(s) (see \link{LittleThumb}):
+#' When unspecified, the value of the following argument(s) are determined
+#' by the corresponding automation option(s) (see \link{LittleThumb}):
 #'
 #' \code{relative}
 #'
