@@ -69,6 +69,7 @@ MakeObj <- function(...) {
 
   a <- as.list(a)
 
+  if(is.null(GetParents(a$name))) SetParent(a$name, NA)
   if(! (is.list(a$parent) | is.environment(a$parent))) {
     a$parent <- parent.frame()
   }

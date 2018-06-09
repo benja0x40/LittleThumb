@@ -4,8 +4,9 @@
 \alias{DeleteObj}
 \title{Delete the RDS file associated to an R object}
 \usage{
-DeleteObj(obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
-  messages = NULL, remove = NULL, ...)
+DeleteObj(obj, path = NULL, name = NULL, parent = NULL,
+  parent.name = NULL, relative = NULL, embedded = NULL, messages = NULL,
+  remove = NULL, ...)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -19,13 +20,19 @@ location (see \code{relative}). By default \code{path} is ignored
 When omitted this name is automatically provided by the symbol being passed
 as first argument using \link{substitute} and \link{deparse}.}
 
+\item{parent}{\link{environment} where the R object should be located.
+By default \code{parent} is the \link{parent.frame} of the function
+being called.}
+
+\item{parent.name}{optional name of the parent environment.}
+
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
 location (default = \code{TRUE}, yes), or as an independent one.}
 
-\item{parent}{\link{environment} where the R object should be located.
-By default \code{parent} is the \link{parent.frame} of the function
-being called.}
+\item{embedded}{logical value controlling whether child objects should have their associated
+RDS files organized into sub-directories corresponding to parent objects
+(default = \code{TRUE}, yes).}
 
 \item{messages}{logical value enabling or disabling status messages from LittleThumb
 functions (default = \code{TRUE}, enabled).}
@@ -43,7 +50,8 @@ Delete the RDS file associated to an R object
 When unspecified, the value of the following argument(s) are determined
 by the corresponding automation option(s) (see \link{LittleThumb}):
 
-\code{relative}, \code{parent}, \code{remove} and \code{messages}
+\code{parent}, \code{relative}, \code{embedded}, \code{remove}
+and \code{messages}
 }
 \examples{
 # Create a simple R object named 'a'

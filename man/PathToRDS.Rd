@@ -4,7 +4,7 @@
 \alias{PathToRDS}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-PathToRDS(name, path = NULL, relative = NULL)
+PathToRDS(name, path = NULL, relative = NULL, embedded = NULL)
 }
 \arguments{
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
@@ -19,6 +19,10 @@ location (see \code{relative}). By default \code{path} is ignored
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
 location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{embedded}{logical value controlling whether child objects should have their associated
+RDS files organized into sub-directories corresponding to parent objects
+(default = \code{TRUE}, yes).}
 }
 \value{
 RDS file path.

@@ -4,7 +4,8 @@
 \alias{AvailableObj}
 \title{Check if the RDS file associated to an R object is available}
 \usage{
-AvailableObj(obj, path = NULL, name = NULL, relative = NULL)
+AvailableObj(obj, path = NULL, name = NULL, relative = NULL,
+  embedded = NULL)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -21,6 +22,10 @@ as first argument using \link{substitute} and \link{deparse}.}
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
 location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{embedded}{logical value controlling whether child objects should have their associated
+RDS files organized into sub-directories corresponding to parent objects
+(default = \code{TRUE}, yes).}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
@@ -32,7 +37,7 @@ Check if the RDS file associated to an R object is available
 When unspecified, the value of the following argument(s) are determined
 by the corresponding automation option(s) (see \link{LittleThumb}):
 
-\code{relative}
+\code{relative} and \code{embedded}
 }
 \examples{
 # Create a simple R object named 'a'

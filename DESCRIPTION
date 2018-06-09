@@ -1,7 +1,7 @@
 Package: LittleThumb
 Type: Package
 Title: Lightweight persistence mechanism for R objects
-Version: 0.5.10
+Version: 0.6.0
 Authors@R:
     person(
       "Benjamin", "Leblanc",

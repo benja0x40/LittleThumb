@@ -158,6 +158,9 @@ ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
   }
 
   a[1] <- call("list")
+  if("parent" %in% lst & ! "parent.name" %in% lst) {
+    a[["parent.name"]] <- as.character(a[["parent"]])
+  }
   a <- as.environment(eval(a, envir = prf))
 
   if(is.na(e)) a[[explicit]] <- implicit

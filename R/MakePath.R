@@ -87,13 +87,21 @@ MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-PathToRDS <- function(name, path = NULL, relative = NULL) {
+PathToRDS <- function(name, path = NULL, relative = NULL, embedded = NULL) {
 
   cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("name", "path"), from = PathToRDS)
+  DefaultArgs(cfg, ignore = c("name"), from = PathToRDS)
 
   path     <- NamedArg(name, path)
-  relative <- NamedArg(name, relative)
+  relative <- LogicalArg(name, relative)
+  embedded <- LogicalArg(name, embedded)
+
+  if(embedded) {
+    prn <- GetParents(name)
+    if(! is.null(prn)) {
+      path <- c(path, as.vector(cbind("_components_", prn)))
+    }
+  }
 
   if(relative & cfg$rootpath != "") path <- c(cfg$rootpath, path)
 

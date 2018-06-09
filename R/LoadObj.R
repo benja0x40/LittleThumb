@@ -13,7 +13,8 @@
 #' When unspecified, the value of the following argument(s) are determined
 #' by the corresponding automation option(s) (see \link{LittleThumb}):
 #'
-#' \code{relative}, \code{parent}, \code{reload} and \code{messages}
+#' \code{parent}, \code{relative}, \code{embedded}, \code{reload}
+#' and \code{messages}
 #'
 #' @param ...
 #' optional arguments passed to the \link{readRDS} function.
@@ -22,19 +23,25 @@
 # -----------------------------------------------------------------------------.
 #' @export
 LoadObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, parent = NULL,
-  messages = NULL, reload = NULL, ...
+  obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
+  relative = NULL, embedded = NULL, messages = NULL, reload = NULL, ...
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
+
+  prn.name <- parent.name
+  if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
+
+  if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
+  # if(is.null(parent) & ! is.null(parent.name)) parent <- get(prn.name)
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = LoadObj)
 
   if(! is.environment(parent)) parent <- parent.frame()
 
-  f <- PathToRDS(obj.name, path, relative)
+  f <- PathToRDS(obj.name, path, relative, embedded)
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 

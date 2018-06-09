@@ -4,14 +4,12 @@
 \alias{LittleThumb}
 \title{Automation options}
 \usage{
-LittleThumb(session = NULL, rootpath = NULL, path = NULL,
-  extension = NULL, relative = NULL, parent = NULL, makedir = NULL,
+LittleThumb(rootpath = NULL, path = NULL, extension = NULL,
+  relative = NULL, embedded = NULL, parent = NULL, makedir = NULL,
   reload = NULL, rebuild = NULL, cleanup = NULL, remove = NULL,
   messages = NULL)
 }
 \arguments{
-\item{session}{TODO: implementation.}
-
 \item{rootpath}{root location for RDS files. By default \code{rootpath} is the current
 working directory (see \link{getwd}).}
 
@@ -25,6 +23,10 @@ location (see \code{relative}). By default \code{path} is ignored
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
 location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{embedded}{logical value controlling whether child objects should have their associated
+RDS files organized into sub-directories corresponding to parent objects
+(default = \code{TRUE}, yes).}
 
 \item{parent}{\link{environment} where the R object should be located.
 By default \code{parent} is the \link{parent.frame} of the function

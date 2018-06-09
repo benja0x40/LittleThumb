@@ -10,26 +10,29 @@
 #' @export
 DefaultOptions <- function() {
   list(
-    rootpath  = "",            # MakePath
+    # Experimental
+    # registry  = "LittleThumb", # TODO: implementation
+    # context   = NA,            # TODO: implementation
 
     # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
+    rootpath  = "",            # PathToRDS
     path      = NA,            #
     extension = ".rds",        #
-    relative  = TRUE,          # + MakePath
+    relative  = TRUE,          # + PathToRDS
+    embedded  = TRUE,          # + PathToRDS
 
     # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
     parent = NA,
 
     # Behavior
-    makedir  = TRUE,              # SaveObj <= MakeObj
-    reload   = FALSE,             # LoadObj <= MakeObj
-    rebuild  = FALSE,             # MakeObj
-    cleanup  = TRUE,              # MakeObj
-    remove   = TRUE,              # DeleteObj
+    makedir  = TRUE,           # SaveObj <= MakeObj
+    reload   = FALSE,          # LoadObj <= MakeObj
+    rebuild  = FALSE,          # MakeObj
+    cleanup  = TRUE,           # MakeObj
+    remove   = TRUE,           # DeleteObj
 
-    # Traceability
-    messages = TRUE,              # SaveObj, LoadObj, DeleteObj, MakeObj
-    session  = "LittleThumb"      # TODO: implementation
+    # Status
+    messages = TRUE            # SaveObj, LoadObj, DeleteObj, MakeObj
   )
 }
 
@@ -39,9 +42,6 @@ DefaultOptions <- function() {
 #' @description
 #' This function sets the default value of arguments used by the main functions
 #' of the LittleThumb package.
-#'
-#' @param session
-#' TODO: implementation.
 #'
 #' @param rootpath
 #' root location for RDS files. By default \code{rootpath} is the current
@@ -60,6 +60,11 @@ DefaultOptions <- function() {
 #' logical value controlling if the \code{path} option is interpreted as a
 #' relative location, meaning as a sub-directory of the \code{rootpath}
 #' location (default = \code{TRUE}, yes), or as an independent one.
+#'
+#' @param embedded
+#' logical value controlling whether child objects should have their associated
+#' RDS files organized into sub-directories corresponding to parent objects
+#' (default = \code{TRUE}, yes).
 #'
 #' @param parent
 #' \link{environment} where the R object should be located.
@@ -96,17 +101,21 @@ DefaultOptions <- function() {
 # -----------------------------------------------------------------------------.
 #' @export
 LittleThumb <- function(
-  session   = NULL,
+
   rootpath  = NULL,
   path      = NULL,
   extension = NULL,
   relative  = NULL,
+  embedded  = NULL,
+
   parent    = NULL,
+
   makedir   = NULL,
   reload    = NULL,
   rebuild   = NULL,
   cleanup   = NULL,
   remove    = NULL,
+
   messages  = NULL
 ) {
 
