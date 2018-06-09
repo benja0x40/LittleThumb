@@ -4,8 +4,6 @@ context("LoadObj")
 # + Basic ----------------------------------------------------------------------
 test_that("Basic", {
 
-  cfg <- LittleThumb() # Global options
-
   f <- PathToRDS("x")
   x <- y <- 1:10
 
@@ -34,6 +32,7 @@ test_that("Basic", {
   rm(x)
   expect_false(exists("x"))
 
-  do.call(LittleThumb, cfg) # Restore default values
-  expect_identical(cfg, LittleThumb())
+  # Cleanup
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })

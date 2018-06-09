@@ -21,11 +21,18 @@
 #' @keywords internal
 #' @export
 AvailableObj <- function(
-  obj, path = NULL, name = NULL, relative = NULL, embedded = NULL
+  obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
+  relative = NULL, embedded = NULL
 ) {
 
   obj.name <- name
   if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
+
+  prn.name <- parent.name
+  if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
+
+  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
+  if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
 
   cfg <- LittleThumb() # Global options
   DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = AvailableObj)

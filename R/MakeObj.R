@@ -49,7 +49,9 @@ MkObj <- function(...) {
 #' In addition, the following named arguments can be used in between
 #' the symbol and expression arguments (see \link{LittleThumb}):
 #'
-#' \code{rebuild}, \code{overload}, \code{path} and \code{parent}
+#' \code{path}, \code{relative}, \code{embedded},  \code{parent},
+#' \code{makedir}, \code{reload}, \code{rebuild}, \code{cleanup},
+#' and \code{messages}
 #'
 #' @param ...
 #' at least an R symbol and an expression defining the corresponding R object.
@@ -69,7 +71,7 @@ MakeObj <- function(...) {
 
   a <- as.list(a)
 
-  if(is.null(GetParents(a$name))) SetParent(a$name, NA)
+  if(! IsKnowObject(a$name)) RegisterObject(a$name)
   if(! (is.list(a$parent) | is.environment(a$parent))) {
     a$parent <- parent.frame()
   }

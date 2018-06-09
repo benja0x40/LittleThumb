@@ -33,6 +33,7 @@ LoadObj <- function(
   prn.name <- parent.name
   if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
 
+  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
   if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
   # if(is.null(parent) & ! is.null(parent.name)) parent <- get(prn.name)
 

@@ -4,8 +4,6 @@ context("MakeObj")
 # + Basic ----------------------------------------------------------------------
 test_that("Basic", {
 
-  cfg <- LittleThumb() # Global options
-
   f <- PathToRDS("x")
   y <- 1:10
 
@@ -42,4 +40,6 @@ test_that("Basic", {
 
   # Cleanup
   expect_true(file.remove(f))
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })

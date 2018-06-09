@@ -80,7 +80,7 @@ MakePath <- function(..., ext = NULL) { # , rootpath = NULL, relative = NULL
 #' When unspecified, the value of the following argument(s) are determined
 #' by the corresponding automation option(s) (see \link{LittleThumb}):
 #'
-#' \code{relative}
+#' \code{relative} and \code{embedded}
 #'
 #' @return
 #' RDS file path.
@@ -99,7 +99,7 @@ PathToRDS <- function(name, path = NULL, relative = NULL, embedded = NULL) {
   if(embedded) {
     prn <- GetParents(name)
     if(! is.null(prn)) {
-      path <- c(path, as.vector(cbind("_components_", prn)))
+      path <- c(path, as.vector(rbind("_components_", prn)))
     }
   }
 

@@ -4,7 +4,7 @@
 \alias{GetChilds}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-GetChilds(parent)
+GetChilds(x)
 }
 \description{
 ** RESERVED FOR INTERNAL USE **

@@ -15,4 +15,6 @@ test_that("Basic", {
 
   # Cleanup
   expect_true(file.remove(f))
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })

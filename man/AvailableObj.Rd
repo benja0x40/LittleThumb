@@ -4,8 +4,8 @@
 \alias{AvailableObj}
 \title{Check if the RDS file associated to an R object is available}
 \usage{
-AvailableObj(obj, path = NULL, name = NULL, relative = NULL,
-  embedded = NULL)
+AvailableObj(obj, path = NULL, name = NULL, parent = NULL,
+  parent.name = NULL, relative = NULL, embedded = NULL)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -18,6 +18,12 @@ location (see \code{relative}). By default \code{path} is ignored
 \item{name}{\strong{RESERVED FOR INTERNAL USE}: optional name of the R object.
 When omitted this name is automatically provided by the symbol being passed
 as first argument using \link{substitute} and \link{deparse}.}
+
+\item{parent}{\link{environment} where the R object should be located.
+By default \code{parent} is the \link{parent.frame} of the function
+being called.}
+
+\item{parent.name}{optional name of the parent environment.}
 
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}

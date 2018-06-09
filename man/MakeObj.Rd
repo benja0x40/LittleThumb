@@ -36,7 +36,9 @@ an integer vector named \code{x} and containing values from 1 to 10:
 In addition, the following named arguments can be used in between
 the symbol and expression arguments (see \link{LittleThumb}):
 
-\code{rebuild}, \code{overload}, \code{path} and \code{parent}
+\code{path}, \code{relative}, \code{embedded},  \code{parent},
+\code{makedir}, \code{reload}, \code{rebuild}, \code{cleanup},
+and \code{messages}
 }
 \note{
 \link{MkObj} can be used as a short alias of function \code{MakeObj}.

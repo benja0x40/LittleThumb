@@ -52,15 +52,46 @@ test_that("PathToRDS", {
   expect_identical(PathToRDS(name,    ""), "Somewhere/obj.rds")
   expect_identical(PathToRDS(name, "x/y"), "Somewhere/x/y/obj.rds")
 
+  RegisterObject("a")
+  RegisterObject("b")
+  RegisterObject(name)
+  SetParent(name, "b")
+  SetParent("b", "a")
+
+  emb <- FALSE
+
   rel <- FALSE
-  expect_identical(PathToRDS(name,    "", rel), "obj.rds")
-  expect_identical(PathToRDS(name, "x/y", rel), "x/y/obj.rds")
+  expect_identical(PathToRDS(name,    "", rel, emb), "obj.rds")
+  expect_identical(PathToRDS(name, "x/y", rel, emb), "x/y/obj.rds")
 
   rel <- TRUE
-  expect_identical(PathToRDS(name,    "", rel), "Somewhere/obj.rds")
-  expect_identical(PathToRDS(name, "x/y", rel), "Somewhere/x/y/obj.rds")
+  expect_identical(PathToRDS(name,    "", rel, emb), "Somewhere/obj.rds")
+  expect_identical(PathToRDS(name, "x/y", rel, emb), "Somewhere/x/y/obj.rds")
 
-  do.call(LittleThumb, cfg) # Restore default values
-  expect_identical(cfg, LittleThumb())
+  emb <- TRUE
+
+  rel <- FALSE
+  expect_identical(
+    PathToRDS(name,    "", rel, emb),
+    "_components_/a/_components_/b/obj.rds"
+  )
+  expect_identical(
+    PathToRDS(name, "x/y", rel, emb),
+    "x/y/_components_/a/_components_/b/obj.rds"
+  )
+
+  rel <- TRUE
+  expect_identical(
+    PathToRDS(name,    "", rel, emb),
+    "Somewhere/_components_/a/_components_/b/obj.rds"
+  )
+  expect_identical(
+    PathToRDS(name, "x/y", rel, emb),
+    "Somewhere/x/y/_components_/a/_components_/b/obj.rds"
+  )
+
+  # Cleanup
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })
 

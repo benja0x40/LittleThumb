@@ -4,8 +4,6 @@ context("DeleteObj")
 # + Basic ----------------------------------------------------------------------
 test_that("Basic", {
 
-  cfg <- LittleThumb() # Global options
-
   expect_warning(DeleteObj(x))
   expect_message(suppressWarnings(DeleteObj(x)), regexp = "not found")
 
@@ -28,4 +26,7 @@ test_that("Basic", {
   expect_false(file.exists(fy))
   expect_true(exists("y"))
 
+  # Cleanup
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })
