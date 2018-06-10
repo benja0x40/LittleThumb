@@ -6,7 +6,7 @@
 \usage{
 LoadObj(obj, path = NULL, name = NULL, parent = NULL,
   parent.name = NULL, relative = NULL, embedded = NULL, messages = NULL,
-  reload = NULL, ...)
+  reload = NULL, origin = parent.frame())
 }
 \arguments{
 \item{obj}{an R object.}
@@ -41,7 +41,7 @@ functions (default = \code{TRUE}, enabled).}
 even when these objects already exist in their parent environment
 (default = \code{FALSE}, no).}
 
-\item{...}{optional arguments passed to the \link{readRDS} function.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
 }
 \description{
 Load an R object from its associated RDS file

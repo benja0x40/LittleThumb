@@ -22,23 +22,19 @@
 #' @export
 DeleteObj <- function(
   obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
-  relative = NULL, embedded = NULL, messages = NULL, remove = NULL, ...
+  relative = NULL, embedded = NULL, messages = NULL, remove = NULL,
+  origin = parent.frame(), ...
 ) {
 
-  obj.name <- name
-  if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
+  # Resolve arguments and automation options
+  arg <- match.call()
+  arg <- ManageObjectAndParentArgs(arg)
+  opt <- LittleThumb()
+  DefaultArgs(opt, ignore = c("obj", "name", "..."), from = DeleteObj)
 
-  prn.name <- parent.name
-  if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
-
-  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
-  if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
-  # if(is.null(parent) & ! is.null(parent.name)) parent <- get(prn.name)
-
-  cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = DeleteObj)
-
-  if(! is.environment(parent)) parent <- parent.frame()
+  obj.name <- eval(arg$name, envir = origin)
+  prn.name <- eval(arg$parent.name, envir = origin)
+  parent <- eval(arg$parent, envir = origin)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
   f.e <- file.exists(f)
@@ -49,7 +45,9 @@ DeleteObj <- function(
 
   if(remove) {
     if(messages) LittleThumb::StatusMessage("remove", obj.name)
-    r <- rm(list = obj.name, pos = parent, ...)
+    if(is.list(parent)) origin[[prn.name]][[obj.name]] <- NULL
+    else if(is.environment(parent)) rm(list = obj.name, pos = parent, ...)
+    else rm(list = obj.name, pos = origin, ...)
   }
 
   ForgetObject(obj.name)

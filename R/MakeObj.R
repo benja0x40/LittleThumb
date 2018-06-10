@@ -62,23 +62,25 @@ MkObj <- function(...) {
 #' @export
 MakeObj <- function(...) {
 
-  x <- NULL
+  origin <- parent.frame()
+
+  # Capture expression
   a <- match.call()
-  a <- ObjWithExpressionArgs(a, xpr = x)
+  x <- a[[length(a)]]
+  a[length(a)] <- NULL
 
-  cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, to = a)
+  # Resolve arguments and automation options
+  a <- ManageObjectAndParentArgs(a)
+  if(identical(names(a)[2], "obj")) a[2] <- NULL
+  a <- eval(a, envir = origin)
+  opt <- LittleThumb()
+  DefaultArgs(opt, ignore = c("obj", "name"), to = "a")
 
-  a <- as.list(a)
-
-  if(! IsKnowObject(a$name)) RegisterObject(a$name)
-  if(! (is.list(a$parent) | is.environment(a$parent))) {
-    a$parent <- parent.frame()
-  }
-
+  if(! is.environment(a$parent)) a$parent <- NULL
+  a$origin <- origin
   a$rebuild <- LogicalArg(a$name, a$rebuild)
 
-  protect <- c(a$name, objects(pos = a$parent))
+  protect <- c(a$name, objects(pos = origin))
 
   # Arguments forwarded to lower level functions
   AO <- names(a) %in% methods::formalArgs(AvailableObj)
@@ -86,20 +88,23 @@ MakeObj <- function(...) {
   SO <- names(a) %in% methods::formalArgs(SaveObj)
 
   if(do.call(AvailableObj, a[AO]) & ! a$rebuild) {
-    # Load the R object from existing RDS file
-    f <- do.call(LoadObj, a[LO])
+    f <- do.call(LoadObj, a[LO]) # Load the R object from existing RDS file
   } else {
-    # Make the R object by evaluating expression x
-    eval(x, envir = a$parent)
-    # TODO: Make sure that obj has been generated
-
-    # Save RDS file associated to the R object
-    f <- do.call(SaveObj, c(list(obj = a$parent[[a$name]]), a[SO]))
+    eval(x, envir = origin) # Make the R object by evaluating expression x
+    if(is.null(origin[[a$name]])) { # Make sure that obj has been generated
+      stop("provided expression does not define object ", a$name)
+    }
+    f <- do.call(SaveObj, a[SO]) # Save RDS file associated to the R object
+    if(! is.null(a$parent.name)) {
+      AssignObj(
+        name = a$name, from = origin, to = a$parent.name, origin = origin
+      )
+    }
   }
 
   if(a$cleanup) {
-    lst <- setdiff(objects(pos = a$parent), protect)
-    rm(list = lst, pos = a$parent)
+    lst <- setdiff(objects(pos = origin), protect)
+    rm(list = lst, pos = origin)
   }
 
   invisible(f)

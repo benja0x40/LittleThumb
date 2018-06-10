@@ -1,8 +1,8 @@
 # > DeleteObj ==================================================================
 context("DeleteObj")
 
-# + Basic ----------------------------------------------------------------------
-test_that("Basic", {
+# + Basics ---------------------------------------------------------------------
+test_that("Basics", {
 
   expect_warning(DeleteObj(x))
   expect_message(suppressWarnings(DeleteObj(x)), regexp = "not found")

@@ -210,69 +210,54 @@ test_that("NamedArg", {
 
 })
 
-# + ObjWithExpressionArgs ------------------------------------------------------
-test_that("ObjWithExpressionArgs", {
+# + ManageObjectAndParentArgs --------------------------------------------------
+test_that("ManageObjectAndParentArgs", {
 
-  x <- NULL
-  a <- quote(MakeObj())
-  expect_error(ObjWithExpressionArgs(a, x))
+  a <- quote(MyFunction())
+  expect_error(ManageObjectAndParentArgs(a), regexp = "insufficient")
 
-  x <- NULL
-  a <- quote(MakeObj(u))
-  expect_error(ObjWithExpressionArgs(a, x))
+  a <- quote(MyFunction(x = 1))
+  expect_error(ManageObjectAndParentArgs(a), regexp = "missing 'obj'")
 
-  x <- NULL
-  a <- quote(MakeObj({ u <- FALSE }))
-  expect_error(ObjWithExpressionArgs(a, x))
+  a <- quote(MyFunction(x))
+  a <- ManageObjectAndParentArgs(a)
+  expect_identical(a, quote(list(obj = x, name = "x")))
 
-  x <- NULL
-  a <- quote(MakeObj(u = v, { u <- FALSE }))
-  expect_error(ObjWithExpressionArgs(a, x))
+  a <- quote(MyFunction(x, name = "y"))
+  a <- ManageObjectAndParentArgs(a)
+  expect_identical(a, quote(list(obj = x, name = "y")))
 
-  x <- NULL
-  a <- quote(MakeObj(u, v = w))
-  expect_error(ObjWithExpressionArgs(a, x))
+  a <- quote(MyFunction(x, parent = i))
+  expect_error(ManageObjectAndParentArgs(a), regexp = "unknown parent")
 
-  x <- NULL
-  a <- quote(MakeObj(obj, { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(name = "obj"))
+  a <- quote(MyFunction(x, parent.name = "j"))
+  expect_error(ManageObjectAndParentArgs(a), regexp = "unknown parent")
 
-  x <- NULL
-  a <- quote(MakeObj(obj, rebuild = TRUE, { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = TRUE))
+  RegisterObject("i")
+  RegisterObject("j")
 
-  x <- NULL
-  a <- quote(MakeObj(name = "obj", { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(as.list(a), list(name = "obj"))
+  a <- quote(MyFunction(x, parent = i))
+  a <- ManageObjectAndParentArgs(a)
+  expect_identical(
+    a, quote(list(obj = x, parent = i, name = "x", parent.name = "i"))
+  )
+  expect_identical(GetParents("x"), "i")
 
-  x <- NULL
-  a <- quote(MakeObj(name = "obj", rebuild = TRUE, { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(rebuild = TRUE, name = "obj"))
+  a <- quote(MyFunction(x, parent.name = "j"))
+  a <- ManageObjectAndParentArgs(a)
+  expect_identical(
+    a, quote(list(obj = x, parent.name = "j", name = "x"))
+  )
+  expect_identical(GetParents("x"), "j")
 
-  x <- NULL
-  a <- quote(MakeObj(rebuild = TRUE, name = "obj", { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = TRUE))
+  a <- quote(MyFunction(x, parent = i, parent.name = "j"))
+  a <- ManageObjectAndParentArgs(a)
+  expect_identical(
+    a, quote(list(obj = x, parent = i, parent.name = "j", name = "x"))
+  )
+  expect_identical(GetParents("x"), "j")
 
-  x <- NULL
-  a <- quote(MakeObj(zzz, name = "obj", { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(name = "obj"))
-
-  x <- NULL
-  a <- quote(MakeObj(zzz, rebuild = TRUE, name = "obj", { obj <- FALSE }))
-  a <- as.list(ObjWithExpressionArgs(a, x))
-  expect_true(is.language(x))
-  expect_identical(a, list(name = "obj", rebuild = TRUE))
-
+  # Cleanup
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
 })

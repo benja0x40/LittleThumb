@@ -4,7 +4,8 @@
 \alias{AssignObj}
 \title{Reassign an R object from its parent environment to another one}
 \usage{
-AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = TRUE)
+AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = TRUE,
+  origin = parent.frame())
 }
 \arguments{
 \item{obj}{an R object.}
@@ -19,6 +20,8 @@ as first argument using \link{substitute} and \link{deparse}.}
 
 \item{remove}{logical value controlling wheter the object should removed from the source
 environment (default = \code{TRUE}, yes).}
+
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
 }
 \description{
 Reassign an R object from its parent environment to another one

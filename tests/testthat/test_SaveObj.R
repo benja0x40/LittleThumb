@@ -1,8 +1,8 @@
 # > SaveObj ====================================================================
 context("SaveObj")
 
-# + Basic ----------------------------------------------------------------------
-test_that("Basic", {
+# + Basics ---------------------------------------------------------------------
+test_that("Basics", {
 
   f <- PathToRDS("x")
   x <- 1:10
@@ -30,6 +30,7 @@ test_that("Basic", {
   expect_identical(readRDS(f), x)
   expect_true(file.remove(f))
 
+  RegisterObject("a")
   SaveObj(x, parent.name = "a")
   f <- PathToRDS("x")
   expect_true(file.exists(f))

@@ -22,20 +22,16 @@
 #' @export
 AvailableObj <- function(
   obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
-  relative = NULL, embedded = NULL
+  relative = NULL, embedded = NULL, origin = parent.frame()
 ) {
 
-  obj.name <- name
-  if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
+  # Resolve arguments and automation options
+  arg <- match.call()
+  arg <- ManageObjectAndParentArgs(arg)
+  opt <- LittleThumb()
+  DefaultArgs(opt, ignore = c("obj", "name", "..."), from = AvailableObj)
 
-  prn.name <- parent.name
-  if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
-
-  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
-  if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
-
-  cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = AvailableObj)
+  obj.name <- eval(arg$name, envir = origin)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
 

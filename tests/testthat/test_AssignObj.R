@@ -1,8 +1,8 @@
 # > AssignObj ==================================================================
 context("AssignObj")
 
-# + Basic ----------------------------------------------------------------------
-test_that("Basic", {
+# + Basics ---------------------------------------------------------------------
+test_that("Basics", {
 
   env <- new.env()
   lst <- list()
@@ -10,8 +10,10 @@ test_that("Basic", {
   x <- z <- LETTERS[1:5]
   i <- k <- 1:10
 
-  expect_error(AssignObj(x, from = x), regexp = "'from'")
-  expect_error(AssignObj(x, to = x), regexp = "'to'")
+  expect_error(AssignObj(x, from = NonExistentObject))
+  expect_error(AssignObj(x, to = NonExistentObject))
+  expect_error(AssignObj(x, from = "NonExistentObject"), regexp = "'from'")
+  expect_error(AssignObj(x, to = "NonExistentObject"), regexp = "'to'")
 
   AssignObj(x, to = env)
   AssignObj(i, to = lst)

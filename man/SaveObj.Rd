@@ -6,7 +6,7 @@
 \usage{
 SaveObj(obj, path = NULL, name = NULL, parent = NULL,
   parent.name = NULL, relative = NULL, embedded = NULL, messages = NULL,
-  makedir = NULL, ...)
+  makedir = NULL, origin = parent.frame())
 }
 \arguments{
 \item{obj}{an R object.}
@@ -40,7 +40,7 @@ functions (default = \code{TRUE}, enabled).}
 \item{makedir}{logical value controlling if non-existing folders should be created
 automatically when necessary (default = \code{TRUE}, yes).}
 
-\item{...}{optional arguments passed to the \link{saveRDS} function.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
 }
 \description{
 Save the RDS file associated to an R object

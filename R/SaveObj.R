@@ -26,31 +26,29 @@
 #' @param parent.name
 #' optional name of the parent environment.
 #'
-#' @param ...
-#' optional arguments passed to the \link{saveRDS} function.
+#' @param origin
+#' \strong{RESERVED FOR INTERNAL USE}.
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
 #' @export
 SaveObj <- function(
   obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
-  relative = NULL, embedded = NULL, messages = NULL, makedir = NULL, ...
+  relative = NULL, embedded = NULL, messages = NULL, makedir = NULL,
+  origin = parent.frame()
 ) {
 
-  obj.name <- name
-  if(is.null(obj.name)) obj.name <- deparse(substitute(obj))
+  # Resolve arguments and automation options
+  arg <- match.call()
+  arg <- ManageObjectAndParentArgs(arg)
+  opt <- LittleThumb()
+  DefaultArgs(opt, ignore = c("obj", "name", "..."), from = SaveObj)
 
-  prn.name <- parent.name
-  if(is.null(prn.name)) prn.name <- deparse(substitute(parent))
+  obj.name <- eval(arg$name, envir = origin)
+  parent <- eval(arg$parent, envir = origin)
+  if(! is.environment(parent)) parent <- origin
 
-  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
-  if(IsKnowObject(prn.name)) SetParent(obj.name, prn.name)
-  # if(is.null(parent) & ! is.null(parent.name)) parent <- get(prn.name)
-
-  cfg <- LittleThumb() # Global options
-  DefaultArgs(cfg, ignore = c("obj", "name", "..."), from = SaveObj)
-
-  if(! is.environment(parent)) parent <- parent.frame()
+  makedir <- LogicalArg(obj.name, makedir)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
   if(! file.exists(f)) msg <- "save" else msg = "overwrite"
@@ -65,7 +63,7 @@ SaveObj <- function(
   }
 
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
-  saveRDS(parent[[obj.name]], f, ...)
+  saveRDS(parent[[obj.name]], f)
 
   invisible(f)
 }

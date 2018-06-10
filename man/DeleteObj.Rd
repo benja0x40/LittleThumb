@@ -6,7 +6,7 @@
 \usage{
 DeleteObj(obj, path = NULL, name = NULL, parent = NULL,
   parent.name = NULL, relative = NULL, embedded = NULL, messages = NULL,
-  remove = NULL, ...)
+  remove = NULL, origin = parent.frame(), ...)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -40,6 +40,8 @@ functions (default = \code{TRUE}, enabled).}
 \item{remove}{logical value controlling wheter \code{DeleteObj} should remove the R object
 from its parent environment after deleting the associated RDS file
 (default = \code{TRUE}, yes).}
+
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
 
 \item{...}{optional arguments passed to the \link{rm} function.}
 }

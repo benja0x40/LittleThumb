@@ -8,12 +8,15 @@
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-DefaultArgs <- function(default, ignore = NULL, from = NULL, to = NULL) {
+DefaultArgs <- function(
+  default, ignore = NULL, from = NULL, to = NULL, origin = parent.frame()
+) {
 
+  lbl <- deparse(substitute(to))
   lst <- names(default)
 
-  if(is.null(from)) from <- parent.frame()
-  if(is.null(to)) to <- parent.frame()
+  if(is.null(from)) from <- origin
+  if(is.null(to)) to <- origin
 
   if(is.function(from)) {
     lst <- methods::formalArgs(from)
@@ -21,13 +24,23 @@ DefaultArgs <- function(default, ignore = NULL, from = NULL, to = NULL) {
   }
 
   lst <- setdiff(lst, ignore)
-
-  for(a in lst) {
-    if(is.null(to[[a]]) & ! (is.null(from[[a]]) | identical(from, to))) {
-      to[[a]] <- from[[a]]
+  if(is.environment(to)) {
+    for(a in lst) {
+      if(is.null(to[[a]]) & ! (is.null(from[[a]]) | identical(from, to))) {
+        to[[a]] <- from[[a]]
+      }
+      if(is.null(to[[a]]) & ! is.null(default[[a]])) {
+        to[[a]] <- default[[a]]
+      }
     }
-    if(is.null(to[[a]]) & ! is.null(default[[a]])) {
-      to[[a]] <- default[[a]]
+  } else {
+    for(a in lst) {
+      if(is.null(origin[[to]][[a]]) & ! (is.null(from[[a]]))) {
+        origin[[to]][[a]] <- from[[a]]
+      }
+      if(is.null(origin[[to]][[a]]) & ! is.null(default[[a]])) {
+        origin[[to]][[a]] <- default[[a]]
+      }
     }
   }
 }
@@ -133,37 +146,31 @@ NamedArg <- function(x, a) {
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-ObjWithExpressionArgs <- function(a, xpr, explicit = "name") {
+ManageObjectAndParentArgs <- function(a, origin = parent.frame()) {
 
-  env <- prf <- parent.frame()
-  xpr <- deparse(substitute(xpr))
+  if(length(a) < 2) stop("insufficient arguments")
+  if(is.null(names(a)) | identical(names(a)[2], "")) names(a)[2] <- "obj"
 
-  n   <- length(a)
-  lst <- names(a)
-  if(is.null(lst)) lst <- rep("", n)
+  obj.name <- a[["name"]]
+  if(is.null(obj.name) & "obj" %in% names(a)) {
+    obj.name <- as.character(a["obj"])
+    a["name"] <- obj.name
+  }
+  if(is.null(obj.name)) stop("missing 'obj' argument")
 
-  e <- match(explicit, lst)
-  i <- 1 + match("", lst[-1])
-  x <- n - match("", rev(lst[-1])) + 1
+  prn.name <- a[["parent.name"]]
+  if(is.null(prn.name) & ! is.null(a[["parent"]])) {
+    prn.name <- as.character(a["parent"])
+    a["parent.name"] <- prn.name
+  }
 
-  if(is.na(x)) stop("missing expression")
-  if(x <= i) i <- NA
-
-  env[[xpr]] <- a[[x]]
-  a[[x]] <- NULL
-
-  if(! is.na(i)) {
-    implicit <- as.character(a[[i]])
-    a[[i]] <- NULL
+  if(! IsKnowObject(obj.name)) RegisterObject(obj.name)
+  if(! is.null(prn.name)) {
+    if(! IsKnowObject(prn.name)) stop("unknown parent object ", prn.name)
+    else SetParent(obj.name, prn.name)
   }
 
   a[1] <- call("list")
-  if("parent" %in% lst & ! "parent.name" %in% lst) {
-    a[["parent.name"]] <- as.character(a[["parent"]])
-  }
-  a <- as.environment(eval(a, envir = prf))
-
-  if(is.na(e)) a[[explicit]] <- implicit
 
   a
 }

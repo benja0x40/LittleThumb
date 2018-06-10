@@ -5,7 +5,8 @@
 \title{Check if the RDS file associated to an R object is available}
 \usage{
 AvailableObj(obj, path = NULL, name = NULL, parent = NULL,
-  parent.name = NULL, relative = NULL, embedded = NULL)
+  parent.name = NULL, relative = NULL, embedded = NULL,
+  origin = parent.frame())
 }
 \arguments{
 \item{obj}{an R object.}
@@ -32,6 +33,8 @@ location (default = \code{TRUE}, yes), or as an independent one.}
 \item{embedded}{logical value controlling whether child objects should have their associated
 RDS files organized into sub-directories corresponding to parent objects
 (default = \code{TRUE}, yes).}
+
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.
