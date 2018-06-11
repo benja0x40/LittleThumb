@@ -41,7 +41,8 @@ functions (default = \code{TRUE}, enabled).}
 even when these objects already exist in their parent environment
 (default = \code{FALSE}, no).}
 
-\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+call.}
 }
 \description{
 Load an R object from its associated RDS file
@@ -99,3 +100,4 @@ DeleteObj(a)
 \link{MakeObj},
   \link{LittleThumb}
 }
+\keyword{internal}

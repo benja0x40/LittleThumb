@@ -34,7 +34,7 @@ DeleteObj <- function(
 
   obj.name <- eval(arg$name, envir = origin)
   prn.name <- eval(arg$parent.name, envir = origin)
-  parent <- eval(arg$parent, envir = origin)
+  parent   <- eval(arg$parent, envir = origin)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
   f.e <- file.exists(f)
@@ -43,12 +43,14 @@ DeleteObj <- function(
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   if(f.e) r <- file.remove(f)
 
-  if(remove) {
+  o.e <- ObjectExists(obj.name, prn.name, parent, origin)
+  if(remove & o.e) {
     if(messages) LittleThumb::StatusMessage("remove", obj.name)
-    if(is.list(parent)) origin[[prn.name]][[obj.name]] <- NULL
-    else if(is.environment(parent)) rm(list = obj.name, pos = parent, ...)
-    else rm(list = obj.name, pos = origin, ...)
+    RemoveObject(obj.name, prn.name, parent, origin)
   }
+
+  if(! o.e) warning("object does not exist")
+  if(! f.e) warning("RDS file does not exist")
 
   ForgetObject(obj.name)
 }

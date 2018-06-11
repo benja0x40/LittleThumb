@@ -58,3 +58,6 @@ functions (default = \code{TRUE}, enabled).}
 This function sets the default value of arguments used by the main functions
 of the LittleThumb package.
 }
+\seealso{
+\link{MakeObj}
+}

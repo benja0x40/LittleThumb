@@ -30,6 +30,7 @@ test_that("Basics", {
   expect_identical(readRDS(f), x)
   expect_true(file.remove(f))
 
+  a <- list(x = 1)
   RegisterObject("a")
   SaveObj(x, parent.name = "a")
   f <- PathToRDS("x")

@@ -18,6 +18,7 @@
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
+#' @keywords internal
 #' @export
 LoadObj <- function(
   obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
@@ -32,8 +33,8 @@ LoadObj <- function(
   DefaultArgs(opt, ignore = c("obj", "name", "..."), from = LoadObj)
 
   obj.name <- eval(arg$name, envir = origin)
-  parent <- eval(arg$parent, envir = origin)
-  if(! is.environment(parent)) parent <- origin
+  prn.name <- eval(arg$parent.name, envir = origin)
+  parent   <- eval(arg$parent, envir = origin)
 
   reload <- LogicalArg(obj.name, reload)
 
@@ -41,14 +42,13 @@ LoadObj <- function(
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
-  o.e <- exists(x = obj.name, where = parent)
+  o.e <- ObjectExists(obj.name, prn.name, parent, origin)
   if(o.e) msg <- "reload" else msg <- "load"
   if(o.e & ! reload) msg <- "bypass"
 
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
   if(f.e & (reload | ! o.e)) {
-    r <- readRDS(f)
-    AssignObj(r, name = obj.name, to = parent)
+    SetValue(obj.name, prn.name, parent, origin, value = readRDS(f))
   }
 
   invisible(f)

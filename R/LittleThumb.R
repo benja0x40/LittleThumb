@@ -39,6 +39,9 @@ DefaultOptions <- function() {
 # =============================================================================.
 #' Automation options
 # -----------------------------------------------------------------------------.
+#' @seealso
+#'   \link{MakeObj}
+# -----------------------------------------------------------------------------.
 #' @description
 #' This function sets the default value of arguments used by the main functions
 #' of the LittleThumb package.

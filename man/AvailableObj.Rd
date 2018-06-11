@@ -34,7 +34,8 @@ location (default = \code{TRUE}, yes), or as an independent one.}
 RDS files organized into sub-directories corresponding to parent objects
 (default = \code{TRUE}, yes).}
 
-\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+call.}
 }
 \value{
 \code{TRUE} when the RDS file exists, \code{FALSE} otherwise.

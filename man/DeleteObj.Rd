@@ -41,7 +41,8 @@ functions (default = \code{TRUE}, enabled).}
 from its parent environment after deleting the associated RDS file
 (default = \code{TRUE}, yes).}
 
-\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+call.}
 
 \item{...}{optional arguments passed to the \link{rm} function.}
 }

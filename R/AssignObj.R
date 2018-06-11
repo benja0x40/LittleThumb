@@ -20,6 +20,7 @@
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
+#' @keywords internal
 #' @export
 AssignObj <- function(
   obj, name = NULL, from = NULL, to = NULL, remove = TRUE,

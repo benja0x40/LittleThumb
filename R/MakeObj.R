@@ -19,7 +19,7 @@ MkObj <- function(...) {
 #'   \link{LittleThumb},
 #'   \link{DeleteObj}
 # -----------------------------------------------------------------------------.
-#' @example exec/examples/Basics.R
+#' @example exec/examples/MakeObj.R
 #'
 #' @description
 #' \code{MakeObj} automatically generates an R object using the provided
@@ -94,12 +94,12 @@ MakeObj <- function(...) {
     if(is.null(origin[[a$name]])) { # Make sure that obj has been generated
       stop("provided expression does not define object ", a$name)
     }
-    f <- do.call(SaveObj, a[SO]) # Save RDS file associated to the R object
     if(! is.null(a$parent.name)) {
       AssignObj(
         name = a$name, from = origin, to = a$parent.name, origin = origin
       )
     }
+    f <- do.call(SaveObj, a[SO]) # Save RDS file associated to the R object
   }
 
   if(a$cleanup) {

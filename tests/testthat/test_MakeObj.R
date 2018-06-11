@@ -1,6 +1,13 @@
 # > MakeObj ====================================================================
 context("MakeObj")
 
+TestObject <- function(x) {
+  r <- NULL
+  if(x == 1) r <- list()
+  if(x == 2) r <- new.env()
+  r
+}
+
 # + Basics ---------------------------------------------------------------------
 test_that("Basics", {
 
@@ -50,56 +57,38 @@ test_that("Basics", {
   LittleThumb::ResetOptions()
 })
 
-# + Advanced -------------------------------------------------------------------
-test_that("Advanced", {
+# + Advanced/1 -----------------------------------------------------------------
+test_that("Advanced/1", {
 
   LittleThumb(rebuild = TRUE, reload = TRUE)
 
   expect_error(MakeObj(tst, { x <- 1 }), regexp = "does not define object")
 
-  RegisterObject("tst")
-  tst <- new.env()
-  MakeObj(z, parent = tst, { z <- 1 })
-  expect_identical(tst$z, 1)
-  DeleteObj(z, parent = tst)
-  expect_null(tst$z)
+  for(loop in 1:2) {
 
-  RegisterObject("tst")
-  tst <- list()
-  MakeObj(z, parent = tst, { z <- 1 })
-  expect_identical(tst$z, 1)
-  DeleteObj(z, parent = tst)
-  expect_null(tst$z)
+    # Top level
+    tst <- TestObject(loop)
+    RegisterObject("tst")
+    MakeObj(z, parent.name = "tst", { z <- 1 })
+    expect_identical(tst$z, 1)
+    DeleteObj(z, parent = tst)
+    expect_null(tst$z)
 
-  # Parent = environment
-  MakeObj(tst, {
-    tst <- new.env()
-    MakeObj(z, parent = tst, { z <- 1 })
-  })
-  expect_identical(tst$z, 1)
-  DeleteObj(tst)
+    # 1 level
+    MakeObj(tst, {
+      tst <- TestObject(loop)
+      MakeObj(z, parent = tst, { z <- loop })
+    })
+    expect_identical(tst$z, loop)
+    DeleteObj(tst)
 
-  MakeObj(tst, {
-    tst <- new.env()
-    MakeObj(z, parent.name = "tst", { z <- 2 })
-  })
-  expect_identical(tst$z, 2)
-  DeleteObj(tst)
-
-  # Parent = list object
-  MakeObj(tst, {
-    tst <- list()
-    MakeObj(z, parent = tst, { z <- 3 })
-  })
-  expect_identical(tst$z, 3)
-  DeleteObj(tst)
-
-  MakeObj(tst, {
-    tst <- list()
-    MakeObj(z, parent.name = "tst", { z <- 4 })
-  })
-  expect_identical(tst$z, 4)
-  DeleteObj(tst)
+    MakeObj(tst, {
+      tst <- TestObject(loop)
+      MakeObj(z, parent.name = "tst", { z <- loop })
+    })
+    expect_identical(tst$z, loop)
+    DeleteObj(tst)
+  }
 
   # Nested lists and environments
   MakeObj(x, {
@@ -125,6 +114,34 @@ test_that("Advanced", {
   })
   expect_identical(x$y$z, 0)
   DeleteObj(x)
+
+  # Cleanup
+  unlink("_components_", recursive = T)
+  LittleThumb::ResetRegistry()
+  LittleThumb::ResetOptions()
+})
+
+
+# + Advanced/2 -----------------------------------------------------------------
+test_that("Advanced/2", {
+
+  LittleThumb(rebuild = FALSE, reload = TRUE)
+
+  for(loop in 1:2) {
+    xpr <- expression(
+      MakeObj(tst, {
+        tst <- TestObject(loop)
+        MakeObj(z, parent = tst, { z <- loop })
+      })
+    )
+    eval(xpr)
+    expect_identical(tst$z, loop)
+    DeleteObj(tst)
+    expect_message(eval(xpr), regexp = "load")
+    expect_identical(tst$z, loop)
+    expect_message(DeleteObj(z, parent = tst), regexp = "delete")
+    expect_message(DeleteObj(tst), regexp = "delete")
+  }
 
   # Cleanup
   unlink("_components_", recursive = T)

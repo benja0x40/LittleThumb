@@ -21,7 +21,8 @@ as first argument using \link{substitute} and \link{deparse}.}
 \item{remove}{logical value controlling wheter the object should removed from the source
 environment (default = \code{TRUE}, yes).}
 
-\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+call.}
 }
 \description{
 Reassign an R object from its parent environment to another one
@@ -30,3 +31,4 @@ Reassign an R object from its parent environment to another one
 \link{MakeObj},
   \link{LittleThumb}
 }
+\keyword{internal}

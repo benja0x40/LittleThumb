@@ -40,7 +40,8 @@ functions (default = \code{TRUE}, enabled).}
 \item{makedir}{logical value controlling if non-existing folders should be created
 automatically when necessary (default = \code{TRUE}, yes).}
 
-\item{origin}{\strong{RESERVED FOR INTERNAL USE}.}
+\item{origin}{\strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+call.}
 }
 \description{
 Save the RDS file associated to an R object
@@ -98,3 +99,4 @@ DeleteObj(a)
 \link{MakeObj},
   \link{LittleThumb}
 }
+\keyword{internal}

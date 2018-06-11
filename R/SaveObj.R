@@ -27,10 +27,12 @@
 #' optional name of the parent environment.
 #'
 #' @param origin
-#' \strong{RESERVED FOR INTERNAL USE}.
+#' \strong{RESERVED FOR INTERNAL USE}: parent.frame of the initial function
+#' call.
 #'
 #' @return NULL
 # -----------------------------------------------------------------------------.
+#' @keywords internal
 #' @export
 SaveObj <- function(
   obj, path = NULL, name = NULL, parent = NULL, parent.name = NULL,
@@ -45,15 +47,15 @@ SaveObj <- function(
   DefaultArgs(opt, ignore = c("obj", "name", "..."), from = SaveObj)
 
   obj.name <- eval(arg$name, envir = origin)
-  parent <- eval(arg$parent, envir = origin)
-  if(! is.environment(parent)) parent <- origin
+  prn.name <- eval(arg$parent.name, envir = origin)
+  parent   <- eval(arg$parent, envir = origin)
 
   makedir <- LogicalArg(obj.name, makedir)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
   if(! file.exists(f)) msg <- "save" else msg = "overwrite"
 
-  o.e <- exists(x = obj.name, where = parent)
+  o.e <- ObjectExists(obj.name, prn.name, parent, origin)
   if(! o.e) stop("object does not exist ", obj.name)
 
   d <- dirname(f)
@@ -63,7 +65,7 @@ SaveObj <- function(
   }
 
   if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
-  saveRDS(parent[[obj.name]], f)
+  saveRDS(GetValue(obj.name, prn.name, parent, origin), f)
 
   invisible(f)
 }
