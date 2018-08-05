@@ -4,6 +4,7 @@ context("DeleteObj")
 # + Basics ---------------------------------------------------------------------
 test_that("Basics", {
 
+  expect_error(DeleteObj(), regexp = "insufficient")
   expect_warning(DeleteObj(x))
   expect_message(suppressWarnings(DeleteObj(x)), regexp = "not found")
 

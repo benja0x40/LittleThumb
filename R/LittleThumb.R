@@ -14,12 +14,12 @@ DefaultOptions <- function() {
     # registry  = "LittleThumb", # TODO: implementation
     # context   = NA,            # TODO: implementation
 
-    # Path generation (SaveObj, LoadObj, DeleteObj, AvailableObj)
-    rootpath  = "",            # PathToRDS
+    # Path generation (PathToRDS, SaveObj, LoadObj, DeleteObj, AvailableObj)
+    rootpath  = "",            #
     path      = NA,            #
+    relative  = TRUE,          #
     extension = ".rds",        #
-    relative  = TRUE,          # + PathToRDS
-    embedded  = TRUE,          # + PathToRDS
+    embedded  = TRUE,          #
 
     # Evaluation (SaveObj, LoadObj, DeleteObj, MakeObj)
     parent = NA,
@@ -56,13 +56,13 @@ DefaultOptions <- function() {
 #' location (see \code{relative}). By default \code{path} is ignored
 #' (\code{path = NA}).
 #'
-#' @param extension
-#' \strong{DO NOT MODIFY}: RDS file extension (default = ".rds").
-#'
 #' @param relative
 #' logical value controlling if the \code{path} option is interpreted as a
 #' relative location, meaning as a sub-directory of the \code{rootpath}
 #' location (default = \code{TRUE}, yes), or as an independent one.
+#'
+#' @param extension
+#' \strong{DO NOT MODIFY}: RDS file extension (default = ".rds").
 #'
 #' @param embedded
 #' logical value controlling whether child objects should have their associated
@@ -107,10 +107,10 @@ LittleThumb <- function(
 
   rootpath  = NULL,
   path      = NULL,
-  extension = NULL,
   relative  = NULL,
-  embedded  = NULL,
+  extension = NULL,
 
+  embedded  = NULL,
   parent    = NULL,
 
   makedir   = NULL,
@@ -177,9 +177,10 @@ ResetOptions <- function() {
 # -----------------------------------------------------------------------------.
 #' @keywords internal
 #' @export
-StatusMessage <- function(status, name = NULL, file = NULL) {
+StatusMessage <- function(status, name = NULL, file = NULL, sep = NULL) {
   msg <- paste0("[LittleThumb] ", status)
+  if(is.null(sep)) sep = "="
   if(! is.null(name)) msg <- paste0(msg, " | ", name)
-  if(! is.null(file)) msg <- paste0(msg, " = ", file)
+  if(! is.null(file)) msg <- paste0(msg, " ", sep, " ", file)
   message(msg)
 }

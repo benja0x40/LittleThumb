@@ -4,7 +4,8 @@
 \alias{RemoveObject}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-RemoveObject(x, prn.name = NULL, parent = NULL, origin = parent.frame())
+RemoveObject(x, prn.name = NULL, parent = NULL,
+  origin = parent.frame())
 }
 \description{
 ** RESERVED FOR INTERNAL USE **

@@ -4,8 +4,8 @@
 \alias{LittleThumb}
 \title{Automation options}
 \usage{
-LittleThumb(rootpath = NULL, path = NULL, extension = NULL,
-  relative = NULL, embedded = NULL, parent = NULL, makedir = NULL,
+LittleThumb(rootpath = NULL, path = NULL, relative = NULL,
+  extension = NULL, embedded = NULL, parent = NULL, makedir = NULL,
   reload = NULL, rebuild = NULL, cleanup = NULL, remove = NULL,
   messages = NULL)
 }
@@ -18,11 +18,11 @@ a sub-directory of the \code{rootpath} location, or as an independent
 location (see \code{relative}). By default \code{path} is ignored
 (\code{path = NA}).}
 
-\item{extension}{\strong{DO NOT MODIFY}: RDS file extension (default = ".rds").}
-
 \item{relative}{logical value controlling if the \code{path} option is interpreted as a
 relative location, meaning as a sub-directory of the \code{rootpath}
 location (default = \code{TRUE}, yes), or as an independent one.}
+
+\item{extension}{\strong{DO NOT MODIFY}: RDS file extension (default = ".rds").}
 
 \item{embedded}{logical value controlling whether child objects should have their associated
 RDS files organized into sub-directories corresponding to parent objects

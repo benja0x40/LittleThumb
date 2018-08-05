@@ -4,7 +4,7 @@
 \alias{StatusMessage}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-StatusMessage(status, name = NULL, file = NULL)
+StatusMessage(status, name = NULL, file = NULL, sep = NULL)
 }
 \description{
 ** RESERVED FOR INTERNAL USE **

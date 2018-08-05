@@ -1,24 +1,33 @@
 # > Arguments ==================================================================
 context("Arguments")
 
+TestObject <- function(x) {
+  r <- NULL
+  if(x == 1) r <- list()
+  if(x == 2) r <- new.env()
+  r
+}
+
 # + DefaultArgs ----------------------------------------------------------------
 test_that("DefaultArgs", {
 
   cfg <- list(x = 1, y = 2, z = 3)
 
-  src <- new.env()
-  dst <- new.env()
+  for(loop in 1:2) {
+    src <- TestObject(loop)
+    dst <- TestObject(loop)
 
-  DefaultArgs(cfg, from = src)
-  expect_identical(names(src), character(0))
+    DefaultArgs(cfg, from = src)
+    expect_identical(as.character(names(src)), character(0))
 
-  DefaultArgs(cfg, to = dst)
-  expect_identical(as.list(dst), cfg)
+    DefaultArgs(cfg, to = dst)
+    expect_identical(as.list(dst), cfg)
 
-  dst <- new.env()
-  dst$y <- 0
-  DefaultArgs(cfg, to = dst)
-  expect_identical(as.list(dst), list(x = 1, y = 0, z = 3))
+    dst <- TestObject(loop)
+    dst$y <- 0
+    DefaultArgs(cfg, to = dst)
+    expect_identical(as.list(dst)[c("x", "y", "z")], list(x = 1, y = 0, z = 3))
+  }
 
   alt <- list(x = 3, y = 2, z = 1)
   dst <- as.environment(alt)

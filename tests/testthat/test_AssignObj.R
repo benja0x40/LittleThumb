@@ -10,6 +10,7 @@ test_that("Basics", {
   x <- z <- LETTERS[1:5]
   i <- k <- 1:10
 
+  expect_error(AssignObj(), regexp = "missing")
   expect_error(AssignObj(x, from = NonExistentObject))
   expect_error(AssignObj(x, to = NonExistentObject))
   expect_error(AssignObj(x, from = "NonExistentObject"), regexp = "'from'")

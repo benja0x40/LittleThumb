@@ -64,7 +64,7 @@ SaveObj <- function(
     LittleThumb::MkDir(d)
   }
 
-  if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
+  if(messages) LittleThumb::StatusMessage(msg, obj.name, f, "=>")
   saveRDS(GetValue(obj.name, prn.name, parent, origin), f)
 
   invisible(f)

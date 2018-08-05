@@ -5,6 +5,8 @@ context("AvailableObj")
 test_that("Basics", {
 
 
+  expect_error(AvailableObj(), regexp = "insufficient")
+
   x <- 1:10
   expect_false(AvailableObj(x))
 

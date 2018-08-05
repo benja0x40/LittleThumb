@@ -42,11 +42,15 @@ LoadObj <- function(
   f.e <- file.exists(f)
   if(! f.e) stop("file not found ", f)
 
+  sep <- "<="
   o.e <- ObjectExists(obj.name, prn.name, parent, origin)
   if(o.e) msg <- "reload" else msg <- "load"
-  if(o.e & ! reload) msg <- "bypass"
+  if(o.e & ! reload) {
+    msg <- "bypass"
+    sep <- NULL
+  }
 
-  if(messages) LittleThumb::StatusMessage(msg, obj.name, f)
+  if(messages) LittleThumb::StatusMessage(msg, obj.name, f, sep)
   if(f.e & (reload | ! o.e)) {
     SetValue(obj.name, prn.name, parent, origin, value = readRDS(f))
   }

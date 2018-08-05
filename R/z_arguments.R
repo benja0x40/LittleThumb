@@ -34,6 +34,7 @@ DefaultArgs <- function(
       }
     }
   } else {
+    if(is.list(to)) to <- lbl
     for(a in lst) {
       if(is.null(origin[[to]][[a]]) & ! (is.null(from[[a]]))) {
         origin[[to]][[a]] <- from[[a]]
@@ -97,6 +98,23 @@ ClonalArg <- function(u, a, d) { # user value, arg names, default value
 #' ** RESERVED FOR INTERNAL USE **
 # -----------------------------------------------------------------------------.
 #' @description
+#' Resolve the value of a character argument.
+# -----------------------------------------------------------------------------.
+#' @keywords internal
+#' @export
+NamedArg <- function(x, a) {
+  if(is.null(names(a))) {
+    x <- a
+  } else {
+    if(is.list(a)) x <- a[[x]] else x <- a[x]
+  }
+  x
+}
+
+# =============================================================================.
+#' ** RESERVED FOR INTERNAL USE **
+# -----------------------------------------------------------------------------.
+#' @description
 #' Standardize the value of a logical argument.
 # -----------------------------------------------------------------------------.
 #' @keywords internal
@@ -119,23 +137,6 @@ LogicalArg <- function(x, a) {
   r <- ifelse(is.null(r[[x]]), FALSE, r[[x]])
 
   r
-}
-
-# =============================================================================.
-#' ** RESERVED FOR INTERNAL USE **
-# -----------------------------------------------------------------------------.
-#' @description
-#' Resolve the value of a character argument.
-# -----------------------------------------------------------------------------.
-#' @keywords internal
-#' @export
-NamedArg <- function(x, a) {
-  if(is.null(names(a))) {
-    x <- a
-  } else {
-    if(is.list(a)) x <- a[[x]] else x <- a[x]
-  }
-  x
 }
 
 # =============================================================================.

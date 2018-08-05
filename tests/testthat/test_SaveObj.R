@@ -7,6 +7,7 @@ test_that("Basics", {
   f <- PathToRDS("x")
   x <- 1:10
 
+  expect_error(SaveObj(), regexp = "insufficient")
   expect_error(SaveObj(z))
 
   expect_false(file.exists(f))

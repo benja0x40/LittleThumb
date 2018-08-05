@@ -7,6 +7,7 @@ test_that("Basics", {
   f <- PathToRDS("x")
   x <- y <- 1:10
 
+  expect_error(LoadObj(), regexp = "insufficient")
   expect_error(LoadObj(x))
   saveRDS(x, f)
 
