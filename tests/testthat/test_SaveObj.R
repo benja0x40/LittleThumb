@@ -16,12 +16,12 @@ test_that("Basics", {
   expect_identical(readRDS(f), x)
 
   x <- 10:1
-  expect_message(SaveObj(x), regexp = "overwrite")
+  expect_message(SaveObj(x), regexp = "update")
   expect_identical(readRDS(f), x)
 
   LittleThumb(rootpath = "AutoSaved")
 
-  expect_message(SaveObj(x, relative = FALSE), regexp = "overwrite")
+  expect_message(SaveObj(x, relative = FALSE), regexp = "update")
   expect_true(file.remove(f))
 
   f <- PathToRDS("x")

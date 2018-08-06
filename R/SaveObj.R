@@ -53,7 +53,7 @@ SaveObj <- function(
   makedir <- LogicalArg(obj.name, makedir)
 
   f <- PathToRDS(obj.name, path, relative, embedded)
-  if(! file.exists(f)) msg <- "save" else msg = "overwrite"
+  if(! file.exists(f)) msg <- "save" else msg = "update"
 
   o.e <- ObjectExists(obj.name, prn.name, parent, origin)
   if(! o.e) stop("object does not exist ", obj.name)
