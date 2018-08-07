@@ -45,11 +45,10 @@ named `xyz`.
 # MiniScript.R
 library(LittleThumb)
 
-# 1. Configure automation options ----------------------------------------------
-# Choose a default location for automatically saved RDS files
+# Choose a default location to store RDS files
 LittleThumb(rootpath = "AutoSaved")
 
-# 2. Define a persistent R object ----------------------------------------------
+# Define persistent R object xyz
 MakeObj(xyz, {
 
   # Compute the value of object xyz
@@ -57,7 +56,7 @@ MakeObj(xyz, {
 
 })
 
-# 3. Use this R object ---------------------------------------------------------
+# Do something using object xyz
 print(xyz)
 ```
 
@@ -139,7 +138,7 @@ source("MiniScript.R")
 
 #### Selective automation
 
-Both the `reload` and `rebuild` options also allow to control automation
+Both the `reload` and `rebuild` options allow to control automation
 of each persistent object individually.
 
 ```R
