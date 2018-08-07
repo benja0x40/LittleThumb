@@ -6,7 +6,7 @@ LittleThumb
 ================================================================================
 
 LittleThumb is an R package under development which provides a lightweight
-persistence mechanism for R objects, with the main motivation being to simplify
+persistence mechanism for R objects, with main motivation to simplify
 the storage and organization of results produced during the development
 of analysis scripts or Rmarkdown notebooks.
 
@@ -25,7 +25,18 @@ devtools::install_github("benja0x40/LittleThumb")
 ```
 
 
-### <a name="example"></a>Example
+### Persistent R objects
+
+The `MakeObj` function serves to define persistent objects and encapsulates
+the block of code necessary to generate such object from scratch.
+
+Each time a portion of R code including a `MakeObj` function call is executed,
+the object defined using this function is automatically generated and saved,
+or loaded, according to current automation options and depending on the object
+availability in the current R environment and at its storage location.
+
+
+#### Example
 
 The script below shows a minimalistic example defining a single persistent object
 named `xyz`.
@@ -35,14 +46,14 @@ named `xyz`.
 library(LittleThumb)
 
 # 1. Configure automation options ----------------------------------------------
-# Here we choose the default location for automatically saved RDS files
+# Choose a default location for automatically saved RDS files
 LittleThumb(rootpath = "AutoSaved")
 
 # 2. Define a persistent R object ----------------------------------------------
 MakeObj(xyz, {
 
-  # Here we compute the value of object xyz
-  xyz <- 0
+  # Compute the value of object xyz
+  xyz <- 1:10
 
 })
 
@@ -51,7 +62,8 @@ print(xyz)
 ```
 
 When this example is run for the first time, the `AutoSaved` folder is
-created and the `xyz` object is saved as `AutoSaved/xyz.rds`.
+created and the `xyz` object is saved to `AutoSaved/xyz.rds`, as indicated
+by LittleThumb's status messages.
 
 ```R
 source("MiniScript.R") # First execution
@@ -62,7 +74,7 @@ source("MiniScript.R") # First execution
 
 From the second execution, as long as the `xyz` object remains available
 in the R environment and LittleThumb automation options remain unchanged,
-the `MakeObj(xyz, ...)` function call in `MiniScript.R` bypasses any execution.
+the `MakeObj` function call in `MiniScript.R` bypasses any execution.
 
 ```R
 source("MiniScript.R") # Second execution
@@ -84,27 +96,16 @@ source("MiniScript.R") # Another execution (xyz being unavailable in R)
     [LittleThumb] load | xyz <= AutoSaved/xyz.rds
 
 
-### Persistent R objects
-
-The `MakeObj` function serves to define persistent objects and encapsulates
-the block of code necessary to generate such object from scratch.
-
-Each time a portion of R code including a `MakeObj` function call is executed,
-the object defined using this function is automatically generated and saved,
-or loaded, according to current automation options and depending on the object
-availability in the current R environment and at its storage location.
-
-
 ### Automation options
 
-The `LittleThumb` function provides access to options controlling
+The `LittleThumb` function provides access to automation options controlling
 storage locations and object updates, either globally or individually
 for each object defined with `MakeObj`.
 The main options are `rootpath` which specifies the root location of RDS
 files managed by LittleThumb, as well as `reload` and `rebuild`.
 
-The effect of the `reload` and `rebuild` options in the context of the
-`MiniScript.R` example is shown hereafter.
+The role of the `reload` and `rebuild` options is shown hereafter using the
+`MiniScript.R` example.
 
 #### Reloading objects
 
@@ -112,8 +113,8 @@ The `reload` option allows to force reloading objects from their associated
 RDS file even when these objects are already available in the R environment.
 
 ```R
-LittleThumb(reload = TRUE)  # All persistent objects must be reloaded
-LittleThumb(reload = "xyz") # Only object xyz must be reloaded
+# Specify that all persistent objects must be reloaded
+LittleThumb(reload = TRUE)
 
 source("MiniScript.R")
 ```
@@ -127,14 +128,44 @@ The `rebuild` option controls whether objects should be recomputed and saved
 even if the associated RDS file already exists at the expected location.
 
 ```R
-LittleThumb(rebuild = TRUE)  # All persistent objects must be updated
-LittleThumb(rebuild = "xyz") # Only object xyz must be updated
+# Specify that all persistent objects must be updated
+LittleThumb(rebuild = TRUE)
 
 source("MiniScript.R")
 ```
 
     [LittleThumb] update | xyz => AutoSaved/xyz.rds
 
+
+#### Selective automation
+
+Both the `reload` and `rebuild` options also allow to control automation
+of each persistent object individually.
+
+```R
+# To specify that only object xyz must be reloaded
+LittleThumb(reload = list(xyz = TRUE)) # option value provided as a named list
+LittleThumb(reload = "xyz")            # or as a character vector
+```
+
+```R
+# To specify that only object xyz must be updated
+LittleThumb(rebuild = list(xyz = TRUE)) # option value provided as a named list
+LittleThumb(rebuild = "xyz")            # or as a character vector
+```
+
+These automation options are also accessible as supplementary arguments
+of the `MakeObj` function. When used, the value of such argument overrides
+the corresponding option value set by `LittleThumb`.
+For instance, the `MiniScript.R` example could be modified as follows to
+make sure that object `xyz` is always reloaded.
+
+```R
+# Object xyz is always reloaded
+MakeObj(xyz, reload = TRUE, {
+  xyz <- 1:10
+})
+```
 
 ### Work in progress
 
