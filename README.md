@@ -89,8 +89,7 @@ the `AutoSaved/xyz.rds` file instead of recomputing this object.
 
 ```R
 rm(xyz) # Simulate restarting the R environment
-
-source("MiniScript.R") # Another execution (xyz being unavailable in R)
+source("MiniScript.R")
 ```
 
     [LittleThumb] load | xyz <= AutoSaved/xyz.rds
@@ -110,7 +109,8 @@ The role of the `reload` and `rebuild` options is shown hereafter using the
 #### Reloading objects
 
 The `reload` option allows to force reloading objects from their associated 
-RDS file even when these objects are already available in the R environment.
+RDS file even when these objects are already available in the current
+R environment.
 
 ```R
 # Specify that all persistent objects must be reloaded
@@ -158,7 +158,7 @@ These automation options are also accessible as supplementary arguments
 of the `MakeObj` function. When used, the value of such argument overrides
 the corresponding option value set by `LittleThumb`.
 For instance, the `MiniScript.R` example could be modified as follows to
-make sure that object `xyz` is always reloaded.
+make sure that object `xyz` is always reloaded when the script is executed.
 
 ```R
 # Object xyz is always reloaded
