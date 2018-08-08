@@ -166,12 +166,6 @@ MakeObj(xyz, reload = TRUE, {
 })
 ```
 
-### Work in progress
-
-These basic features of LittleThumb should remain stable in future versions,
-which is not guaranteed for the other functionalities and options documented
-in the package manual.
-
 ### Author
 
 Benjamin Leblanc |
