@@ -1,31 +1,51 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-language: R
-cache: packages
-
-# Use containers
-sudo: false
 
 # Run for pushes to the master branch only
 branches:
   only:
-   - master
+    - master
 
+language: r
+
+r:
+  - oldrel  # Previous major release
+  - release # Current release
+  - devel   # Development branch
+
+os:
+  - linux
+  - osx
+
+jobs:
+  exclude:
+  - os: osx
+    r: devel
+
+addons:
+  apt:
+    packages:
+      - libgit2-dev
+
+cache:
+  packages: true
+
+# List of R packages to install via install.packages
 r_packages:
-  - covr
+  - devtools
+  - covr                                                 # Code coverage support
 
+# List of packages to install from GitHub using devtools::install_github
 # r_github_packages:
 
-warnings_are_errors: false
+# List of Bioconductor packages to install
+# bioc_packages:
 
-matrix:
-  include:
-    - os: linux
-      # r_build_args: '--no-build-vignettes'
-      # r_check_args: '--ignore-vignettes'
-      env: R_CODECOV=true
-    # - os: osx
-    #   r_build_args: '--no-build-vignettes'
-    #   r_check_args: '--ignore-vignettes'
+# Forces all WARNINGS from R CMD check to become build failures
+warnings_are_errors: true
+
+# Environment variables
+env:
+  - R_CODECOV=true                                       # Code coverage support
 
 after_success:
   - if [[ "${R_CODECOV}" ]]; then R -e 'covr::codecov()'; fi

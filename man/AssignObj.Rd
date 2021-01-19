@@ -4,8 +4,14 @@
 \alias{AssignObj}
 \title{Reassign an R object from its parent environment to another one}
 \usage{
-AssignObj(obj, name = NULL, from = NULL, to = NULL, remove = TRUE,
-  origin = parent.frame())
+AssignObj(
+  obj,
+  name = NULL,
+  from = NULL,
+  to = NULL,
+  remove = TRUE,
+  origin = parent.frame()
+)
 }
 \arguments{
 \item{obj}{an R object.}

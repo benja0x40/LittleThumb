@@ -4,7 +4,9 @@
 \name{LT}
 \alias{LT}
 \title{** RESERVED FOR INTERNAL USE **}
-\format{An object of class \code{environment} of length 1.}
+\format{
+An object of class \code{environment} of length 1.
+}
 \usage{
 LT
 }

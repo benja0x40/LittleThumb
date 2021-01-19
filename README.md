@@ -1,14 +1,15 @@
-[![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Build Status](https://travis-ci.com/benja0x40/LittleThumb.svg?branch=master)](https://travis-ci.com/benja0x40/LittleThumb)
 [![Coverage Status](https://codecov.io/gh/benja0x40/LittleThumb/branch/master/graph/badge.svg)](https://codecov.io/gh/benja0x40/LittleThumb)
 
 LittleThumb
 ================================================================================
 
-LittleThumb is an R package under development which provides a lightweight
-persistence mechanism for R objects, with main motivation to simplify
-the storage and organization of results produced during the development
-of analysis scripts or Rmarkdown notebooks.
+LittleThumb is an R package providing a lightweight persistence mechanism for R
+objects, developped mainly to simplify the storage and organization of temporary
+results produced while programming and testing data analysis scripts or
+Rmarkdown notebooks. LittleThumb can be used to speed-up repeated executions of
+a maturing script or notebook by caching intermediate results and skipping the
+corresponding computations between executions.
 
 ### <a name="install"></a>Functionalities
 
@@ -170,5 +171,4 @@ MakeObj(xyz, reload = TRUE, {
 
 Benjamin Leblanc |
 [GitHub](https://github.com/benja0x40) -
-[ResearchGate](https://www.researchgate.net/profile/Benjamin_Leblanc) -
-[LinkedIn](https://www.linkedin.com/in/benja0x40)
+[ResearchGate](https://www.researchgate.net/profile/Benjamin_Leblanc)

@@ -4,9 +4,18 @@
 \alias{SaveObj}
 \title{Save the RDS file associated to an R object}
 \usage{
-SaveObj(obj, path = NULL, name = NULL, parent = NULL,
-  parent.name = NULL, relative = NULL, embedded = NULL,
-  messages = NULL, makedir = NULL, origin = parent.frame())
+SaveObj(
+  obj,
+  path = NULL,
+  name = NULL,
+  parent = NULL,
+  parent.name = NULL,
+  relative = NULL,
+  embedded = NULL,
+  messages = NULL,
+  makedir = NULL,
+  origin = parent.frame()
+)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -92,8 +101,9 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
-# Cleanup
+# Cleanup ======================================================================
 DeleteObj(a)
+unlink("AutoSaved", recursive = TRUE)
 }
 \seealso{
 \link{MakeObj},

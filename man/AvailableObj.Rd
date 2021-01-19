@@ -4,9 +4,16 @@
 \alias{AvailableObj}
 \title{Check if the RDS file associated to an R object is available}
 \usage{
-AvailableObj(obj, path = NULL, name = NULL, parent = NULL,
-  parent.name = NULL, relative = NULL, embedded = NULL,
-  origin = parent.frame())
+AvailableObj(
+  obj,
+  path = NULL,
+  name = NULL,
+  parent = NULL,
+  parent.name = NULL,
+  relative = NULL,
+  embedded = NULL,
+  origin = parent.frame()
+)
 }
 \arguments{
 \item{obj}{an R object.}
@@ -88,8 +95,9 @@ if(AvailableObj(a)) {
 # Automatically make/save/load the object 'a'
 MakeObj(a, { a <- 1:10 })
 
-# Cleanup
+# Cleanup ======================================================================
 DeleteObj(a)
+unlink("AutoSaved", recursive = TRUE)
 }
 \seealso{
 \link{MakeObj},

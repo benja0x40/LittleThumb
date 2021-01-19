@@ -4,8 +4,7 @@
 \alias{SetValue}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-SetValue(x, prn.name = NULL, parent = NULL, origin = parent.frame(),
-  value)
+SetValue(x, prn.name = NULL, parent = NULL, origin = parent.frame(), value)
 }
 \description{
 ** RESERVED FOR INTERNAL USE **

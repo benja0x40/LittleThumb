@@ -15,3 +15,7 @@ MakeObj(xyz, {
 # 3. Do anything with defined R objects ----------------------------------------
 
 print(xyz)
+
+# Cleanup ======================================================================
+DeleteObj(xyz)
+unlink("AutoSaved", recursive = TRUE)

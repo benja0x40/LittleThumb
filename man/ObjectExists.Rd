@@ -4,8 +4,13 @@
 \alias{ObjectExists}
 \title{** RESERVED FOR INTERNAL USE **}
 \usage{
-ObjectExists(x, prn.name = NULL, parent = NULL,
-  origin = parent.frame(), inherits = FALSE)
+ObjectExists(
+  x,
+  prn.name = NULL,
+  parent = NULL,
+  origin = parent.frame(),
+  inherits = FALSE
+)
 }
 \description{
 ** RESERVED FOR INTERNAL USE **
